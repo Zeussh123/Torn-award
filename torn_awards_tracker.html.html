@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Torn Awards Tracker</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Inter:wght@300;400;500;600;700&display=swap');
+
+  /* ── DEFAULT: DARK MODE (black/grey) ── */
+  :root {
+    --bg:        #0d0d0f;
+    --surface:   #141417;
+    --surface2:  #1c1c21;
+    --border:    #2a2a32;
+    --red:       #e94560;
+    --red-dim:   rgba(233,69,96,0.15);
+    --amber:     #f5a623;
+    --amber-dim: rgba(245,166,35,0.12);
+    --green:     #2ecc71;
+    --green-dim: rgba(46,204,113,0.12);
+    --blue:      #4a9eff;
+    --blue-dim:  rgba(74,158,255,0.12);
+    --text:      #e8e8f0;
+    --muted:     #6b6b80;
+    --mono:      'Share Tech Mono', monospace;
+    --sans:      'Inter', sans-serif;
+  }
+
+  /* ── BLUE DARK MODE ── */
+  body.blue-dark {
+    --bg:        #060d1a;
+    --surface:   #0d1b2e;
+    --surface2:  #112236;
+    --border:    #1a3050;
+    --red:       #e94560;
+    --red-dim:   rgba(233,69,96,0.15);
+    --amber:     #f5a623;
+    --amber-dim: rgba(245,166,35,0.12);
+    --green:     #2ecc71;
+    --green-dim: rgba(46,204,113,0.12);
+    --blue:      #5ba8ff;
+    --blue-dim:  rgba(91,168,255,0.15);
+    --text:      #dde8f8;
+    --muted:     #4d6a8a;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    min-height: 100vh;
+    line-height: 1.5;
+  }
+
+  /* ── HEADER ── */
+  header {
+    border-bottom: 1px solid var(--border);
+    padding: 20px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    background: rgba(var(--bg-rgb, 13,13,15),0.95);
+    backdrop-filter: blur(10px);
+    transition: background .3s;
+    backdrop-filter: blur(10px);
+    z-index: 100;
+  }
+  .logo {
+    font-family: var(--mono);
+    font-size: 18px;
+    color: var(--red);
+    letter-spacing: 2px;
+  }
+  .logo span { color: var(--muted); font-size: 12px; display: block; letter-spacing: 1px; }
+
+  .theme-toggle {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    width: 36px; height: 36px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background .2s;
+  }
+  .theme-toggle:hover { background: var(--border); }
+
+  /* ── API KEY SECTION ── */
+  .api-section {
+    max-width: 600px;
+    margin: 60px auto;
+    padding: 0 24px;
+    text-align: center;
+  }
+  .api-section h1 {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .api-section h1 em { color: var(--red); font-style: normal; }
+  .api-section p {
+    color: var(--muted);
+    margin-bottom: 32px;
+    font-size: 15px;
+  }
+  .api-input-row {
+    display: flex;
+    gap: 10px;
+  }
+  .api-input-row input {
+    flex: 1;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-family: var(--mono);
+    font-size: 13px;
+    outline: none;
+    transition: border-color .2s;
+  }
+  .api-input-row input:focus { border-color: var(--red); }
+  .btn {
+    background: var(--red);
+    color: #fff;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: opacity .2s, transform .1s;
+    white-space: nowrap;
+  }
+  .btn:hover { opacity: .85; }
+  .btn:active { transform: scale(.97); }
+  .btn:disabled { opacity: .4; cursor: not-allowed; }
+  .btn-ghost {
+    background: var(--surface2);
+    color: var(--text);
+    border: 1px solid var(--border);
+  }
+  .api-note {
+    margin-top: 14px;
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .api-note a { color: var(--blue); text-decoration: none; }
+
+  /* ── MAIN DASHBOARD ── */
+  #dashboard { display: none; }
+
+  .dash-header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 24px 32px;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+  .player-info h2 {
+    font-size: 22px;
+    font-weight: 700;
+  }
+  .player-info .sub {
+    color: var(--muted);
+    font-size: 13px;
+    font-family: var(--mono);
+  }
+  .stat-pill {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-family: var(--mono);
+  }
+  .stat-pill span { color: var(--red); font-weight: 600; }
+
+  /* ── CONTROLS ── */
+  .controls {
+    padding: 20px 32px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    align-items: center;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg);
+    position: sticky;
+    top: 65px;
+    z-index: 90;
+  }
+  .filter-btn {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--muted);
+    padding: 7px 16px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all .15s;
+  }
+  .filter-btn:hover { border-color: var(--red); color: var(--text); }
+  .filter-btn.active { background: var(--red-dim); border-color: var(--red); color: var(--red); }
+  .controls-right {
+    margin-left: auto;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+  .search-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 7px 14px;
+    border-radius: 6px;
+    font-size: 13px;
+    outline: none;
+    width: 200px;
+    transition: border-color .2s;
+  }
+  .search-box:focus { border-color: var(--red); }
+  .toggle-label {
+    font-size: 13px;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+  }
+  .toggle-label input[type=checkbox] { accent-color: var(--red); }
+
+  /* ── GRID ── */
+  .awards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 12px;
+    padding: 24px 32px;
+  }
+
+  /* ── AWARD CARD ── */
+  .award-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+    transition: border-color .2s, transform .1s;
+    position: relative;
+    overflow: hidden;
+  }
+  .award-card:hover { border-color: #3a3a48; transform: translateY(-1px); }
+  .award-card.earned {
+    opacity: .5;
+    border-color: var(--border);
+  }
+  .award-card.earned:hover { opacity: .7; }
+
+  /* Rush glow */
+  .award-card.rush {
+    border-color: rgba(233,69,96,0.4);
+  }
+  .award-card.rush::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, var(--red-dim), transparent 60%);
+    pointer-events: none;
+  }
+
+  .card-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    gap: 8px;
+  }
+  .card-name {
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 1.3;
+  }
+  .badge {
+    font-family: var(--mono);
+    font-size: 10px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .badge-honor  { background: var(--blue-dim);  color: var(--blue);  border: 1px solid rgba(74,158,255,.25); }
+  .badge-medal  { background: var(--amber-dim); color: var(--amber); border: 1px solid rgba(245,166,35,.25); }
+  .badge-earned { background: var(--green-dim); color: var(--green); border: 1px solid rgba(46,204,113,.25); }
+  .badge-rush   { background: var(--red-dim);   color: var(--red);   border: 1px solid rgba(233,69,96,.25); }
+
+  .card-stat {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    margin-bottom: 10px;
+  }
+  .card-stat span { color: var(--text); }
+
+  /* Progress bar */
+  .prog-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 8px;
+  }
+  .prog-bar {
+    flex: 1;
+    height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .prog-fill {
+    height: 100%;
+    border-radius: 2px;
+    transition: width .4s ease;
+  }
+  .prog-fill.high   { background: var(--red); }
+  .prog-fill.mid    { background: var(--amber); }
+  .prog-fill.low    { background: var(--blue); }
+  .prog-fill.done   { background: var(--green); }
+  .prog-pct {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    width: 38px;
+    text-align: right;
+    flex-shrink: 0;
+  }
+  .prog-left {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 4px;
+    font-family: var(--mono);
+  }
+  .prog-left strong { color: var(--text); }
+
+  /* ── SECTION HEADERS ── */
+  .section-header {
+    padding: 16px 32px 0;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .section-header::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* ── RUSH PANEL ── */
+  .rush-panel {
+    background: var(--surface);
+    border: 1px solid rgba(233,69,96,.3);
+    border-radius: 10px;
+    margin: 20px 32px 0;
+    padding: 20px;
+  }
+  .rush-panel h3 {
+    font-size: 14px;
+    color: var(--red);
+    font-family: var(--mono);
+    letter-spacing: 1px;
+    margin-bottom: 12px;
+  }
+  .rush-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .rush-item:last-child { border-bottom: none; }
+  .rush-name { flex: 1; font-size: 13px; font-weight: 500; }
+  .rush-left { font-family: var(--mono); font-size: 12px; color: var(--red); }
+
+  /* ── COMBO PANEL ── */
+  .combo-panel {
+    background: var(--surface);
+    border: 1px solid rgba(245,166,35,.25);
+    border-radius: 10px;
+    margin: 12px 32px 0;
+    padding: 20px;
+  }
+  .combo-panel h3 {
+    font-size: 14px;
+    color: var(--amber);
+    font-family: var(--mono);
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+  }
+  .combo-desc { font-size: 12px; color: var(--muted); margin-bottom: 12px; }
+  .combo-item { display: flex; align-items: center; gap: 8px; padding: 4px 0; font-size: 13px; }
+  .combo-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--amber); flex-shrink: 0; }
+  .combo-done { opacity: .4; }
+  .combo-done .combo-dot { background: var(--green); }
+
+  /* ── LOADING ── */
+  .loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 80px 32px;
+    gap: 16px;
+    color: var(--muted);
+  }
+  .spinner {
+    width: 32px; height: 32px;
+    border: 2px solid var(--border);
+    border-top-color: var(--red);
+    border-radius: 50%;
+    animation: spin .7s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ── ERROR ── */
+  .error-box {
+    background: var(--red-dim);
+    border: 1px solid rgba(233,69,96,.3);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin: 20px 32px;
+    font-size: 14px;
+    color: var(--red);
+  }
+
+  /* ── EMPTY ── */
+  .empty {
+    text-align: center;
+    padding: 60px 32px;
+    color: var(--muted);
+    font-size: 14px;
+  }
+
+  /* ── STATS BAR ── */
+  .stats-bar {
+    display: flex;
+    gap: 16px;
+    padding: 16px 32px;
+    border-bottom: 1px solid var(--border);
+    flex-wrap: wrap;
+  }
+  .stat-block { text-align: center; }
+  .stat-block .val {
+    font-family: var(--mono);
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--red);
+  }
+  .stat-block .lbl {
+    font-size: 11px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .stat-sep { width: 1px; background: var(--border); margin: 4px 0; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 600px) {
+    header { padding: 16px; }
+    .awards-grid { grid-template-columns: 1fr; padding: 16px; }
+    .controls { padding: 12px 16px; top: 57px; }
+    .dash-header { padding: 16px; }
+    .rush-panel, .combo-panel, .error-box { margin: 12px 16px 0; }
+    .stats-bar { padding: 12px 16px; }
+    .section-header { padding: 12px 16px 0; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="logo">DARKPULSE<span>AWARDS TRACKER</span></div>
+  <button class="theme-toggle" onclick="toggleTheme()" id="theme-btn" title="Toggle light/dark mode">🌙</button>
+  <div id="header-btns" style="display:none;gap:8px;display:none">
+    <button class="btn btn-ghost" onclick="logout()" style="padding:8px 16px;font-size:13px">Change Key</button>
+  </div>
+</header>
+
+<!-- API KEY SECTION -->
+<div id="api-section" class="api-section">
+  <h1>Track Your <em>Torn Awards</em></h1>
+  <p>Enter your Torn API key to see your honors & medals progress,<br>find what you can rush, and discover combos.</p>
+  <div class="api-input-row">
+    <input type="password" id="api-key-input" placeholder="Your Torn API key..." autocomplete="off" />
+    <button class="btn" id="load-btn" onclick="loadData()">Load</button>
+  </div>
+  <p class="api-note">
+    Your key is never stored — all requests go directly from your browser to Torn's API.<br>
+    Get your key at <a href="https://www.torn.com/preferences.php#tab=api" target="_blank">torn.com/preferences → API</a> (Limited access is enough)<br>
+    ⚠️ <strong>Must be hosted to work</strong> — open via GitHub Pages or Netlify, not as a local file.
+  </p>
+</div>
+
+<!-- DASHBOARD -->
+<div id="dashboard">
+  <div class="dash-header" id="dash-header"></div>
+  <div class="stats-bar" id="stats-bar"></div>
+  <div class="controls">
+    <button class="filter-btn active" data-cat="rush" onclick="setFilter('rush')">🔥 Rush</button>
+    <button class="filter-btn" data-cat="combo" onclick="setFilter('combo')">⚡ Combos</button>
+    <button class="filter-btn" data-cat="all" onclick="setFilter('all')">All</button>
+    <button class="filter-btn" data-cat="attacks" onclick="setFilter('attacks')">Attacks</button>
+    <button class="filter-btn" data-cat="weapons" onclick="setFilter('weapons')">Weapons</button>
+    <button class="filter-btn" data-cat="crimes" onclick="setFilter('crimes')">Crimes</button>
+    <button class="filter-btn" data-cat="travel" onclick="setFilter('travel')">Travel</button>
+    <button class="filter-btn" data-cat="drugs" onclick="setFilter('drugs')">Drugs</button>
+    <button class="filter-btn" data-cat="racing" onclick="setFilter('racing')">Racing</button>
+    <button class="filter-btn" data-cat="misc" onclick="setFilter('misc')">Misc</button>
+    <div class="controls-right">
+      <input type="text" class="search-box" placeholder="Search awards..." oninput="setSearch(this.value)" />
+      <label class="toggle-label">
+        <input type="checkbox" id="show-earned" onchange="toggleEarned()" /> Show earned
+      </label>
+    </div>
+  </div>
+  <div id="content"></div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════
+//  AWARDS DATABASE
+// ═══════════════════════════════════════════
+const HONORS = {
+  // Attacks
+  10: {name:"Aggressor I",       cat:"attacks",  stat:"attackswon",       goal:1},
+  11: {name:"Aggressor II",      cat:"attacks",  stat:"attackswon",       goal:500},
+  12: {name:"Aggressor III",     cat:"attacks",  stat:"attackswon",       goal:5000},
+  13: {name:"Aggressor IV",      cat:"attacks",  stat:"attackswon",       goal:25000},
+  14: {name:"Aggressor V",       cat:"attacks",  stat:"attackswon",       goal:100000},
+  367:{name:"Killstreak I",      cat:"attacks",  stat:"bestkillstreak",   goal:5},
+  368:{name:"Killstreak II",     cat:"attacks",  stat:"bestkillstreak",   goal:10},
+  369:{name:"Killstreak III",    cat:"attacks",  stat:"bestkillstreak",   goal:20},
+  370:{name:"Killstreak IV",     cat:"attacks",  stat:"bestkillstreak",   goal:50},
+  371:{name:"Killstreak V",      cat:"attacks",  stat:"bestkillstreak",   goal:100},
+  395:{name:"One Hit Wonder I",  cat:"attacks",  stat:"onehitkills",      goal:1},
+  396:{name:"One Hit Wonder II", cat:"attacks",  stat:"onehitkills",      goal:10},
+  397:{name:"One Hit Wonder III",cat:"attacks",  stat:"onehitkills",      goal:100},
+  398:{name:"One Hit Wonder IV", cat:"attacks",  stat:"onehitkills",      goal:1000},
+  // Weapons
+  100:{name:"Rifle I",           cat:"weapons",  stat:"rifhits",          goal:100},
+  101:{name:"Rifle II",          cat:"weapons",  stat:"rifhits",          goal:500},
+  102:{name:"Rifle III",         cat:"weapons",  stat:"rifhits",          goal:5000},
+  103:{name:"Rifle IV",          cat:"weapons",  stat:"rifhits",          goal:50000},
+  104:{name:"SMG I",             cat:"weapons",  stat:"smghits",          goal:100},
+  105:{name:"SMG II",            cat:"weapons",  stat:"smghits",          goal:500},
+  106:{name:"SMG III",           cat:"weapons",  stat:"smghits",          goal:5000},
+  107:{name:"SMG IV",            cat:"weapons",  stat:"smghits",          goal:50000},
+  108:{name:"Pistol I",          cat:"weapons",  stat:"pishits",          goal:100},
+  109:{name:"Pistol II",         cat:"weapons",  stat:"pishits",          goal:500},
+  110:{name:"Pistol III",        cat:"weapons",  stat:"pishits",          goal:5000},
+  111:{name:"Pistol IV",         cat:"weapons",  stat:"pishits",          goal:50000},
+  112:{name:"Shotgun I",         cat:"weapons",  stat:"shohits",          goal:100},
+  113:{name:"Shotgun II",        cat:"weapons",  stat:"shohits",          goal:500},
+  114:{name:"Shotgun III",       cat:"weapons",  stat:"shohits",          goal:5000},
+  116:{name:"Slash I",           cat:"weapons",  stat:"slahits",          goal:100},
+  117:{name:"Slash II",          cat:"weapons",  stat:"slahits",          goal:500},
+  118:{name:"Slash III",         cat:"weapons",  stat:"slahits",          goal:5000},
+  119:{name:"Slash IV",          cat:"weapons",  stat:"slahits",          goal:50000},
+  120:{name:"Grenadier I",       cat:"weapons",  stat:"grehits",          goal:100},
+  121:{name:"Grenadier II",      cat:"weapons",  stat:"grehits",          goal:500},
+  122:{name:"Grenadier III",     cat:"weapons",  stat:"grehits",          goal:5000},
+  123:{name:"Grenadier IV",      cat:"weapons",  stat:"grehits",          goal:50000},
+  124:{name:"Axe I",             cat:"weapons",  stat:"axehits",          goal:100},
+  125:{name:"Axe II",            cat:"weapons",  stat:"axehits",          goal:500},
+  126:{name:"Axe III",           cat:"weapons",  stat:"axehits",          goal:5000},
+  127:{name:"H2H I",             cat:"weapons",  stat:"h2hhits",          goal:100},
+  128:{name:"H2H II",            cat:"weapons",  stat:"h2hhits",          goal:500},
+  129:{name:"H2H III",           cat:"weapons",  stat:"h2hhits",          goal:5000},
+  // Crimes
+  200:{name:"Vandal I",          cat:"crimes",   stat:"vandalism",        goal:100},
+  201:{name:"Vandal II",         cat:"crimes",   stat:"vandalism",        goal:1000},
+  202:{name:"Vandal III",        cat:"crimes",   stat:"vandalism",        goal:5000},
+  203:{name:"Vandal IV",         cat:"crimes",   stat:"vandalism",        goal:25000},
+  204:{name:"Thief I",           cat:"crimes",   stat:"theft",            goal:100},
+  205:{name:"Thief II",          cat:"crimes",   stat:"theft",            goal:1000},
+  206:{name:"Thief III",         cat:"crimes",   stat:"theft",            goal:5000},
+  207:{name:"Thief IV",          cat:"crimes",   stat:"theft",            goal:25000},
+  208:{name:"Criminal I",        cat:"crimes",   stat:"criminaloffenses", goal:100},
+  209:{name:"Criminal II",       cat:"crimes",   stat:"criminaloffenses", goal:1000},
+  210:{name:"Criminal III",      cat:"crimes",   stat:"criminaloffenses", goal:5000},
+  211:{name:"Criminal IV",       cat:"crimes",   stat:"criminaloffenses", goal:25000},
+  // Travel
+  300:{name:"Traveler I",        cat:"travel",   stat:"traveltimes",      goal:10},
+  301:{name:"Traveler II",       cat:"travel",   stat:"traveltimes",      goal:50},
+  302:{name:"Traveler III",      cat:"travel",   stat:"traveltimes",      goal:100},
+  303:{name:"Traveler IV",       cat:"travel",   stat:"traveltimes",      goal:500},
+  // Drugs
+  400:{name:"Xanax User I",      cat:"drugs",    stat:"xantaken",         goal:10},
+  401:{name:"Xanax User II",     cat:"drugs",    stat:"xantaken",         goal:100},
+  402:{name:"Xanax User III",    cat:"drugs",    stat:"xantaken",         goal:1000},
+  403:{name:"Ecstasy User I",    cat:"drugs",    stat:"exttaken",         goal:10},
+  404:{name:"Ecstasy User II",   cat:"drugs",    stat:"exttaken",         goal:100},
+  406:{name:"Drug User I",       cat:"drugs",    stat:"drugsused",        goal:10},
+  407:{name:"Drug User II",      cat:"drugs",    stat:"drugsused",        goal:100},
+  408:{name:"Drug User III",     cat:"drugs",    stat:"drugsused",        goal:1000},
+  // Hospital
+  500:{name:"Patient I",         cat:"hospital", stat:"hospital",         goal:10},
+  501:{name:"Patient II",        cat:"hospital", stat:"hospital",         goal:100},
+  502:{name:"Patient III",       cat:"hospital", stat:"hospital",         goal:1000},
+  // Racing
+  600:{name:"Racer I",           cat:"racing",   stat:"racesentered",     goal:10},
+  601:{name:"Racer II",          cat:"racing",   stat:"racesentered",     goal:100},
+  602:{name:"Racer III",         cat:"racing",   stat:"racesentered",     goal:1000},
+  603:{name:"Winner I",          cat:"racing",   stat:"raceswon",         goal:10},
+  604:{name:"Winner II",         cat:"racing",   stat:"raceswon",         goal:100},
+  // Misc
+  700:{name:"Active I",          cat:"misc",     stat:"activestreak",     goal:30},
+  701:{name:"Active II",         cat:"misc",     stat:"activestreak",     goal:60},
+  702:{name:"Active III",        cat:"misc",     stat:"activestreak",     goal:90},
+  703:{name:"Active IV",         cat:"misc",     stat:"activestreak",     goal:180},
+  704:{name:"Active V",          cat:"misc",     stat:"activestreak",     goal:365},
+  800:{name:"Bounty Hunter I",   cat:"misc",     stat:"bountiesplaced",   goal:10},
+  801:{name:"Bounty Hunter II",  cat:"misc",     stat:"bountiesplaced",   goal:50},
+  802:{name:"Bounty Hunter III", cat:"misc",     stat:"bountiesplaced",   goal:100},
+};
+
+const MEDALS = {
+  1:  {name:"Donator I",         cat:"donator",  stat:"daysbeendonator",  goal:30},
+  2:  {name:"Donator II",        cat:"donator",  stat:"daysbeendonator",  goal:90},
+  3:  {name:"Donator III",       cat:"donator",  stat:"daysbeendonator",  goal:180},
+  4:  {name:"Donator IV",        cat:"donator",  stat:"daysbeendonator",  goal:365},
+  5:  {name:"Donator V",         cat:"donator",  stat:"daysbeendonator",  goal:730},
+  34: {name:"Vandal I",          cat:"crimes",   stat:"vandalism",        goal:100},
+  35: {name:"Vandal II",         cat:"crimes",   stat:"vandalism",        goal:1000},
+  36: {name:"Thief I",           cat:"crimes",   stat:"theft",            goal:100},
+  37: {name:"Thief II",          cat:"crimes",   stat:"theft",            goal:1000},
+  89: {name:"Aggressor I",       cat:"attacks",  stat:"attackswon",       goal:100},
+  90: {name:"Aggressor II",      cat:"attacks",  stat:"attackswon",       goal:1000},
+  91: {name:"Aggressor III",     cat:"attacks",  stat:"attackswon",       goal:5000},
+  92: {name:"Aggressor IV",      cat:"attacks",  stat:"attackswon",       goal:10000},
+  93: {name:"Aggressor V",       cat:"attacks",  stat:"attackswon",       goal:25000},
+  94: {name:"Aggressor VI",      cat:"attacks",  stat:"attackswon",       goal:50000},
+  174:{name:"Traveler I",        cat:"travel",   stat:"traveltimes",      goal:10},
+  175:{name:"Traveler II",       cat:"travel",   stat:"traveltimes",      goal:100},
+  190:{name:"Drug User I",       cat:"drugs",    stat:"drugsused",        goal:100},
+  204:{name:"Millionaire",       cat:"misc",     stat:"networth",         goal:1000000},
+  207:{name:"Multi-Millionaire", cat:"misc",     stat:"networth",         goal:10000000},
+  210:{name:"Billionaire",       cat:"misc",     stat:"networth",         goal:1000000000},
+  215:{name:"Racer I",           cat:"racing",   stat:"racesentered",     goal:100},
+  216:{name:"Racer II",          cat:"racing",   stat:"racesentered",     goal:1000},
+  242:{name:"Bounty Hunter I",   cat:"misc",     stat:"bountiesplaced",   goal:10},
+  243:{name:"Bounty Hunter II",  cat:"misc",     stat:"bountiesplaced",   goal:50},
+  244:{name:"Bounty Hunter III", cat:"misc",     stat:"bountiesplaced",   goal:100},
+};
+
+const COMBOS = [
+  {name:"Rifle Attacks",  desc:"Every rifle hit advances all tiers at once", stats:["rifhits"],  honors:[100,101,102,103]},
+  {name:"Slash Attacks",  desc:"Every slash hit advances all tiers at once", stats:["slahits"],  honors:[116,117,118,119]},
+  {name:"Pistol Attacks", desc:"Every pistol hit advances all tiers at once",stats:["pishits"],  honors:[108,109,110,111]},
+  {name:"Grenades",       desc:"Every grenade hit advances all tiers",       stats:["grehits"],  honors:[120,121,122,123]},
+  {name:"Crimes",         desc:"Theft & Vandalism both count toward Criminal offenses", stats:["theft","vandalism","criminaloffenses"], honors:[204,205,206,207,200,201,202,203,208,209,210,211]},
+  {name:"Attack Wins",    desc:"Each win advances wins + killstreak + one-hit-kills",  stats:["attackswon","bestkillstreak","onehitkills"], honors:[10,11,12,13,367,368,369,370,395,396,397]},
+];
+
+// ═══════════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════════
+let state = { filter:'rush', search:'', showEarned:false, data:null };
+
+// ═══════════════════════════════════════════
+//  API
+// ═══════════════════════════════════════════
+async function loadData() {
+  const key = document.getElementById('api-key-input').value.trim();
+  if (!key) return;
+  const btn = document.getElementById('load-btn');
+  btn.disabled = true;
+  btn.textContent = 'Loading...';
+
+  document.getElementById('content').innerHTML = `<div class="loading"><div class="spinner"></div><span>Fetching your data from Torn...</span></div>`;
+  document.getElementById('api-section').style.display = 'none';
+  document.getElementById('dashboard').style.display = 'block';
+
+  try {
+    // Use CORS proxy to allow requests from file:// and GitHub Pages
+    const base = `https://api.torn.com/user/?key=${key}`;
+    const [d1, d2] = await Promise.all([
+      fetch(`${base}&selections=profile,honors,medals`).then(r=>r.json()),
+      fetch(`${base}&selections=personalstats`).then(r=>r.json()),
+    ]);
+
+    if (d1.error) throw new Error(d1.error.error);
+    if (d2.error) throw new Error(d2.error.error);
+
+    state.data = {
+      name:    d1.name,
+      level:   d1.level,
+      age:     d1.age,
+      rank:    d1.rank,
+      honors:  d1.honors_awarded || [],
+      medals:  d1.medals_awarded || [],
+      stats:   d2.personalstats || {},
+      key,
+    };
+
+    renderHeader();
+    renderContent();
+    document.getElementById('header-btns').style.display = 'flex';
+  } catch(e) {
+    document.getElementById('content').innerHTML = `<div class="error-box">❌ Error: ${e.message}. Check your API key and try again.</div>`;
+    document.getElementById('api-section').style.display = 'block';
+    document.getElementById('dashboard').style.display = 'none';
+  }
+  btn.disabled = false;
+  btn.textContent = 'Load';
+}
+
+// ═══════════════════════════════════════════
+//  RENDER HEADER
+// ═══════════════════════════════════════════
+function renderHeader() {
+  const {name, level, age, rank, honors, medals, stats} = state.data;
+  const totalAwards = Object.keys(HONORS).length + Object.keys(MEDALS).length;
+  const earned = honors.length + medals.length;
+
+  document.getElementById('dash-header').innerHTML = `
+    <div class="player-info">
+      <h2>${name}</h2>
+      <div class="sub">Level ${level} · ${rank} · ${age} days old</div>
+    </div>
+    <div class="stat-pill">Attacks <span>${fmt(stats.attackswon||0)}</span></div>
+    <div class="stat-pill">Crimes <span>${fmt(stats.criminaloffenses||0)}</span></div>
+    <div class="stat-pill">Xanax <span>${fmt(stats.xantaken||0)}</span></div>
+    <button class="btn btn-ghost" onclick="logout()" style="margin-left:auto;padding:8px 16px;font-size:13px">Change Key</button>
+  `;
+
+  const totalTracked = Object.keys(HONORS).length + Object.keys(MEDALS).length;
+  const rushable = computeAll().filter(a => !a.earned && a.left <= 500 && a.left > 0).length;
+  document.getElementById('stats-bar').innerHTML = `
+    <div class="stat-block"><div class="val">${honors.length + medals.length}</div><div class="lbl">Earned</div></div>
+    <div class="stat-sep"></div>
+    <div class="stat-block"><div class="val">${honors.length}</div><div class="lbl">Honors</div></div>
+    <div class="stat-sep"></div>
+    <div class="stat-block"><div class="val">${medals.length}</div><div class="lbl">Medals</div></div>
+    <div class="stat-sep"></div>
+    <div class="stat-block"><div class="val" style="color:var(--amber)">${rushable}</div><div class="lbl">Rushable</div></div>
+    <div class="stat-sep"></div>
+    <div class="stat-block"><div class="val" style="color:var(--green)">${Math.round(earned/totalTracked*100)}%</div><div class="lbl">Progress</div></div>
+  `;
+}
+
+// ═══════════════════════════════════════════
+//  COMPUTE AWARDS
+// ═══════════════════════════════════════════
+function computeAll() {
+  const {honors, medals, stats} = state.data;
+  const results = [];
+
+  for (const [id, info] of Object.entries(HONORS)) {
+    const val  = stats[info.stat] || 0;
+    const pct  = Math.min(100, Math.round(val / info.goal * 100 * 10) / 10);
+    const left = Math.max(0, info.goal - val);
+    results.push({id:+id, ...info, type:'Honor', val, pct, left, earned: honors.includes(+id)});
+  }
+  for (const [id, info] of Object.entries(MEDALS)) {
+    const val  = stats[info.stat] || 0;
+    const pct  = Math.min(100, Math.round(val / info.goal * 100 * 10) / 10);
+    const left = Math.max(0, info.goal - val);
+    results.push({id:+id, ...info, type:'Medal', val, pct, left, earned: medals.includes(+id)});
+  }
+  return results;
+}
+
+function fmt(n) { return Number(n).toLocaleString(); }
+
+// ═══════════════════════════════════════════
+//  RENDER CONTENT
+// ═══════════════════════════════════════════
+function renderContent() {
+  const el = document.getElementById('content');
+  if (!state.data) return;
+
+  if (state.filter === 'rush') { renderRush(el); return; }
+  if (state.filter === 'combo') { renderCombos(el); return; }
+
+  let awards = computeAll();
+
+  // Filter category
+  if (state.filter !== 'all') awards = awards.filter(a => a.cat === state.filter);
+
+  // Filter earned
+  if (!state.showEarned) awards = awards.filter(a => !a.earned);
+
+  // Search
+  if (state.search) awards = awards.filter(a => a.name.toLowerCase().includes(state.search.toLowerCase()) || a.stat.toLowerCase().includes(state.search.toLowerCase()));
+
+  // Sort by % desc
+  awards.sort((a,b) => b.pct - a.pct);
+
+  if (!awards.length) {
+    el.innerHTML = '<div class="empty">No awards found matching your filters ✅</div>';
+    return;
+  }
+
+  el.innerHTML = `<div class="awards-grid">${awards.map(cardHTML).join('')}</div>`;
+}
+
+function cardHTML(a) {
+  const isRush = !a.earned && a.left <= 500 && a.left > 0;
+  const cls = a.earned ? 'earned' : (isRush ? 'rush' : '');
+  const fillClass = a.earned ? 'done' : (a.pct >= 80 ? 'high' : (a.pct >= 50 ? 'mid' : 'low'));
+  const badge = a.earned
+    ? `<span class="badge badge-earned">✓ EARNED</span>`
+    : (isRush ? `<span class="badge badge-rush">🔥 RUSH</span>` : `<span class="badge badge-${a.type.toLowerCase()}">${a.type.toUpperCase()}</span>`);
+
+  return `
+    <div class="award-card ${cls}">
+      <div class="card-top">
+        <div class="card-name">${a.name}</div>
+        ${badge}
+      </div>
+      <div class="card-stat">Stat: <span>${a.stat}</span></div>
+      <div class="prog-row">
+        <div class="prog-bar"><div class="prog-fill ${fillClass}" style="width:${a.pct}%"></div></div>
+        <div class="prog-pct">${a.pct}%</div>
+      </div>
+      <div class="prog-left">
+        <strong>${fmt(a.val)}</strong> / ${fmt(a.goal)}
+        ${!a.earned ? ` — <strong>${fmt(a.left)}</strong> left` : ''}
+      </div>
+    </div>
+  `;
+}
+
+function renderRush(el) {
+  const awards = computeAll()
+    .filter(a => !a.earned && a.left > 0)
+    .sort((a,b) => a.left - b.left);
+
+  const tiers = [
+    {label:'⚡ Within 100',  max:100,  awards: awards.filter(a=>a.left<=100)},
+    {label:'🔥 Within 500',  max:500,  awards: awards.filter(a=>a.left>100&&a.left<=500)},
+    {label:'🎯 Within 2000', max:2000, awards: awards.filter(a=>a.left>500&&a.left<=2000)},
+  ];
+
+  let html = '';
+  for (const tier of tiers) {
+    if (!tier.awards.length) continue;
+    html += `
+      <div class="rush-panel">
+        <h3>${tier.label} — ${tier.awards.length} awards</h3>
+        ${tier.awards.map(a => `
+          <div class="rush-item">
+            <div class="rush-name">
+              <span class="badge badge-${a.type.toLowerCase()}" style="margin-right:6px">${a.type.toUpperCase()}</span>
+              ${a.name}
+            </div>
+            <div>
+              <div class="rush-left">${fmt(a.left)} left</div>
+              <div style="font-size:11px;color:var(--muted);font-family:var(--mono)">${a.stat}</div>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    `;
+  }
+
+  el.innerHTML = html || '<div class="empty">No rushable awards found!</div>';
+}
+
+function renderCombos(el) {
+  const {honors, medals, stats} = state.data;
+  let html = '';
+
+  for (const combo of COMBOS) {
+    const items = combo.honors.map(id => {
+      const info  = HONORS[id];
+      if (!info) return null;
+      const val   = stats[info.stat] || 0;
+      const pct   = Math.min(100, Math.round(val/info.goal*100));
+      const left  = Math.max(0, info.goal - val);
+      const earned = honors.includes(id);
+      return {id, ...info, val, pct, left, earned};
+    }).filter(Boolean);
+
+    const hasUnearned = items.some(i => !i.earned);
+    if (!hasUnearned) continue;
+
+    html += `
+      <div class="combo-panel">
+        <h3>⚡ ${combo.name}</h3>
+        <div class="combo-desc">${combo.desc}</div>
+        ${items.map(i => `
+          <div class="combo-item ${i.earned ? 'combo-done' : ''}">
+            <div class="combo-dot"></div>
+            <div style="flex:1">
+              <span style="font-weight:500">${i.name}</span>
+              <span style="color:var(--muted);font-size:11px;font-family:var(--mono);margin-left:8px">${i.stat}</span>
+            </div>
+            <div style="text-align:right">
+              ${i.earned
+                ? `<span style="color:var(--green);font-size:12px">✓ Done</span>`
+                : `<span style="font-family:var(--mono);font-size:12px;color:var(--red)">${fmt(i.left)} left</span>`
+              }
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    `;
+  }
+
+  el.innerHTML = html || '<div class="empty">All combo awards are earned! 🏆</div>';
+}
+
+// ═══════════════════════════════════════════
+//  CONTROLS
+// ═══════════════════════════════════════════
+function setFilter(cat) {
+  state.filter = cat;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.toggle('active', b.dataset.cat === cat));
+  renderContent();
+}
+function setSearch(val) { state.search = val; renderContent(); }
+function toggleEarned() { state.showEarned = document.getElementById('show-earned').checked; renderContent(); }
+// Themes: dark (default) → blue-dark → dark → ...
+const THEMES = [
+  {cls: '',          icon: '🌑', label: 'Dark'},
+  {cls: 'blue-dark', icon: '🌊', label: 'Blue Dark'},
+];
+let themeIdx = 0;
+
+function toggleTheme() {
+  themeIdx = (themeIdx + 1) % THEMES.length;
+  const t   = THEMES[themeIdx];
+  const btn = document.getElementById('theme-btn');
+  document.body.className = t.cls;
+  btn.textContent = THEMES[(themeIdx + 1) % THEMES.length].icon;
+  btn.title = `Switch to ${THEMES[(themeIdx + 1) % THEMES.length].label}`;
+  localStorage.setItem('themeIdx', themeIdx);
+}
+
+(function() {
+  const saved = parseInt(localStorage.getItem('themeIdx') || '0');
+  themeIdx = saved;
+  const t   = THEMES[themeIdx];
+  const btn = document.getElementById('theme-btn');
+  document.body.className = t.cls;
+  if (btn) {
+    btn.textContent = THEMES[(themeIdx + 1) % THEMES.length].icon;
+    btn.title = `Switch to ${THEMES[(themeIdx + 1) % THEMES.length].label}`;
+  }
+})();
+
+function logout() {
+  state.data = null;
+  document.getElementById('api-section').style.display = 'block';
+  document.getElementById('dashboard').style.display = 'none';
+  document.getElementById('api-key-input').value = '';
+  document.getElementById('header-btns').style.display = 'none';
+}
+
+// Enter key on input
+document.getElementById('api-key-input').addEventListener('keydown', e => {
+  if (e.key === 'Enter') loadData();
+});
+</script>
+</body>
+</html>
