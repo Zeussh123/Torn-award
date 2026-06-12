@@ -559,12 +559,6 @@ function calcSettings(){ return {donator:pget('donator',true),xanax:Number(pget(
 function dailyEnergyBudget(c=calcSettings()){ return (c.donator?720:480) + (c.xanax||0)*250 + (c.refill?150:0); }
 function dailyNerveBudget(c=calcSettings()){ return 288 + (c.cannabis?30:0); }
 function dailyBudgetText(){ const c=calcSettings(); return `Daily model: ${Math.round(dailyEnergyBudget(c))} energy/day, ${Math.round(dailyNerveBudget(c))} nerve/day, ${c.xanax}/3 Xanax/day, refill ${c.refill?'ON':'OFF'}.`; }
-function getGoalFromDesc(desc){
- const m=(desc||'').match(/(?:achieve|win|commit|travel|fire|collect|use|find|import|bust|reach level|have|make|earn|attain|participate in|complete|gain|acquire|deal|serve|be a donator for)\s+(?:a\s+)?(?:total of\s+)?(?:best\s+)?(?:kill streak of\s+)?([\d,]+)/i);
- if(m) return parseInt(m[1].replace(/,/g,''));
- const m2=(desc||'').match(/\$([\d,]+)/); if(m2) return parseInt(m2[1].replace(/,/g,''));
- return null;
-}
 function estimateCost(a){
  if(a.earned) return {kind:'done',energy:0,nerve:0,hours:0,accuracy:'exact'};
  if(a.tracking!=='exact' || a.left===null) return {kind:'manual',energy:null,nerve:null,hours:null,accuracy:'manual'};
