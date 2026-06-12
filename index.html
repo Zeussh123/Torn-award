@@ -244,10 +244,12 @@ function getAwardMapping(type, id) {
 // estimated = guessed from the award description; useful but not guaranteed
 // manual    = Torn personalstats does not expose the exact sub-progress needed
 const TRACKING_OVERRIDES={
+  H26:{mode:'manual',reason:'Spaced Out requires overdosing on Cannabis. personalstats cantaken only counts Cannabis used, not Cannabis overdoses.'},
   H676:{mode:'manual',reason:'This honor requires successfully burgling all 34 unique areas. Torn personalstats exposes total crime/offense counters, not the unique burglary-area checklist.'},
   H800:{mode:'manual',reason:'Surplus requires using 100 rounds of special ammunition. This is not the same as bounties placed, and Torn personalstats does not expose a reliable special-ammo-rounds counter here.'},
 };
 const MANUAL_PATTERNS=[
+  /overdose/i,/overdosed/i,
   /special ammunition/i,/special ammo/i,/use\s+\d+\s+rounds\s+of\s+special/i,
   /burgle all\s+\d+\s+areas/i,/all\s+\d+\s+areas/i,/all available areas/i,
   /each\s+.*area/i,/unique\s+.*area/i,/every\s+.*area/i,/all\s+.*areas/i,
@@ -256,14 +258,32 @@ const MANUAL_PATTERNS=[
   /lease\s+.*property/i,/rent\s+.*property/i,/own\s+.*property/i
 ];
 function isManualByDescription(desc){return MANUAL_PATTERNS.some(rx=>rx.test(desc||''));}
+function exactFromDescription(desc,stats){
+  const d=(desc||'').toLowerCase();
+  // Safe text rules: only use these when the wording directly matches a Torn personalstats key.
+  // YATA does not blindly map text to random counters; it renders a server-side State/Goal pair.
+  // We emulate that by allowing only conservative, exact patterns here.
+  if(/\bwin\s+[\d,]+\s+races?\b/i.test(desc||'') && Object.prototype.hasOwnProperty.call(stats,'raceswon')){
+    const goal=getGoalFromDesc(desc);
+    return goal?{s:'raceswon',g:goal,reason:'Tracked from Torn personalstats: raceswon'}:null;
+  }
+  if(/\bparticipate in\s+[\d,]+\s+races?\b/i.test(desc||'') && Object.prototype.hasOwnProperty.call(stats,'racesentered')){
+    const goal=getGoalFromDesc(desc);
+    return goal?{s:'racesentered',g:goal,reason:'Tracked from Torn personalstats: racesentered'}:null;
+  }
+  return null;
+}
 function makeTracking(type,id,desc,mapped,guessedKey,stats){
   const ov=TRACKING_OVERRIDES[type+id];
   if(ov) return {...ov,source:'override'};
-  if(isManualByDescription(desc)) return {mode:'manual',reason:'This award needs unique/binary progress that Torn personalstats cannot expose exactly.',source:'pattern'};
+  if(isManualByDescription(desc)) return {mode:'manual',reason:'This award needs unique/RNG/binary progress that Torn personalstats cannot expose exactly.',source:'pattern'};
   if(mapped && mapped.s && Object.prototype.hasOwnProperty.call(stats,mapped.s)) return {mode:'exact',reason:'Tracked from Torn personalstats: '+mapped.s,source:'map'};
   if(mapped && mapped.s && !Object.prototype.hasOwnProperty.call(stats,mapped.s)) return {mode:'manual',reason:'Mapped stat is not available in this API response/key access.',source:'missing-stat'};
-  if(guessedKey && Object.prototype.hasOwnProperty.call(stats,guessedKey)) return {mode:'estimated',reason:'Guessed from the award text. Check manually before relying on the percentage.',source:'guess'};
-  return {mode:'manual',reason:'No reliable personalstats counter found for this award.',source:'none'};
+  const exactDesc=exactFromDescription(desc,stats);
+  if(exactDesc) return {mode:'exact',reason:exactDesc.reason,source:'exact-description',descMap:exactDesc};
+  // Important: no automatic estimated progress from generic text guesses.
+  // Too many awards look similar but require a unique action, RNG event, hidden checklist, or a different counter.
+  return {mode:'manual',reason:'No verified State/Goal counter found. Marked manual to avoid false 100% progress.',source:'none'};
 }
 function trackingTag(a){
   if(a.tracking==='exact') return '<span class="tag green">accurate</span>';
@@ -450,8 +470,8 @@ function buildAwards(honorsDB,medalsDB,data){
   const mapped=getAwardMapping(type,raw.id);
   const guessedKey=mapped?null:guessStatKey(raw.description,raw.name);
   const tr=makeTracking(type,raw.id,raw.description,mapped,guessedKey,stats);
-  const statKey=tr.mode==='manual'?null:(mapped?mapped.s:guessedKey);
-  const goal=tr.mode==='manual'?null:(mapped?mapped.g:getGoalFromDesc(raw.description));
+  const statKey=tr.mode==='manual'?null:(tr.descMap?tr.descMap.s:(mapped?mapped.s:null));
+  const goal=tr.mode==='manual'?null:(tr.descMap?tr.descMap.g:(mapped?mapped.g:null));
   const cat=TYPE_CAT[raw.type?.title||'misc']||'misc';
   const val=statKey?Math.max(0,stats[statKey]||0):0;
   let pct=goal&&statKey?Math.min(100,Math.round(val/goal*1000)/10):0;
