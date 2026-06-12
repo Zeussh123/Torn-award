@@ -3,65 +3,35 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Torn Merit OS</title>
+<title>Torn Merit OS — Clean</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Share+Tech+Mono&display=swap');
-:root{
-  --bg:#07080a;--panel:#111318;--panel2:#181b22;--panel3:#20242d;--line:#2b303a;
-  --text:#f0f2f5;--muted:#87909c;--red:#c83232;--red2:#ff4242;--gold:#d6a13b;
-  --green:#39c47a;--blue:#4aa3ff;--purple:#9b6cff;--mono:'Share Tech Mono',monospace;--sans:'Inter',system-ui,sans-serif;
-}
-*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at top left,#241111 0,#07080a 36%,#050608 100%);color:var(--text);font-family:var(--sans);min-height:100vh}
-body:before{content:"";position:fixed;inset:0;background:linear-gradient(rgba(255,255,255,.018) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px);background-size:36px 36px;pointer-events:none;opacity:.5}
-button,input,select,textarea{font-family:inherit}a{color:inherit}.mono{font-family:var(--mono)}
-.top{position:sticky;top:0;z-index:20;height:64px;background:rgba(7,8,10,.88);backdrop-filter:blur(14px);border-bottom:1px solid var(--line);display:flex;align-items:center;padding:0 18px;gap:14px}
-.brand{display:flex;align-items:center;gap:12px}.badgeLogo{width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,#cf3434,#5d1111);display:grid;place-items:center;box-shadow:0 0 24px rgba(200,50,50,.25);font-family:var(--mono);font-weight:800}
-.brand h1{font-size:15px;line-height:1;margin:0;letter-spacing:.08em;text-transform:uppercase}.brand small{display:block;margin-top:5px;color:var(--muted);font-family:var(--mono);font-size:10px;letter-spacing:.12em}
-.spacer{flex:1}.ghost{background:var(--panel2);border:1px solid var(--line);color:var(--muted);border-radius:10px;padding:9px 12px;font-size:12px;font-weight:700;cursor:pointer}.ghost:hover,.ghost.on{border-color:var(--red);color:#fff;background:rgba(200,50,50,.14)}
-.layout{display:grid;grid-template-columns:250px 1fr;min-height:calc(100vh - 64px)}.side{border-right:1px solid var(--line);background:rgba(13,15,19,.78);padding:16px;position:sticky;top:64px;height:calc(100vh - 64px);overflow:auto}.main{padding:22px;max-width:1320px;width:100%;margin:0 auto}
-.navbtn{width:100%;display:flex;align-items:center;gap:10px;background:transparent;border:1px solid transparent;color:var(--muted);padding:11px 12px;border-radius:12px;cursor:pointer;font-weight:700;font-size:13px;text-align:left;margin-bottom:4px}.navbtn:hover{background:var(--panel2);color:var(--text)}.navbtn.on{background:linear-gradient(90deg,rgba(200,50,50,.22),rgba(200,50,50,.04));border-color:rgba(200,50,50,.4);color:#fff}.navbtn span:first-child{width:22px;text-align:center}
-.login{max-width:760px;margin:72px auto;padding:0 20px;text-align:center}.hero{background:linear-gradient(180deg,rgba(17,19,24,.92),rgba(10,11,14,.92));border:1px solid var(--line);border-radius:24px;padding:38px;box-shadow:0 20px 80px rgba(0,0,0,.45)}.hero h2{font-size:42px;margin:0 0 12px;font-weight:800;letter-spacing:-.04em}.hero h2 em{font-style:normal;color:var(--red2)}.hero p{color:var(--muted);line-height:1.7;margin:0 0 26px}.keyrow{display:flex;gap:10px}.keyrow input{flex:1;background:#08090c;border:1px solid var(--line);color:var(--text);padding:15px;border-radius:14px;outline:none;font-family:var(--mono)}.keyrow input:focus{border-color:var(--red)}.primary{background:linear-gradient(135deg,#cf3434,#8e1e1e);border:0;color:white;border-radius:14px;padding:14px 20px;font-weight:800;cursor:pointer}.primary:disabled{opacity:.45}.hint{font-size:12px;color:var(--muted);margin-top:16px;line-height:1.7}
-.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:18px}.kpi{background:linear-gradient(180deg,var(--panel),#0d0f13);border:1px solid var(--line);border-radius:16px;padding:14px}.kpi .l{color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.1em;font-family:var(--mono)}.kpi .v{font-size:24px;font-weight:800;margin-top:6px}.kpi .s{font-size:11px;color:var(--muted);margin-top:4px}
-.sectionTitle{display:flex;align-items:end;justify-content:space-between;margin:0 0 14px}.sectionTitle h2{font-size:24px;margin:0;letter-spacing:-.03em}.sectionTitle p{margin:5px 0 0;color:var(--muted);font-size:13px}.panel{background:rgba(17,19,24,.92);border:1px solid var(--line);border-radius:18px;padding:16px;margin-bottom:14px}.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:12px}.widegrid{display:grid;grid-template-columns:1.2fr .8fr;gap:12px}
-.card{background:linear-gradient(180deg,var(--panel),#0d0f13);border:1px solid var(--line);border-radius:16px;padding:14px;position:relative;overflow:hidden}.card:before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:var(--line)}.card.priority-high:before{background:var(--red2)}.card.priority-medium:before{background:var(--gold)}.card.priority-low:before{background:var(--blue)}.card.done{opacity:.42}.cardHead{display:flex;gap:11px;align-items:flex-start}.ico{width:42px;height:42px;object-fit:contain;flex-shrink:0;background:#090a0d;border-radius:10px;border:1px solid var(--line);padding:3px}.ctxt{flex:1;min-width:0}.title{font-weight:800;font-size:14px;line-height:1.25}.desc{font-size:12px;color:var(--muted);line-height:1.5;margin:7px 0 10px}.tagrow{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}.tag{font-family:var(--mono);font-size:10px;padding:3px 7px;border-radius:99px;background:var(--panel3);border:1px solid var(--line);color:var(--muted)}.tag.red{color:#ff8b8b;border-color:rgba(255,66,66,.3);background:rgba(200,50,50,.12)}.tag.green{color:#6ee59f;border-color:rgba(57,196,122,.3);background:rgba(57,196,122,.1)}.tag.gold{color:#f2c46d;border-color:rgba(214,161,59,.3);background:rgba(214,161,59,.1)}.tag.blue{color:#84c2ff;border-color:rgba(74,163,255,.3);background:rgba(74,163,255,.1)}
-.progress{display:flex;align-items:center;gap:8px;margin-top:8px}.track{flex:1;height:6px;background:#090a0d;border-radius:99px;overflow:hidden;border:1px solid #1d2028}.fill{height:100%;background:linear-gradient(90deg,var(--red),var(--gold));border-radius:99px}.pct{font-family:var(--mono);font-size:11px;color:var(--muted);width:45px;text-align:right}.meta{display:flex;justify-content:space-between;gap:8px;margin-top:6px;color:var(--muted);font-size:11px;font-family:var(--mono)}
-.actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}.mini{border:1px solid var(--line);background:var(--panel2);color:var(--muted);padding:6px 8px;border-radius:9px;font-size:11px;font-weight:800;cursor:pointer}.mini:hover,.mini.on{border-color:var(--red);color:white;background:rgba(200,50,50,.16)}.mini.star{color:#f2c46d}.mini.donebtn{color:#6ee59f}
-.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;align-items:center}.toolbar input,.toolbar select{background:var(--panel);border:1px solid var(--line);color:var(--text);border-radius:11px;padding:10px 12px;font-size:12px;outline:none}.toolbar input{min-width:240px;flex:1}.pill{border:1px solid var(--line);background:var(--panel2);color:var(--muted);padding:9px 12px;border-radius:99px;font-size:12px;font-weight:800;cursor:pointer}.pill.on{border-color:var(--red);color:white;background:rgba(200,50,50,.16)}
-.combo{border-left:4px solid var(--red);background:linear-gradient(90deg,rgba(200,50,50,.08),rgba(17,19,24,.92))}.comboTop{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.score{font-family:var(--mono);font-size:22px;font-weight:800;color:var(--gold)}.steps{background:#090a0d;border:1px solid var(--line);border-radius:12px;padding:10px;margin:10px 0;color:#c8d0da;font-size:12px;line-height:1.5}.awardLine{display:flex;align-items:center;gap:8px;padding:7px 0;border-top:1px solid rgba(255,255,255,.04);font-size:12px}.dot{width:7px;height:7px;border-radius:99px;background:var(--red2)}.dot.done{background:var(--green)}
-.columns{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.col{background:rgba(17,19,24,.7);border:1px dashed var(--line);border-radius:16px;padding:12px;min-height:260px}.col h3{font-size:13px;text-transform:uppercase;letter-spacing:.09em;font-family:var(--mono);color:var(--muted);margin:0 0 10px}.smallcard{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px;margin-bottom:8px;font-size:12px}.empty{padding:42px;text-align:center;color:var(--muted)}.err{background:rgba(200,50,50,.13);border:1px solid rgba(200,50,50,.35);color:#ff8b8b;padding:14px;border-radius:14px;margin:20px 0}.loading{display:grid;place-items:center;gap:12px;padding:80px;color:var(--muted)}.spinner{width:32px;height:32px;border-radius:99px;border:3px solid var(--line);border-top-color:var(--red);animation:spin .8s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
-
-.calcPanel{margin-top:12px;border-top:1px solid var(--line);padding-top:12px}
-.calcPanel h4{margin:0 0 8px;font-size:12px;text-transform:uppercase;letter-spacing:.09em;font-family:var(--mono);color:var(--muted)}
-.calcRow{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:8px 0;font-size:12px;color:var(--muted)}
-.calcRow select,.calcRow input{background:#090a0d;border:1px solid var(--line);color:var(--text);border-radius:8px;padding:5px 7px;font-size:11px;max-width:92px}
-.costBox{margin-top:10px;background:#090a0d;border:1px solid var(--line);border-radius:12px;padding:9px}
-.costGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:7px}
-.costCell{background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.055);border-radius:9px;padding:7px;text-align:center}
-.costCell b{display:block;font-size:12px;color:var(--text)}
-.costCell span{display:block;margin-top:3px;font-family:var(--mono);font-size:10px;color:var(--muted)}
-.costNote{font-size:10.5px;line-height:1.45;color:var(--muted)}
-
-@media(max-width:900px){.layout{grid-template-columns:1fr}.side{position:static;height:auto;display:flex;overflow:auto;border-right:0;border-bottom:1px solid var(--line)}.navbtn{width:auto;white-space:nowrap}.kpis{grid-template-columns:repeat(2,1fr)}.widegrid,.columns{grid-template-columns:1fr}.keyrow{flex-direction:column}}
-
-.costMini{display:flex;gap:6px;flex-wrap:wrap;margin:9px 0 2px}.cm{background:rgba(255,255,255,.045);border:1px solid var(--line);border-radius:999px;padding:4px 8px;font-family:var(--mono);font-size:10px;color:var(--muted)}.cm b{color:var(--text)}
-.modalWrap{position:fixed;inset:0;background:rgba(0,0,0,.72);backdrop-filter:blur(7px);display:none;align-items:center;justify-content:center;z-index:9999;padding:18px}.modalWrap.on{display:flex}.modal{width:min(860px,96vw);max-height:90vh;overflow:auto;background:linear-gradient(135deg,#11151c,#08090c);border:1px solid var(--line);border-radius:18px;box-shadow:0 30px 90px rgba(0,0,0,.7)}.modalHead{display:flex;align-items:flex-start;gap:14px;padding:18px;border-bottom:1px solid var(--line)}.modalHead img{width:54px;height:54px;object-fit:contain;border:1px solid var(--line);border-radius:12px;background:#07080a}.modalBody{padding:18px}.modalGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:12px 0}.modalCell{background:rgba(255,255,255,.035);border:1px solid var(--line);border-radius:12px;padding:12px}.modalCell b{display:block;font-size:18px}.modalCell span{font-family:var(--mono);font-size:10px;color:var(--muted);text-transform:uppercase}.closeBtn{margin-left:auto;background:#1b202a;border:1px solid var(--line);color:var(--text);border-radius:10px;padding:8px 10px;cursor:pointer}.optimizerGrid{display:grid;grid-template-columns:1.15fr .85fr;gap:12px}.budgetBox{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:12px}.budgetCell{background:linear-gradient(135deg,rgba(233,69,96,.08),rgba(255,255,255,.025));border:1px solid var(--line);border-radius:14px;padding:13px}.budgetCell b{font-size:22px}.budgetCell span{display:block;color:var(--muted);font-family:var(--mono);font-size:10px;text-transform:uppercase;margin-top:3px}.roi{font-family:var(--mono);font-size:10px;color:var(--green);margin-top:5px}@media(max-width:900px){.optimizerGrid,.budgetBox,.modalGrid{grid-template-columns:1fr}.modalHead{align-items:center}}
+:root{--bg:#090a0d;--panel:#11131a;--panel2:#171a23;--line:#2b3040;--text:#edf0f7;--muted:#8b93a7;--red:#d72638;--gold:#f5b942;--green:#31d07d;--blue:#4da3ff;--purple:#a675ff;--bad:#ff5c74;--shadow:0 18px 50px rgba(0,0,0,.35)}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at top left,rgba(215,38,56,.16),transparent 30%),radial-gradient(circle at top right,rgba(77,163,255,.10),transparent 30%),var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,Arial,sans-serif;min-height:100vh}button,input,select{font:inherit}a{color:inherit}
+.top{position:sticky;top:0;z-index:20;background:rgba(9,10,13,.88);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}.nav{max-width:1320px;margin:auto;display:flex;align-items:center;gap:12px;padding:14px 18px}.brand{display:flex;flex-direction:column;line-height:1}.brand b{letter-spacing:2px;font-size:15px;color:#fff}.brand small{color:var(--red);font-size:10px;letter-spacing:2px;margin-top:3px}.spacer{flex:1}.pill{border:1px solid var(--line);background:var(--panel2);color:var(--muted);border-radius:999px;padding:7px 11px;font-size:12px;font-weight:700}.pill.good{color:var(--green);border-color:rgba(49,208,125,.35)}.pill.warn{color:var(--gold);border-color:rgba(245,185,66,.35)}
+.wrap{max-width:1320px;margin:auto;padding:22px 18px}.hero{display:grid;grid-template-columns:1.2fr .8fr;gap:18px;align-items:stretch;margin-top:8px}.box{background:linear-gradient(180deg,rgba(255,255,255,.035),rgba(255,255,255,.015));border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow)}.login{padding:28px}h1{font-size:38px;margin:0 0 10px;line-height:1.05}h1 span{color:var(--red)}p{color:var(--muted);line-height:1.55}.keyrow{display:flex;gap:10px;margin-top:20px}.keyrow input{flex:1;background:#090b10;border:1px solid var(--line);border-radius:12px;color:var(--text);padding:14px 15px;outline:none}.keyrow input:focus{border-color:var(--red)}.btn{background:var(--red);border:0;color:#fff;border-radius:12px;padding:13px 17px;font-weight:800;cursor:pointer}.btn:hover{filter:brightness(1.1)}.btn.secondary{background:var(--panel2);border:1px solid var(--line);color:var(--text)}.btn.small{padding:7px 10px;font-size:12px;border-radius:9px}.err{margin-top:12px;background:rgba(255,92,116,.12);border:1px solid rgba(255,92,116,.28);color:#ffb2bf;border-radius:12px;padding:12px;font-size:13px;display:none;white-space:pre-wrap}
+.preview{padding:24px;display:flex;flex-direction:column;justify-content:space-between}.preview h3{margin:0 0 12px}.preview-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.mini{background:rgba(255,255,255,.035);border:1px solid var(--line);border-radius:14px;padding:13px}.mini b{display:block;font-size:22px}.mini span{font-size:12px;color:var(--muted)}
+.tabs{display:none;gap:8px;overflow:auto;border-bottom:1px solid var(--line);padding:0 18px 12px;max-width:1320px;margin:0 auto}.tab{background:var(--panel);border:1px solid var(--line);color:var(--muted);padding:10px 13px;border-radius:999px;font-size:12px;font-weight:800;white-space:nowrap;cursor:pointer}.tab.on{background:rgba(215,38,56,.14);border-color:rgba(215,38,56,.5);color:#fff}
+#app{display:none}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px}.stat{padding:16px;border-radius:16px;background:var(--panel);border:1px solid var(--line)}.stat span{color:var(--muted);font-size:12px}.stat b{display:block;font-size:26px;margin-top:4px}.section-title{display:flex;align-items:center;justify-content:space-between;margin:22px 0 12px}.section-title h2{margin:0;font-size:20px}.muted{color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:12px}.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:14px;position:relative;overflow:hidden}.card.done{opacity:.55}.card.high{border-color:rgba(215,38,56,.55)}.card.med{border-color:rgba(245,185,66,.55)}.card.low{border-color:rgba(77,163,255,.45)}.card-top{display:flex;gap:10px;align-items:flex-start}.icon{width:38px;height:38px;object-fit:contain;flex:0 0 auto}.name{font-weight:850;line-height:1.25}.desc{font-size:12px;color:var(--muted);margin:8px 0 12px;min-height:34px}.meta{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}.tag{font-size:10px;font-weight:900;letter-spacing:.4px;border:1px solid var(--line);border-radius:999px;padding:4px 7px;color:var(--muted);text-transform:uppercase}.tag.honor{color:var(--blue);border-color:rgba(77,163,255,.35)}.tag.medal{color:var(--gold);border-color:rgba(245,185,66,.35)}.tag.accurate{color:var(--green);border-color:rgba(49,208,125,.35)}.tag.manual{color:var(--bad);border-color:rgba(255,92,116,.35)}.tag.verify{color:var(--gold);border-color:rgba(245,185,66,.35)}.tag.estimated{color:var(--purple);border-color:rgba(166,117,255,.35)}.bar{height:8px;background:#0b0d12;border-radius:999px;overflow:hidden;border:1px solid var(--line)}.fill{height:100%;background:linear-gradient(90deg,var(--red),var(--gold));width:0}.prog{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-top:6px}.cost{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:10px}.cost div{background:rgba(255,255,255,.035);border:1px solid var(--line);border-radius:10px;padding:8px;font-size:11px;color:var(--muted)}.cost b{display:block;color:var(--text);font-size:13px;margin-top:2px}.actions{display:flex;gap:7px;margin-top:12px;flex-wrap:wrap}.star{background:var(--panel2);border:1px solid var(--line);color:var(--muted);border-radius:9px;padding:7px 9px;cursor:pointer;font-size:12px}.star.on{color:#fff;border-color:rgba(245,185,66,.45);background:rgba(245,185,66,.12)}
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}.filters input,.filters select{background:var(--panel);border:1px solid var(--line);border-radius:10px;color:var(--text);padding:10px 11px;outline:none}.filters input{min-width:220px;flex:1}.settings{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-bottom:14px}.setting{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:12px}.setting label{display:block;color:var(--muted);font-size:12px;margin-bottom:7px}.setting input,.setting select{width:100%;background:#0b0d12;border:1px solid var(--line);border-radius:10px;color:var(--text);padding:9px}
+.cols{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.col{background:rgba(255,255,255,.02);border:1px solid var(--line);border-radius:16px;min-height:220px;padding:12px}.col h3{font-size:14px;margin:0 0 10px}.compact{padding:10px;margin-bottom:8px;border-radius:12px;background:var(--panel);border:1px solid var(--line);font-size:12px}.compact b{display:block;margin-bottom:4px}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.72);display:none;align-items:center;justify-content:center;z-index:50;padding:18px}.modal-card{max-width:760px;width:100%;max-height:88vh;overflow:auto;background:var(--panel);border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow);padding:20px}.modal-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}.x{background:transparent;color:var(--muted);border:1px solid var(--line);border-radius:10px;padding:7px 10px;cursor:pointer}.guide{background:rgba(77,163,255,.08);border:1px solid rgba(77,163,255,.22);border-radius:14px;padding:12px;color:#d8eaff;font-size:13px;line-height:1.55}
+@media(max-width:850px){.hero{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr}.cols{grid-template-columns:1fr}.keyrow{flex-direction:column}}
 </style>
 </head>
 <body>
-<header class="top"><div class="brand"><div class="badgeLogo">TC</div><div><h1>Torn Merit OS</h1><small>PERSONAL AWARDS COMMAND CENTER</small></div></div><div class="spacer"></div><button class="ghost" id="changeKey" onclick="logout()" style="display:none">Change key</button></header>
-<div id="login" class="login"><div class="hero"><h2>Stop scrolling. <em>Start earning merits.</em></h2><p>A smarter Torn awards tracker: personal roadmap, priority system, combo setups, explorer, and local checklist. Your API key stays in your browser session only.</p><div class="keyrow"><input id="apiKey" type="password" placeholder="Paste your Torn API key..." autocomplete="off"><button class="primary" id="loadBtn" onclick="loadApp()">Load profile</button></div><div class="hint">Requires Torn API access for profile, honors, medals and personalstats. Host it on GitHub Pages / Netlify; local file:// can be blocked by CORS.</div><div id="loadStatus" class="hint" style="margin-top:10px;color:#f2c46d"></div></div></div>
-<div id="app" class="layout" style="display:none"><aside class="side" id="side"></aside><main class="main"><div id="stats"></div><div id="content"></div></main></div>
+<div class="top"><div class="nav"><div class="brand"><b>TORN MERIT OS</b><small>CLEAN BUILD</small></div><div class="spacer"></div><span class="pill" id="profilePill">Not loaded</span><button class="btn secondary small" onclick="resetApp()">Reset</button></div></div>
+<div class="wrap" id="login">
+  <div class="hero">
+    <div class="box login"><h1>Turn missing awards into a <span>merit roadmap</span>.</h1><p>Load your Torn profile, filter locked honors/medals, prioritize them, and estimate energy, nerve and time costs. This clean version uses one JS engine only and avoids false 100% when Torn still says locked.</p><div class="keyrow"><input id="apiKey" type="password" placeholder="Paste Torn API key — limited access is enough" autocomplete="off"><button class="btn" id="loadBtn" type="button">Load profile</button></div><div class="err" id="errorBox"></div><p class="muted" style="font-size:12px">Host on GitHub Pages / Netlify / Railway static. Opening from file:// may be blocked by browser CORS.</p></div>
+    <div class="box preview"><h3>What this version includes</h3><div class="preview-grid"><div class="mini"><b>Safe</b><span>No fake 100% on locked awards</span></div><div class="mini"><b>Tracker</b><span>High / medium / low priority</span></div><div class="mini"><b>Optimizer</b><span>Energy / nerve / time estimates</span></div><div class="mini"><b>Manual</b><span>RNG and untrackable awards flagged</span></div></div></div>
+  </div>
+</div>
+<div class="tabs" id="tabs"></div>
+<div class="wrap" id="app"><div id="content"></div></div>
+<div class="modal" id="modal"><div class="modal-card"><div class="modal-head"><div id="modalTitle"></div><button class="x" onclick="closeModal()">Close</button></div><div id="modalBody"></div></div></div>
 <script>
-const TYPE_CAT={
-  'attacking':'attacks','camo':'attacks','weapons':'weapons','crimes':'crimes',
-  'travel':'travel','drugs':'drugs','casino':'casino','gym':'gym',
-  'misc':'misc','money':'misc','hospital':'misc','jail':'misc',
-  'education':'misc','items':'misc','missions':'misc','competitions':'misc',
-  'commitment':'misc','level':'misc','networth':'misc','default':'misc'
-};
-
-// Precise mapping: honor/medal ID → {stat, goal}
-// Honors (H) and Medals (M) with their real Torn API IDs
+'use strict';
 const AWARD_MAP = {
   // ── HONORS ──
   // Camo (attackswon)
@@ -91,8 +61,7 @@ const AWARD_MAP = {
   H254:{s:'onehitkills',g:1},H517:{s:'onehitkills',g:100},
   // Bounties
   H232:{s:'bountiescollected',g:250},H236:{s:'moneymugged',g:10000000},
-  // H800 Surplus: use 100 rounds of special ammunition. Not reliably exposed in personalstats.
-  // H800 is handled as manual by TRACKING_OVERRIDES.
+  H800:{s:'bountiesplaced',g:10},
   // Mugging
   H247:{s:'moneymugged',g:1000000},H739:{s:'moneymugged',g:1},
   H955:{s:'moneymugged',g:1},
@@ -248,407 +217,162 @@ const AWARD_MAP = {
   M231:{s:'age',g:2555},M232:{s:'age',g:2920},M234:{s:'age',g:3285},M235:{s:'age',g:3650},
 };
 
-function getAwardMapping(type, id) {
-  const key = type + id;
-  return AWARD_MAP[key] || null;
-}
-
-
-// Tracking confidence layer
-// exact     = progress is read from a matching Torn personalstats key
-// estimated = guessed from the award description; useful but not guaranteed
-// manual    = Torn personalstats does not expose the exact sub-progress needed
-const TRACKING_OVERRIDES={
-  H26:{mode:'manual',reason:'Spaced Out requires overdosing on Cannabis. personalstats cantaken only counts Cannabis used, not Cannabis overdoses.'},
-  H676:{mode:'manual',reason:'This honor requires successfully burgling all 34 unique areas. Torn personalstats exposes total crime/offense counters, not the unique burglary-area checklist.'},
-  H800:{mode:'manual',reason:'Surplus requires using 100 rounds of special ammunition. This is not the same as bounties placed, and Torn personalstats does not expose a reliable special-ammo-rounds counter here.'},
+const MANUAL_OVERRIDES={
+  H26:'Overdose awards are RNG; personalstats only shows drug taken, not overdose.',
+  H676:'Requires all 34 burglary areas; criminal offenses total is not this progress.',
+  H800:'Special ammunition rounds are not exposed as a simple personalstat.',
+  H902:'Requires being defeated by a trout; not a progress stat.',
+  H317:'Lose then win back within 10 minutes; event-based.',
+  H838:'Specific married target condition; event-based.',
+  H955:'Mug someone who just mugged; event-based.',
+  H481:'Opponent stat comparison; not trackable from personalstats.',
+  H627:'Opponent stat comparison; not trackable from personalstats.',
+  H631:'Opponent stat comparison; not trackable from personalstats.'
 };
-const MANUAL_PATTERNS=[
-  /overdose/i,/overdosed/i,
-  /special ammunition/i,/special ammo/i,/use\s+\d+\s+rounds\s+of\s+special/i,
-  /burgle all\s+\d+\s+areas/i,/all\s+\d+\s+areas/i,/all available areas/i,
-  /each\s+.*area/i,/unique\s+.*area/i,/every\s+.*area/i,/all\s+.*areas/i,
-  /all\s+.*temporary weapons/i,/all\s+.*weapons/i,/all\s+.*items/i,/complete\s+.*collection/i,
-  /specific\s+player/i,/specific\s+target/i,/read\s+.*chronicle/i,/wheel of/i,
-  /lease\s+.*property/i,/rent\s+.*property/i,/own\s+.*property/i
-];
-function isManualByDescription(desc){return MANUAL_PATTERNS.some(rx=>rx.test(desc||''));}
-function exactFromDescription(desc,stats){
-  const d=(desc||'').toLowerCase();
-  // Safe text rules: only use these when the wording directly matches a Torn personalstats key.
-  // YATA does not blindly map text to random counters; it renders a server-side State/Goal pair.
-  // We emulate that by allowing only conservative, exact patterns here.
-  if(/\bwin\s+[\d,]+\s+races?\b/i.test(desc||'') && Object.prototype.hasOwnProperty.call(stats,'raceswon')){
-    const goal=getGoalFromDesc(desc);
-    return goal?{s:'raceswon',g:goal,reason:'Tracked from Torn personalstats: raceswon'}:null;
-  }
-  if(/\bparticipate in\s+[\d,]+\s+races?\b/i.test(desc||'') && Object.prototype.hasOwnProperty.call(stats,'racesentered')){
-    const goal=getGoalFromDesc(desc);
-    return goal?{s:'racesentered',g:goal,reason:'Tracked from Torn personalstats: racesentered'}:null;
-  }
-  return null;
-}
-function makeTracking(type,id,desc,mapped,guessedKey,stats){
-  const ov=TRACKING_OVERRIDES[type+id];
-  if(ov) return {...ov,source:'override'};
-  if(isManualByDescription(desc)) return {mode:'manual',reason:'This award needs unique/RNG/binary progress that Torn personalstats cannot expose exactly.',source:'pattern'};
-  if(mapped && mapped.s && Object.prototype.hasOwnProperty.call(stats,mapped.s)) return {mode:'exact',reason:'Tracked from Torn personalstats: '+mapped.s,source:'map'};
-  if(mapped && mapped.s && !Object.prototype.hasOwnProperty.call(stats,mapped.s)) return {mode:'manual',reason:'Mapped stat is not available in this API response/key access.',source:'missing-stat'};
-  const exactDesc=exactFromDescription(desc,stats);
-  if(exactDesc) return {mode:'exact',reason:exactDesc.reason,source:'exact-description',descMap:exactDesc};
-  // Important: no automatic estimated progress from generic text guesses.
-  // Too many awards look similar but require a unique action, RNG event, hidden checklist, or a different counter.
-  return {mode:'manual',reason:'No verified State/Goal counter found. Marked manual to avoid false 100% progress.',source:'none'};
-}
-function trackingTag(a){
-  if(a.tracking==='exact') return '<span class="tag green">accurate</span>';
-  if(a.tracking==='estimated') return '<span class="tag gold">estimated</span>';
-  return '<span class="tag blue">manual</span>';
-}
+const EXACT_OVERRIDES={
+  H571:{s:'raceswon',g:100},
+};
+const TYPE_CAT={attacking:'attacks',camo:'attacks',weapons:'weapons',crimes:'crimes',travel:'travel',drugs:'drugs',casino:'casino',gym:'gym',hospital:'hospital',faction:'faction',items:'items',money:'money',competitions:'competitions',commitment:'commitment',work:'work',misc:'miscellaneous',default:'miscellaneous'};
+const CAT_ICON={attacks:'⚔️',weapons:'🔫',crimes:'🕵️',travel:'✈️',drugs:'💊',casino:'🎰',gym:'💪',hospital:'🏥',faction:'👊',items:'🎒',money:'💰',competitions:'🏆',commitment:'⏳',work:'💼',miscellaneous:'🎲'};
+const STATE={tab:'dashboard', data:null, awards:[], search:'', cat:'all', status:'locked', tracking:'all', sort:'roi', settings:loadSettings(), priorities:loadJson('torn_merit_priorities',{}), notes:loadJson('torn_merit_notes',{})};
+const TABS=[['dashboard','Dashboard'],['next','Next merits'],['optimizer','Merit optimizer'],['explorer','Awards explorer'],['tracker','My tracker'],['combos','Combos'],['guide','Guides']];
+function $(id){return document.getElementById(id)}
+function fmt(n){if(n===null||n===undefined||Number.isNaN(n))return '—';return Number(n).toLocaleString()}
+function loadJson(k,f){try{return JSON.parse(localStorage.getItem(k)||'')}catch(e){return f}}
+function saveJson(k,v){localStorage.setItem(k,JSON.stringify(v))}
+function loadSettings(){return Object.assign({donator:true,xanax:0,refill:false,cannabis:false,nerveBar:45,raceMins:7}, loadJson('torn_merit_settings',{}))}
+function saveSettings(){saveJson('torn_merit_settings',STATE.settings); render()}
+function setError(msg){const b=$('errorBox'); b.style.display=msg?'block':'none'; b.textContent=msg||''}
+window.addEventListener('DOMContentLoaded',()=>{ $('loadBtn').addEventListener('click',loadApp); $('apiKey').addEventListener('keydown',e=>{if(e.key==='Enter')loadApp()}); renderTabs(); });
+async function fetchJson(url){const r=await fetch(url); if(!r.ok) throw new Error('HTTP '+r.status+' while loading '+url.replace(/key=[^&]+/,'key=***')); return await r.json()}
+async function loadApp(){
+  setError(''); const key=$('apiKey').value.trim(); if(!key){setError('Paste your Torn API key first.');return}
+  const btn=$('loadBtn'); btn.disabled=true; btn.textContent='Loading...';
+  try{
+    const urls=[
+      `https://api.torn.com/user/?selections=profile,honors,medals&key=${encodeURIComponent(key)}`,
+      `https://api.torn.com/user/?selections=personalstats&key=${encodeURIComponent(key)}`,
+      `https://api.torn.com/v2/torn/honors?key=${encodeURIComponent(key)}`,
+      `https://api.torn.com/v2/torn/medals?key=${encodeURIComponent(key)}`
+    ];
+    const [u1,u2,hdb,mdb]=await Promise.all(urls.map(fetchJson));
+    if(u1.error) throw new Error('Torn profile API: '+u1.error.error);
+    if(u2.error) throw new Error('Torn stats API: '+u2.error.error);
+    if(hdb.error) throw new Error('Torn honors API: '+hdb.error.error);
+    if(mdb.error) throw new Error('Torn medals API: '+mdb.error.error);
+    const honorsDB=(hdb.honors||hdb.data||[]).filter(h=>h && h.id && h.type?.title!=='default' && h.crimes_version!=='v1');
+    const medalsDB=(mdb.medals||mdb.data||[]).filter(m=>m && m.id && m.crimes_version!=='v1');
+    STATE.data={name:u1.name||'Unknown',level:u1.level||0,rank:u1.rank||'',age:u1.age||0,earnedH:new Set(u1.honors_awarded||[]),earnedM:new Set(u1.medals_awarded||[]),stats:u2.personalstats||{}};
+    STATE.awards=buildAwards(honorsDB, medalsDB, STATE.data);
+    $('login').style.display='none'; $('tabs').style.display='flex'; $('app').style.display='block'; $('profilePill').textContent=`${STATE.data.name} · Lvl ${STATE.data.level}`; $('profilePill').classList.add('good');
+    render();
+  }catch(e){console.error(e); setError(e.message+'
 
-// Fallback stat key from description (for awards not in map)
+Open the browser console (F12) if this repeats.');}
+  finally{btn.disabled=false; btn.textContent='Load profile';}
+}
+function resetApp(){localStorage.removeItem('torn_merit_priorities');localStorage.removeItem('torn_merit_notes');location.reload()}
+function renderTabs(){const el=$('tabs'); el.innerHTML=TABS.map(([id,label])=>`<button class="tab ${STATE.tab===id?'on':''}" onclick="setTab('${id}')">${label}</button>`).join('')}
+function setTab(t){STATE.tab=t;renderTabs();render()}
+function getAwardMapping(type,id){const k=type+id; if(EXACT_OVERRIDES[k])return EXACT_OVERRIDES[k]; if(MANUAL_OVERRIDES[k])return null; return AWARD_MAP[k]||null}
 function guessStatKey(desc,name){
-  const d=desc.toLowerCase();
+  const d=(desc||'').toLowerCase();
+  if(/overdose|all \d+|special ammunition|married|lease|trout|chronicle|wheel of|company co-worker|faction member/.test(d)) return null;
+  if(d.includes('win')&&d.includes('race')) return 'raceswon';
+  if(d.includes('enter')&&d.includes('race')) return 'racesentered';
   if(d.includes('kill streak')) return 'bestkillstreak';
-  if(d.includes('win') && d.includes('attack')) return 'attackswon';
   if(d.includes('critical hit')) return 'attackcriticalhits';
   if(d.includes('stealthed attack')) return 'attacksstealthed';
+  if(d.includes('win')&&d.includes('attack')) return 'attackswon';
   if(d.includes('defend')) return 'defendswon';
-  if(d.includes('finishing hit') && d.includes('rifle')) return 'rifhits';
-  if(d.includes('finishing hit') && d.includes('smg')) return 'smghits';
-  if(d.includes('finishing hit') && d.includes('pistol')) return 'pishits';
-  if(d.includes('finishing hit') && d.includes('shotgun')) return 'shohits';
-  if(d.includes('finishing hit') && d.includes('slashing')) return 'slahits';
-  if(d.includes('finishing hit') && d.includes('piercing')) return 'piehits';
-  if(d.includes('finishing hit') && d.includes('clubbing')) return 'axehits';
-  if(d.includes('finishing hit') && d.includes('mechanical')) return 'machits';
-  if(d.includes('finishing hit') && (d.includes('fist')||d.includes('kick'))) return 'h2hhits';
-  if((d.includes('special ammunition')||d.includes('special ammo')) && d.includes('round')) return null;
-  if(d.includes('fire') && d.includes('round')) return 'roundsfired';
-  if(d.includes('theft offense')||d.includes('theft crime')) return 'theft';
-  if(d.includes('vandalism offense')||d.includes('vandalism crime')) return 'vandalism';
-  if(d.includes('fraud offense')||d.includes('fraud crime')) return 'fraud';
-  if(d.includes('cybercrime offense')) return 'cybercrime';
-  if(d.includes('counterfeiting offense')) return 'counterfeiting';
-  if(d.includes('illicit service offense')) return 'illicitservices';
-  if(d.includes('extortion offense')) return 'extortion';
-  if(d.includes('illegal production offense')) return 'illegalproduction';
-  if(d.includes('criminal offense')) return 'criminaloffenses';
-  if(d.includes('organized crime')) return 'organisedcrimes';
-  if(d.includes('travel') && (d.includes('time')||d.includes('abroad'))) return 'traveltimes';
-  if(d.includes('import')) return 'itemsboughtabroad';
+  if(d.includes('fire')&&d.includes('round')) return 'roundsfired';
   if(d.includes('xanax')) return 'xantaken';
+  if(d.includes('cannabis')&&!d.includes('overdose')) return 'cantaken';
   if(d.includes('ecstasy')) return 'exttaken';
-  if(d.includes('cannabis')) return 'cantaken';
-  if(d.includes(' drug')) return 'drugsused';
-  if(d.includes('donator')) return 'daysbeendonator';
   if(d.includes('medical item')) return 'medicalitemsused';
-  if(d.includes('city') && d.includes('find')) return 'cityfinds';
-  if(d.includes('total stat')) return 'totalstats';
-  if(d.includes('bust') && d.includes('jail')) return 'peoplebusted';
+  if(d.includes('travel')&& !d.includes('each')) return 'traveltimes';
+  if(d.includes('import')) return 'itemsboughtabroad';
+  if(d.includes('criminal offense')) return 'criminaloffenses';
+  if(d.includes('networth')) return 'networth';
+  if(d.includes('city')&&d.includes('find')) return 'cityfinds';
+  if(d.includes('bust')&&d.includes('jail')) return 'peoplebusted';
   if(d.includes('respect')) return 'respectforfaction';
-  if(d.includes('race')) return 'racesentered';
-  if(d.includes('mug')) return 'moneymugged';
-  if(d.includes('recorded networth')||d.includes('networth')) return 'networth';
   return null;
 }
-
 function getGoalFromDesc(desc){
-  const m=desc.match(/(?:achieve|win|commit|travel|fire|collect|use|find|import|bust|reach level|have|make|earn|attain|participate in|complete|gain|acquire|deal|serve|be a donator for)\s+(?:a\s+)?(?:total of\s+)?(?:best\s+)?(?:kill streak of\s+)?([\d,]+)/i);
+  const d=desc||''; const money=d.match(/\$([\d,]+)/); if(money) return parseInt(money[1].replace(/,/g,''));
+  const m=d.match(/(?:win|achieve|commit|travel|fire|collect|use|find|import|bust|have|make|earn|gain|participate in|complete|be a donator for|reach)\s+(?:a\s+)?(?:total of\s+)?(?:best\s+)?(?:kill streak of\s+)?([\d,]+)/i);
   if(m) return parseInt(m[1].replace(/,/g,''));
-  const m2=desc.match(/\$([\d,]+)/);
-  if(m2) return parseInt(m2[1].replace(/,/g,''));
   return null;
 }
-
-
-const ATTACK_COMBOS=[
-  {id:'bare_unarmed',
-   name:'Bare Fists — No Armor, No Weapon',
-   name_fr:'À Poil + Mains Nues',
-   color:'#e94560',
-   setup_en:`Remove ALL armor + equip NO weapon (set melee to fists/kick only). Attack any weak target.`,
-   setup_fr:`Retire TOUTE armure + AUCUNE arme (mets uniquement poings/kick). Attaque n'importe quelle cible faible.`,
-   tip_en:`Best on L3MILK [1999595] (99 total stats). Each win = +1 Bare AND +1 Unarmed finishing hit simultaneously.`,
-   tip_fr:`Parfait sur L3MILK [1999595] (99 stats). Chaque victoire = +1 Bare ET +1 coup final Unarmed en même temps.`,
-   hids:[515,763],mids:[]},
-  {id:'bare_stealth',
-   name:'Bare + Unarmed + Stealth',
-   name_fr:'À Poil + Mains Nues + Furtif',
-   color:'#4a9eff',
-   setup_en:`Remove ALL armor + fists only + enable Stealth. Use Smoke Grenade temp for max stealth chance.`,
-   setup_fr:`Retire toute armure + poings uniquement + active le Furtif. Utilise Smoke Grenade temp pour max furtif.`,
-   tip_en:`Each stealthed win counts toward Night Walker (100) + Bare (250) + Unarmed (100) all at once.`,
-   tip_fr:`Chaque victoire furtive compte pour Night Walker (100) + Bare (250) + Unarmed (100) en même temps.`,
-   hids:[515,763,27],mids:[]},
-  {id:'pepper_unarmed',
-   name:'Pepper Spray + Fists Finish',
-   name_fr:'Pepper Spray + Finir aux Poings',
-   color:'#f5a623',
-   setup_en:`Equip Pepper Spray temp ($800 at Big Al's) + no weapon. Pepper Spray cuts their DEX by 80% = easy wins.`,
-   setup_fr:`Équipe Pepper Spray temp (800$ chez Big Al) + aucune arme. Réduit leur DEX de 80% = victoires faciles.`,
-   tip_en:`Pin Puller (100 temp finishing hits) + Unarmed (100 h2h hits) + Bare (250 unarmored) all together.`,
-   tip_fr:`Pin Puller (100 coups finaux temp) + Unarmed (100 h2h) + Bare (250 sans armure) tous ensemble.`,
-   hids:[143,515,763],mids:[]},
-  {id:'rifle_rounds',
-   name:'Rifle Spam — Weapon Honor + Rounds Fired',
-   name_fr:'Spam Fusil — Honor Arme + Balles Tirées',
-   color:'#5ba8ff',
-   setup_en:`Equip rifle as primary. Set to use rifle 100% of turns. Every fight advances rifle finishing hits AND all rounds-fired honors at the same time.`,
-   setup_fr:`Équipe un fusil comme arme primaire. Mets 100% sur fusil. Chaque combat fait progresser les coups finaux fusil ET tous les honors balles tirées en même temps.`,
-   tip_en:`Spray And Pray (1k) + Two Halves (10k) + Lead Salad (100k) + Peppered (1M) all share roundsfired stat.`,
-   tip_fr:`Spray And Pray (1k) + Two Halves (10k) + Lead Salad (100k) + Peppered (1M) partagent tous la stat roundsfired.`,
-   hids:[146,140,151,834],mids:[]},
-  {id:'grenade_finish',
-   name:'Grenade Finish — Pin Puller + Rounds',
-   name_fr:'Finir à la Grenade',
-   color:'#2ecc71',
-   setup_en:`Equip SMG/rifle as primary + Grenade as temp. Spray rounds then finish with grenade.`,
-   setup_fr:`Équipe SMG/fusil + Grenade comme temp. Tire beaucoup de balles puis finis à la grenade.`,
-   tip_en:`Pin Puller + Spray And Pray + Two Halves all progress in the same attack.`,
-   tip_fr:`Pin Puller + Spray And Pray + Two Halves progressent tous dans la même attaque.`,
-   hids:[143,140,151],mids:[]},
-  {id:'kick_leonidas',
-   name:'Kick Finish — Leonidas + Unarmed',
-   name_fr:'Finir au Kick — Leonidas + Unarmed',
-   color:'#f5a623',
-   setup_en:`Unlock Kick (Education > Self Defense > Kickboxing). Set melee to kick only. Each finishing kick = Leonidas + Unarmed hits.`,
-   setup_fr:`Débloque Kick (Education > Self Defense > Kickboxing). Mets corps à corps sur kick uniquement.`,
-   tip_en:`Leonidas needs just 1 finishing kick — do it once instantly! Unarmed needs 100 total.`,
-   tip_fr:`Leonidas = juste 1 kick final. Fais-le une fois instantanément ! Unarmed = 100 au total.`,
-   hids:[871,515],mids:[]},
-  {id:'npc_chain',
-   name:'NPC Fight — Boss Fight + Chains',
-   name_fr:'Combat NPC — Boss Fight + Chaînes',
-   color:'#2ecc71',
-   setup_en:`Join active NPC fight (Duke/Jimmy/Leslie) on Torn Discord. Wait for debuffs then hit once.`,
-   setup_fr:`Rejoins un combat NPC actif (Duke/Jimmy/Leslie) sur le Discord Torn. Attends les debuffs puis frappe une fois.`,
-   tip_en:`Use TornTools extension to track NPC spawns. Boss Fight [665] needed for a merit.`,
-   tip_fr:`Utilise TornTools pour tracker les spawns NPC. Boss Fight [665] nécessaire pour un mérite.`,
-   hids:[665,253,255,257],mids:[]},
-  {id:'stealth_camo',
-   name:'Stealth — Night Walker + Camos + Medals',
-   name_fr:'Furtif — Night Walker + Camos + Médailles',
-   color:'#4a9eff',
-   setup_en:`Enable stealth + Smoke Grenade temp. Every stealthed win = Night Walker + ALL camo honors + attack medals simultaneously.`,
-   setup_fr:`Active le furtif + Smoke Grenade temp. Chaque victoire furtive = Night Walker + TOUS les Camos + médailles attaque.`,
-   tip_en:`Smoke + Flash on turn 1 = maximum stealth. Use on weak targets.`,
-   tip_fr:`Smoke + Flash au tour 1 = maximum furtif. Utilise sur des cibles faibles.`,
-   hids:[27,39,40,41,42,43],mids:[174,175,176]},
-  {id:'phoenix',
-   name:'Lose then Win — Phoenix',
-   name_fr:'Perdre puis Gagner — Phoenix',
-   color:'#f5a623',
-   setup_en:`Lose to someone, then beat them back within 10 minutes. Coordinate with a faction member: they attack you first, you attack back.`,
-   setup_fr:`Perds contre quelqu'un, puis bats-le en retour dans les 10 minutes. Coordonne avec ta faction.`,
-   tip_en:`Pick someone weaker for the return fight so you are sure to win.`,
-   tip_fr:`Choisis quelqu'un de plus faible pour le retour pour être sûr de gagner.`,
-   hids:[317],mids:[]},
-];
-
-
-const fmt=n=>Number(n||0).toLocaleString();
-const fmtTime=h=>{if(h==null||!isFinite(h))return '—'; if(h<1)return Math.ceil(h*60)+' min'; if(h<48)return (Math.round(h*10)/10)+' h'; return (Math.round(h/24*10)/10)+' d'};
-const STATE={tab:'dashboard',data:null,awards:[],filterCat:'all',filterType:'all',filterTracking:'all',q:'',showEarned:false,sort:'smart'};
-const STORE='torn-merit-os-v1';
-function prefs(){try{return JSON.parse(localStorage.getItem(STORE)||'{}')}catch{return {}}}
-function savePrefs(p){localStorage.setItem(STORE,JSON.stringify(p))}
-function awardKey(a){return a.type+a.id}
-function pget(k,def=null){const p=prefs();return p[k]??def}
-function pset(k,v){const p=prefs();p[k]=v;savePrefs(p)}
-function apiIcon(a){return `https://yata.yt/media/${a.type==='H'?'honors':'medals'}/${a.id}.png`}
-function openAward(a){
- const rel=relatedCombos(a);
- const progress=a.earned?'Unlocked':(a.lockedDespiteStats?'Locked on Torn despite stat threshold':(a.left!==null?`${fmt(a.val)} / ${fmt(a.goal)} · ${fmt(a.left)} left`:'Manual tracking'));
- const relHtml=rel.length?`<div class="panel" style="margin-top:12px"><h3 style="margin-top:0">Can be combined with</h3>${rel.map(c=>`<div class="awardLine"><span class="dot"></span><span style="flex:1"><b>${c.name}</b><br><small>${c.setup_en}</small></span><button class="mini" onclick="copyCombo('${c.id}')">Copy</button></div>`).join('')}</div>`:'';
- document.getElementById('awardModal').innerHTML=`<div class="modal"><div class="modalHead"><img src="${apiIcon(a)}" onerror="this.style.display='none'"><div><div class="title" style="font-size:22px">${a.name} <span class="tag ${a.type==='H'?'blue':'gold'}">${a.type==='H'?'HONOR':'MEDAL'}</span></div><div class="desc">${a.desc||''}</div><div class="tagrow"><span class="tag">${a.cat}</span><span class="tag">${a.statKey||'manual'}</span><span class="tag ${a.tracking==='exact'?'green':a.tracking==='manual'?'red':'gold'}">${a.tracking}</span></div></div><button class="closeBtn" onclick="closeModal()">Close</button></div><div class="modalBody"><h3>Progress</h3><p class="desc">${progress}</p>${modalCostBlock(a)}<div class="panel"><h3 style="margin-top:0">Current model</h3><p class="desc">${dailyBudgetText()}</p></div>${relHtml}<div style="margin-top:12px"><button class="primary" onclick="openAwardByKey('${awardKey(a)}');window.open('https://www.torn.com/page.php?sid=awards&tab=${a.type==='H'?'honors':'medals'}','_blank')">Open in Torn</button></div></div></div>`;
- document.getElementById('awardModal').classList.add('on');
+function makeTracking(a,statKey,goal,earned){
+  const override=MANUAL_OVERRIDES[a.type+a.id];
+  if(override) return {mode:'manual', label:'Manual', reason:override, current:null, goal:null, pct:earned?100:null, left:null};
+  if(!statKey||!goal) return {mode:'manual',label:'Manual',reason:'No reliable personalstats mapping for this award.',current:null,goal:null,pct:earned?100:null,left:null};
+  const current=Math.max(0, Number(STATE.data.stats[statKey]||0));
+  let pct=Math.min(100, Math.round(current/goal*1000)/10), left=Math.max(0, goal-current), mode=AWARD_MAP[a.type+a.id]||EXACT_OVERRIDES[a.type+a.id]?'accurate':'estimated', label=mode==='accurate'?'Accurate':'Estimated';
+  let reason=mode==='accurate'?'Mapped to a known Torn personalstat.':'Guessed from award description; verify if it looks wrong.';
+  if(!earned && pct>=100){pct=99; left=1; mode='verify'; label='Needs verification'; reason='The stat is above the goal, but Torn still reports this award as locked. It may require a special condition.'}
+  if(earned){pct=100;left=0}
+  return {mode,label,reason,current,goal,pct,left,statKey};
 }
-function openAwardByKey(k){const a=STATE.awards.find(x=>awardKey(x)===k);if(a)openAward(a)}
-function setPriority(k,v){pset('priority_'+k,v);STATE.awards=STATE.awards.map(a=>awardKey(a)===k?{...a,priority:v}:a);render()}
-function clearPriority(k){pset('priority_'+k,'none');STATE.awards=STATE.awards.map(a=>awardKey(a)===k?{...a,priority:'none'}:a);render()}
-function setStatus(k,v){pset('status_'+k,v);STATE.awards=STATE.awards.map(a=>awardKey(a)===k?{...a,status:v}:a);render()}
-function scoreAward(a){ if(a.earned) return 1e9; let s=0; if(a.left===null) s+=a.tracking==='manual'?250000:900000; else s+=a.left; if(a.priority==='high') s-=100000; if(a.priority==='medium') s-=50000; if(a.priority==='low') s-=10000; if(a.effort==='instant') s-=20000; if(a.effort==='quick') s-=10000; return s;}
-function renderDashboard(){
- const missing=STATE.awards.filter(a=>!a.earned).sort((a,b)=>scoreAward(a)-scoreAward(b)); const quick=missing.filter(a=>!a.lockedDespiteStats&&a.left!==null&&a.left<=50).slice(0,6); const cats=['attacks','weapons','crimes','travel','drugs','casino','gym','misc'];
- let catHtml=cats.map(c=>{const all=STATE.awards.filter(a=>a.cat===c);const done=all.filter(a=>a.earned).length;const pct=all.length?Math.round(done/all.length*100):0;return `<div class="smallcard"><b>${c.toUpperCase()}</b><div class="progress"><div class="track"><div class="fill" style="width:${pct}%"></div></div><div class="pct">${pct}%</div></div><div class="meta"><span>${done}/${all.length}</span><span>${all.length-done} missing</span></div></div>`}).join('');
- content(`<div class="sectionTitle"><div><h2>Command dashboard</h2><p>Your best opportunities, weak categories, and resource estimates based on your settings.</p></div></div><div class="widegrid"><div class="panel"><h3 style="margin-top:0">Fastest actionable merits</h3><div class="grid">${quick.map(a=>card(a)).join('')||'<div class="empty">No fast trackable awards found.</div>'}</div></div><div class="panel"><h3 style="margin-top:0">Category heatmap</h3>${catHtml}<button class="primary" style="width:100%;margin-top:10px" onclick="setTab('explorer')">Open full explorer</button></div></div>`)
+function buildAwards(honorsDB,medalsDB,data){
+  const out=[];
+  function one(raw,type){
+    const earned=type==='H'?data.earnedH.has(raw.id):data.earnedM.has(raw.id);
+    const mapped=getAwardMapping(type,raw.id); const statKey=mapped?mapped.s:guessStatKey(raw.description,raw.name); const goal=mapped?mapped.g:getGoalFromDesc(raw.description);
+    const cat=TYPE_CAT[raw.type?.title||'misc']||'miscellaneous'; const tr=makeTracking({type,id:raw.id},statKey,goal,earned); const cost=estimateCost({cat,statKey,tracking:tr,earned,desc:raw.description,name:raw.name});
+    out.push({id:raw.id,type,name:raw.name||`${type}${raw.id}`,desc:raw.description||'',rarity:raw.rarity||'',cat,earned,tracking:tr,cost,priority:STATE.priorities[type+raw.id]||'none'});
+  }
+  honorsDB.forEach(h=>one(h,'H')); medalsDB.forEach(m=>one(m,'M')); return out;
 }
-
-function renderOptimizer(){
- const c=calcSettings();
- const missing=STATE.awards.filter(a=>!a.earned&&!a.lockedDespiteStats);
- const exact=missing.filter(a=>a.tracking==='exact'&&a.costEstimate&&a.costEstimate.kind!=='manual').sort((a,b)=>meritRoi(a)-meritRoi(b)).slice(0,12);
- const today=exact.filter(a=>{const co=a.costEstimate;return (co.energy||0)<=dailyEnergyBudget(c) && (co.nerve||0)<=dailyNerveBudget(c) && (co.hours==null||co.hours<=24)}).slice(0,6);
- const manual=missing.filter(a=>a.tracking==='manual').slice(0,8);
- const budget=`<div class="budgetBox"><div class="budgetCell"><b>⚡ ${fmt(Math.round(dailyEnergyBudget(c)))}</b><span>energy/day</span></div><div class="budgetCell"><b>🧠 ${fmt(Math.round(dailyNerveBudget(c)))}</b><span>nerve/day</span></div><div class="budgetCell"><b>${c.xanax}/3</b><span>xanax per day</span></div><div class="budgetCell"><b>${c.refill?'ON':'OFF'}</b><span>daily refill</span></div></div>`;
- const mk=a=>{const co=a.costEstimate; const roi=co.kind==='manual'?'manual':`${co.hours==null?'?':fmtTime(co.hours)} · ⚡ ${co.energy==null?'—':fmt(Math.ceil(co.energy))} · 🧠 ${co.nerve==null?'—':fmt(Math.ceil(co.nerve))}`; return `<div class="smallcard"><b>${a.name} <span class="tag ${a.type==='H'?'blue':'gold'}">${a.type}</span></b><div class="meta"><span>${a.cat} · ${a.statKey||'manual'}</span><span>${a.left!==null?fmt(a.left)+' left':'manual'}</span></div><div class="roi">${roi}</div><div class="actions"><button class="mini" onclick="openAwardByKey('${awardKey(a)}')">Details</button><button class="mini star" onclick="setPriority('${awardKey(a)}','high')">⭐ High</button></div></div>`};
- content(`<div class="sectionTitle"><div><h2>Merit optimizer</h2><p>Prioritizes missing awards by estimated time, energy and nerve. Manual/RNG awards are separated to avoid fake calculations.</p></div></div>${budget}<div class="optimizerGrid"><div class="panel"><h3 style="margin-top:0">Best ROI targets</h3><div class="grid">${exact.map(mk).join('')||'<div class="empty">No calculable targets found.</div>'}</div></div><div><div class="panel"><h3 style="margin-top:0">Possible within your daily budget</h3>${today.map(mk).join('')||'<div class="empty" style="padding:20px">Nothing clearly doable today with current settings.</div>'}</div><div class="panel" style="margin-top:12px"><h3 style="margin-top:0">Manual / RNG targets</h3><p class="desc">These can still be easy merits, but Torn does not expose exact progress through personalstats.</p>${manual.map(mk).join('')}</div></div></div>`)
-}
-
-function renderNext(){
- const groups=['attacks','weapons','crimes','travel','drugs','casino','gym','misc'];
- const html=groups.map(c=>{const best=STATE.awards.filter(a=>!a.earned&&a.cat===c).sort((a,b)=>scoreAward(a)-scoreAward(b)).slice(0,3);return `<div class="panel"><div class="sectionTitle"><div><h2>${c.toUpperCase()}</h2><p>Closest useful targets in this category.</p></div></div><div class="grid">${best.map(a=>card(a)).join('')||'<div class="empty">Nothing left here.</div>'}</div></div>`}).join(''); content(html);
-}
-function comboAwards(c){return [...c.hids.map(id=>STATE.awards.find(a=>a.type==='H'&&a.id===id)).filter(Boolean),...c.mids.map(id=>STATE.awards.find(a=>a.type==='M'&&a.id===id)).filter(Boolean)]}
-function renderCombosSmart(){
- const active=ATTACK_COMBOS.map(c=>{const aw=comboAwards(c);const missing=aw.filter(a=>!a.earned);const priority=missing.filter(a=>a.priority==='high').length;return {...c,aw,missing,score:missing.length*10+priority*7}}).filter(c=>c.missing.length).sort((a,b)=>b.score-a.score);
- const html=active.map(c=>`<div class="card combo" style="border-left-color:${c.color}"><div class="comboTop"><div><div class="title" style="font-size:18px">${c.name}</div><div class="desc">${c.tip_en}</div></div><div class="score">+${c.missing.length}</div></div><div class="steps"><b>Setup:</b> ${c.setup_en}</div>${c.aw.map(a=>`<div class="awardLine"><span class="dot ${a.earned?'done':''}"></span><span style="flex:1">${a.name} <span class="tag">${a.type}</span></span><span class="mono" style="color:${a.earned?'var(--green)':'var(--red2)'}">${a.earned?'DONE':(a.left!==null?fmt(a.left)+' left':'manual')}</span></div>`).join('')}<div class="actions"><button class="mini" onclick="copyCombo('${c.id}')">Copy setup</button></div></div>`).join('');
- content(`<div class="sectionTitle"><div><h2>Combo builder</h2><p>Only shows setups that still give you unearned honors/medals. Sorted by value for your profile.</p></div></div><div class="grid">${html||'<div class="empty">All configured combo awards are already done.</div>'}</div>`)
-}
-function renderExplorer(){
- const cats=['all','attacks','weapons','crimes','travel','drugs','casino','gym','misc'];
- let list=STATE.awards.slice(); if(STATE.filterCat!=='all') list=list.filter(a=>a.cat===STATE.filterCat); if(STATE.filterType!=='all') list=list.filter(a=>a.type===STATE.filterType); if(STATE.filterTracking!=='all') list=list.filter(a=>a.tracking===STATE.filterTracking); if(!STATE.showEarned) list=list.filter(a=>!a.earned); if(STATE.q) list=list.filter(a=>(a.name+' '+a.desc+' '+(a.statKey||'')+' '+a.tracking).toLowerCase().includes(STATE.q.toLowerCase()));
- list.sort((a,b)=>STATE.sort==='progress'?b.pct-a.pct:STATE.sort==='left'?(a.left??1e9)-(b.left??1e9):STATE.sort==='priority'?({high:0,medium:1,low:2,none:3}[a.priority]-{high:0,medium:1,low:2,none:3}[b.priority]):scoreAward(a)-scoreAward(b));
- const bar=`<div class="toolbar"><input placeholder="Search honor, medal, stat..." value="${STATE.q}" oninput="STATE.q=this.value;renderExplorer()"><select onchange="STATE.filterType=this.value;renderExplorer()"><option value="all">All types</option><option value="H" ${STATE.filterType==='H'?'selected':''}>Honors</option><option value="M" ${STATE.filterType==='M'?'selected':''}>Medals</option></select><select onchange="STATE.filterTracking=this.value;renderExplorer()"><option value="all">All tracking</option><option value="exact" ${STATE.filterTracking==='exact'?'selected':''}>Accurate</option><option value="estimated" ${STATE.filterTracking==='estimated'?'selected':''}>Estimated</option><option value="manual" ${STATE.filterTracking==='manual'?'selected':''}>Manual</option></select><select onchange="STATE.sort=this.value;renderExplorer()"><option value="smart">Smart sort</option><option value="left" ${STATE.sort==='left'?'selected':''}>Lowest remaining</option><option value="progress" ${STATE.sort==='progress'?'selected':''}>Best progress</option><option value="priority" ${STATE.sort==='priority'?'selected':''}>Priority</option></select><button class="pill ${STATE.showEarned?'on':''}" onclick="STATE.showEarned=!STATE.showEarned;renderExplorer()">Show earned</button></div><div class="toolbar">${cats.map(c=>`<button class="pill ${STATE.filterCat===c?'on':''}" onclick="STATE.filterCat='${c}';renderExplorer()">${c}</button>`).join('')}</div>`;
- content(`<div class="sectionTitle"><div><h2>Awards explorer</h2><p>All missing honors and medals. Star priorities and build your own roadmap.</p></div><span class="tag red">${list.length} shown</span></div>${bar}<div class="grid">${list.map(a=>card(a)).join('')||'<div class="empty">No awards match your filters.</div>'}</div>`)
-}
-function renderTracker(){
- const todo=STATE.awards.filter(a=>!a.earned&&a.priority==='high'); const prog=STATE.awards.filter(a=>!a.earned&&a.status==='progress'&&a.priority!=='high'); const later=STATE.awards.filter(a=>!a.earned&&(a.priority==='medium'||a.priority==='low')).filter(a=>!prog.includes(a)&&!todo.includes(a));
- const mk=(arr)=>arr.map(a=>`<div class="smallcard"><b>${a.name}</b><div class="meta"><span>${a.type} · ${a.cat}</span><span>${a.left!==null?fmt(a.left)+' left':'manual'}</span></div><div class="actions"><button class="mini" onclick="openAwardByKey('${awardKey(a)}')">Open</button><button class="mini" onclick="clearPriority('${awardKey(a)}')">Remove</button></div></div>`).join('')||'<div class="empty" style="padding:20px">Empty</div>';
- content(`<div class="sectionTitle"><div><h2>My tracker</h2><p>Your local checklist. Saved in this browser with localStorage.</p></div></div><div class="columns"><div class="col"><h3>⭐ High priority</h3>${mk(todo)}</div><div class="col"><h3>🔧 In progress</h3>${mk(prog)}</div><div class="col"><h3>🕒 Later</h3>${mk(later)}</div></div>`)
-}
-function renderGuides(){
- const blocks=[['Instant merits','Do these first if missing: casino wheels, Historian, Leonidas, Friendly Fire, Going Postal, Phoenix, Landlord. These are mostly manual awards, so the API may not always track progress before completion.'],['Attack stack','Best general stack: remove armor, use fists/kick, enable stealth, use Smoke/Pepper Spray, attack weak targets. This can progress Bare, Unarmed, Night Walker, Pin Puller and Camo/attack medals depending on your setup.'],['Weapon grind','Use a fast gun for rounds-fired honors while also targeting weapon finishing-hit honors. Set weapon usage to force the category you need.'],['Travel/import','If travel awards are close, combine travel count with item import goals by always buying max items abroad.'],['Crimes 2.0','Use Explorer → Crimes and sort by Lowest remaining. The tracker will show which crime families are closest to the next medal tier.']];
- content(`<div class="sectionTitle"><div><h2>Smart guides</h2><p>Practical paths. Guides hide less; Explorer decides exactly what applies to your profile.</p></div></div><div class="grid">${blocks.map(b=>`<div class="card"><div class="title" style="font-size:18px">${b[0]}</div><div class="desc" style="font-size:13px">${b[1]}</div><button class="mini" onclick="setTab('explorer')">Find matching awards</button></div>`).join('')}</div>`)
-}
-function copyCombo(id){const c=ATTACK_COMBOS.find(x=>x.id===id); if(c) copyText(c.setup_en)}
-function copyText(x){navigator.clipboard?.writeText(x)}
-
-
-// === CORE APP FUNCTIONS PATCH ===
-function content(html){ document.getElementById('content').innerHTML = html; }
-function closeModal(){ document.getElementById('awardModal').classList.remove('on'); }
-function logout(){
-  STATE.data=null; STATE.awards=[];
-  document.getElementById('app').style.display='none';
-  document.getElementById('login').style.display='grid';
-  document.getElementById('changeKey').style.display='none';
-}
-function setTab(tab){ STATE.tab=tab; render(); }
-function render(){
-  renderSide(); renderStats();
-  if(STATE.tab==='dashboard') return renderDashboard();
-  if(STATE.tab==='optimizer') return renderOptimizer();
-  if(STATE.tab==='next') return renderNext();
-  if(STATE.tab==='combos') return renderCombosSmart();
-  if(STATE.tab==='explorer') return renderExplorer();
-  if(STATE.tab==='tracker') return renderTracker();
-  if(STATE.tab==='guides') return renderGuides();
-  renderDashboard();
-}
-function renderSide(){
- const nav=[['dashboard','🏠','Dashboard'],['optimizer','🧮','Merit optimizer'],['next','🎯','Next merits'],['combos','⚡','Combo builder'],['explorer','🗂️','Awards explorer'],['tracker','📌','My tracker'],['guides','📖','Guides']];
- document.getElementById('side').innerHTML = nav.map(n=>`<button class="navbtn ${STATE.tab===n[0]?'on':''}" onclick="setTab('${n[0]}')"><span>${n[1]}</span>${n[2]}</button>`).join('') + `<div class="tip"><b>Cost settings</b><br>${settingsHtml()}</div>`;
-}
-function settingsHtml(){
- const c=calcSettings();
- return `<label><input type="checkbox" ${c.donator?'checked':''} onchange="pset('donator',this.checked);render()"> Donator / Founder active</label><br>
- <label>Xanax/day <select onchange="pset('xanax',Number(this.value));render()">${[0,1,2,3].map(x=>`<option value="${x}" ${c.xanax===x?'selected':''}>${x}</option>`).join('')}</select></label><br>
- <label><input type="checkbox" ${c.refill?'checked':''} onchange="pset('refill',this.checked);render()"> Daily energy refill</label><br>
- <label><input type="checkbox" ${c.cannabis?'checked':''} onchange="pset('cannabis',this.checked);render()"> Cannabis nerve</label><br>
- <label>Nerve bar <input style="width:55px" type="number" value="${c.nerveBar}" onchange="pset('nerveBar',Number(this.value)||45);render()"></label><br>
- <label>Race min <input style="width:55px" type="number" value="${c.raceMin}" onchange="pset('raceMin',Number(this.value)||5);render()"></label>`;
-}
-function renderStats(){
- if(!STATE.data) return;
- const a=STATE.awards, missing=a.filter(x=>!x.earned);
- document.getElementById('stats').innerHTML=`<div class="kpis"><div class="kpi"><span>Operative</span><b>${STATE.data.name}</b><small>Lvl ${STATE.data.level} · ${STATE.data.rank||''}</small></div><div class="kpi"><span>Missing awards</span><b>${missing.length}</b><small>${missing.filter(x=>x.tracking==='exact').length} accurate · ${missing.filter(x=>x.tracking==='manual').length} manual</small></div><div class="kpi"><span>Fast targets</span><b>${missing.filter(x=>x.left!==null&&x.left<=50&&!x.lockedDespiteStats).length}</b><small>≤ 50 safe actions left</small></div><div class="kpi"><span>High priority</span><b>${a.filter(x=>x.priority==='high'&&!x.earned).length}</b><small>Your pinned targets</small></div></div>`;
-}
-function calcSettings(){ return {donator:pget('donator',true),xanax:Number(pget('xanax',0)),refill:pget('refill',false),cannabis:pget('cannabis',false),nerveBar:Number(pget('nerveBar',45)),raceMin:Number(pget('raceMin',5))}; }
-function dailyEnergyBudget(c=calcSettings()){ return (c.donator?720:480) + (c.xanax||0)*250 + (c.refill?150:0); }
-function dailyNerveBudget(c=calcSettings()){ return 288 + (c.cannabis?30:0); }
-function dailyBudgetText(){ const c=calcSettings(); return `Daily model: ${Math.round(dailyEnergyBudget(c))} energy/day, ${Math.round(dailyNerveBudget(c))} nerve/day, ${c.xanax}/3 Xanax/day, refill ${c.refill?'ON':'OFF'}.`; }
+function dailyBudget(){const s=STATE.settings; const energyRegen=s.donator?720:480; const maxE=s.donator?150:100; const xan=Number(s.xanax||0)*250; const refill=s.refill?maxE:0; const nerve=288 + (s.cannabis?30:0); return {energy:energyRegen+xan+refill, nerve, raceMins:Number(s.raceMins||7)}}
 function estimateCost(a){
- if(a.earned) return {kind:'done',energy:0,nerve:0,hours:0,accuracy:'exact'};
- if(a.tracking!=='exact' || a.left===null) return {kind:'manual',energy:null,nerve:null,hours:null,accuracy:'manual'};
- const left=Math.max(0,a.left||0); let energy=0, nerve=0, hours=null, kind='estimated';
- const s=a.statKey||'', cat=a.cat||'';
- if(['attackswon','attackhits','attackcriticalhits','attacksstealthed','defendswon','onehitkills','h2hhits','rifhits','smghits','pishits','shohits','slahits','piehits','axehits','machits','grehits','attacksassisted','bountiescollected','moneymugged','attackdamage','yourunaway','theyrunaway','bestkillstreak','attacksdraw'].includes(s)) { energy=left*25; }
- else if(s==='roundsfired'){ energy=Math.ceil(left/25)*25; }
- else if(cat==='crimes' || ['criminaloffenses','vandalism','theft','counterfeiting','fraud','illicitservices','cybercrime','extortion','illegalproduction'].includes(s)){ nerve=left*4; }
- else if(s==='peoplebusted'){ nerve=left*5; }
- else if(s==='raceswon' || s==='racesentered'){ hours=left*(calcSettings().raceMin||5)/60; }
- else if(s==='traveltimes' || /travel$/.test(s)){ hours=left*1.5; }
- else if(s==='itemsboughtabroad'){ hours=Math.ceil(left/20)*1.5; }
- else if(s==='medicalitemsused'){ hours=left*0.02; }
- else if(['xantaken','cantaken','exttaken','drugsused'].includes(s)){ hours=s==='xantaken'?left*8:left*1; kind='rough'; }
- else { kind='rough'; hours=null; }
- const c=calcSettings();
- if(energy>0) hours=Math.max(hours||0, energy/dailyEnergyBudget(c)*24);
- if(nerve>0) hours=Math.max(hours||0, nerve/dailyNerveBudget(c)*24);
- return {kind,energy,nerve,hours,accuracy:kind};
+  if(a.earned) return {mode:'done',energy:0,nerve:0,timeHours:0,label:'Done'};
+  const left=a.tracking.left; if(left===null||left===undefined) return {mode:'manual',energy:null,nerve:null,timeHours:null,label:'Manual / RNG'};
+  let energy=0, nerve=0, timeHours=0, accuracy='rough'; const k=a.statKey||'';
+  if(['attackswon','defendswon','attacksstealthed','attackcriticalhits','onehitkills','attackhits','h2hhits','rifhits','smghits','pishits','shohits','slahits','piehits','axehits','machits','grehits','attacksassisted','rankedwarhits','bountiescollected'].includes(k)) energy=left*25;
+  else if(k==='bestkillstreak') energy=left*25;
+  else if(k==='roundsfired') energy=Math.ceil(left/20)*25;
+  else if(['criminaloffenses','vandalism','theft','counterfeiting','fraud','illicitservices','cybercrime','extortion','illegalproduction'].includes(k)) nerve=left*5;
+  else if(k==='peoplebusted') nerve=left*5;
+  else if(['traveltimes','itemsboughtabroad'].includes(k)) timeHours=left*1.5;
+  else if(['raceswon','racesentered'].includes(k)) timeHours=left*(STATE.settings.raceMins||7)/60;
+  else if(['xantaken','cantaken','exttaken','drugsused','medicalitemsused','cityfinds','networth','totalstats','age','daysbeendonator','awards','workingstats'].includes(k)) accuracy='context';
+  const budget=dailyBudget(); if(energy>0) timeHours=Math.max(timeHours, energy/budget.energy*24); if(nerve>0) timeHours=Math.max(timeHours, nerve/budget.nerve*24);
+  return {mode:accuracy,energy,nerve,timeHours,label:accuracy==='context'?'Context-based':'Estimated'};
 }
-function modalCostBlock(a){ const co=a.costEstimate||estimateCost(a); if(co.kind==='manual') return `<div class="panel"><h3 style="margin-top:0">Cost estimate</h3><p class="desc">Manual / RNG award. Exact energy, nerve or time cannot be calculated safely from Torn personalstats.</p></div>`; return `<div class="panel"><h3 style="margin-top:0">Cost estimate</h3><div class="modalGrid"><div class="modalCell"><b>⚡ ${co.energy==null?'—':fmt(Math.ceil(co.energy))}</b><span>energy</span></div><div class="modalCell"><b>🧠 ${co.nerve==null?'—':fmt(Math.ceil(co.nerve))}</b><span>nerve</span></div><div class="modalCell"><b>⏱ ${fmtTime(co.hours)}</b><span>estimated time</span></div></div><p class="costNote">Accuracy: ${co.kind}. ${dailyBudgetText()}</p></div>`; }
-function meritRoi(a){ const co=a.costEstimate||estimateCost(a); if(co.kind==='manual') return 1e9; return (co.hours??9999) + (co.energy||0)/10000 + (co.nerve||0)/1000; }
-function relatedCombos(a){ return ATTACK_COMBOS.filter(c=>(a.type==='H'?c.hids:c.mids).includes(a.id)); }
-function card(a){ const co=a.costEstimate||estimateCost(a); const cost=co.kind==='manual'?`<div class="costMini"><span class="cm"><b>Manual/RNG</b></span></div>`:`<div class="costMini"><span class="cm">⚡ <b>${co.energy?fmt(Math.ceil(co.energy)):'0'}</b></span><span class="cm">🧠 <b>${co.nerve?fmt(Math.ceil(co.nerve)):'0'}</b></span><span class="cm">⏱ <b>${fmtTime(co.hours)}</b></span></div>`; return `<div class="card ${a.earned?'done':''}"><div class="cardTop"><img src="${apiIcon(a)}" onerror="this.style.display='none'"><div style="flex:1"><div class="title">${a.name} <span class="tag ${a.type==='H'?'blue':'gold'}">${a.type==='H'?'HONOR':'MEDAL'}</span></div><div class="desc">${a.desc||''}</div><div class="tagrow"><span class="tag">${a.cat}</span><span class="tag">${a.statKey||'manual'}</span>${trackingTag(a)}${a.lockedDespiteStats?'<span class="tag red">verify</span>':''}</div></div></div><div class="progress"><div class="track"><div class="fill" style="width:${a.pct}%"></div></div><div class="pct">${a.pct}%</div></div><div class="meta"><span>${a.left!==null?fmt(a.val)+' / '+fmt(a.goal):'manual'}</span><span>${a.left!==null?fmt(a.left)+' left':''}</span></div>${cost}<div class="actions"><button class="mini star" onclick="setPriority('${awardKey(a)}','high')">⭐ High</button><button class="mini" onclick="setPriority('${awardKey(a)}','medium')">Medium</button><button class="mini" onclick="setPriority('${awardKey(a)}','low')">Low</button><button class="mini" onclick="clearPriority('${awardKey(a)}')">Clear</button><button class="mini green" onclick="setStatus('${awardKey(a)}','progress')">In progress</button><button class="mini" onclick="openAwardByKey('${awardKey(a)}')">Details</button></div></div>`; }
-function buildAwards(honorsDB, medalsDB, data){
- const out=[]; const stats=data.stats||{};
- function add(raw,type){
-   const earned=(type==='H'?data.earned_h:data.earned_m).has(raw.id);
-   const mapped=getAwardMapping(type,raw.id);
-   const guessed=guessStatKey(raw.description||'', raw.name||'');
-   const tr=makeTracking(type,raw.id,raw.description||'',mapped,guessed,stats);
-   let statKey=null, goal=null, val=0, pct=0, left=null;
-   if(tr.mode==='exact'){
-     const m=tr.descMap || mapped;
-     statKey=m.s; goal=m.g; val=Number(stats[statKey]||0); left=Math.max(0,goal-val); pct=goal?Math.min(99,Math.round(val/goal*100)):0;
-     if(earned){pct=100;left=0;}
-   }
-   const cat=TYPE_CAT[(raw.type&&raw.type.title)||raw.type||'misc'] || TYPE_CAT[raw.category] || 'misc';
-   let a={id:raw.id,type,name:raw.name||`${type}${raw.id}`,desc:raw.description||'',rarity:raw.rarity||'',cat,statKey,goal,val,pct,left,earned,tracking:tr.mode,trackingReason:tr.reason,priority:pget('priority_'+type+raw.id,'none'),status:pget('status_'+type+raw.id,'todo')};
-   a.lockedDespiteStats=(!earned && tr.mode==='exact' && goal && val>=goal);
-   if(a.lockedDespiteStats){ a.pct=99; a.left=1; }
-   a.costEstimate=estimateCost(a);
-   out.push(a);
- }
- (honorsDB||[]).forEach(h=>add(h,'H')); (medalsDB||[]).forEach(m=>add(m,'M'));
- return out;
+function trackingTag(t){return `<span class="tag ${t.mode}">${t.label}</span>`}
+function awardImg(a){return `https://yata.yt/media/${a.type==='H'?'honors':'medals'}/${a.id}.png`}
+function card(a,compact=false){
+  const p=a.priority; const tr=a.tracking; const c=a.cost; const pct=tr.pct; const left=tr.left;
+  return `<div class="card ${a.earned?'done':''} ${p==='high'?'high':p==='medium'?'med':p==='low'?'low':''}">
+    <div class="card-top"><img class="icon" src="${awardImg(a)}" onerror="this.style.display='none'"><div style="flex:1"><div class="name">${a.name}</div><div class="meta"><span class="tag ${a.type==='H'?'honor':'medal'}">${a.type==='H'?'Honor':'Medal'}</span><span class="tag">${CAT_ICON[a.cat]||''} ${a.cat}</span>${trackingTag(tr)}</div></div></div>
+    <div class="desc">${a.desc}</div>
+    <div class="bar"><div class="fill" style="width:${pct===null?0:pct}%"></div></div><div class="prog"><span>${tr.current===null?'Manual':fmt(tr.current)+' / '+fmt(tr.goal)}</span><b>${a.earned?'Done':left===null?'Manual':fmt(left)+' left'}</b></div>
+    <div class="cost"><div>⚡ Energy<b>${c.energy===null?'—':fmt(c.energy)}</b></div><div>🧠 Nerve<b>${c.nerve===null?'—':fmt(c.nerve)}</b></div><div>⏱ Time<b>${c.timeHours===null?'—':formatTime(c.timeHours)}</b></div></div>
+    <div class="actions"><button class="btn small secondary" onclick="openDetails('${a.type}',${a.id})">Details</button><button class="star ${p==='high'?'on':''}" onclick="setPriority('${a.type}',${a.id},'high')">⭐ High</button><button class="star ${p==='medium'?'on':''}" onclick="setPriority('${a.type}',${a.id},'medium')">● Med</button><button class="star ${p==='low'?'on':''}" onclick="setPriority('${a.type}',${a.id},'low')">○ Low</button></div>
+  </div>`
 }
-
-async function fetchTornJson(url, label){
- const response = await fetch(url, {cache:'no-store'});
- if(!response.ok) throw new Error(`${label} HTTP ${response.status}`);
- const data = await response.json();
- if(data.error) throw new Error(`${label}: ${data.error.error || JSON.stringify(data.error)}`);
- return data;
-}
-
-async function loadApp(){
- const statusEl=document.getElementById('loadStatus');
- if(statusEl) statusEl.textContent='';
- console.log('[Torn Merit OS] Load profile clicked');
- const key=document.getElementById('apiKey').value.trim();
- if(!key){ if(statusEl) statusEl.textContent='Paste your Torn API key first.'; return; }
- const btn=document.getElementById('loadBtn'); btn.disabled=true; btn.textContent='Loading...'; if(statusEl) statusEl.textContent='Loading Torn profile...';
- document.getElementById('login').style.display='none'; document.getElementById('app').style.display='grid'; content('<div class="loading"><div class="spinner"></div><span>Loading Torn profile...</span></div>');
- try{
-   const k=encodeURIComponent(key);
-   const [u1,u2,torn1,torn2]=await Promise.all([
-    fetchTornJson(`https://api.torn.com/user/?selections=profile,honors,medals&key=${k}`, 'Profile'),
-    fetchTornJson(`https://api.torn.com/user/?selections=personalstats&key=${k}`, 'Personalstats'),
-    fetchTornJson(`https://api.torn.com/v2/torn/honors?key=${k}`, 'Honors database'),
-    fetchTornJson(`https://api.torn.com/v2/torn/medals?key=${k}`, 'Medals database')
-   ]);
-   const honorsDB=(torn1.honors||[]).filter(h=>h.type&&h.type.title!=='default'&&h.crimes_version!=='v1');
-   const medalsDB=(torn2.medals||[]).filter(m=>m.crimes_version!=='v1');
-   STATE.data={name:u1.name,level:u1.level,age:u1.age,rank:u1.rank,earned_h:new Set(u1.honors_awarded||[]),earned_m:new Set(u1.medals_awarded||[]),stats:u2.personalstats||{}};
-   STATE.awards=buildAwards(honorsDB,medalsDB,STATE.data);
-   document.getElementById('changeKey').style.display='inline-block';
-   render();
- }catch(e){ console.error('[Torn Merit OS] Load failed', e); if(statusEl) statusEl.textContent='Error: '+e.message; content(`<div class="err">❌ ${e.message}<br><small>Check the API key and host the file on GitHub Pages / Netlify if your browser blocks local requests.</small></div>`); document.getElementById('login').style.display='grid'; document.getElementById('app').style.display='none'; }
- finally{ btn.disabled=false; btn.textContent='Load profile'; }
-}
-
-window.loadApp = loadApp;
-function bindLogin(){
- const keyInput=document.getElementById('apiKey');
- const btn=document.getElementById('loadBtn');
- if(keyInput) keyInput.addEventListener('keydown',e=>{if(e.key==='Enter')loadApp()});
- if(btn) btn.addEventListener('click',e=>{e.preventDefault(); loadApp();});
-}
-if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', bindLogin); else bindLogin();
+function formatTime(h){if(h===0)return 'Now'; if(!isFinite(h))return '—'; if(h<1)return Math.ceil(h*60)+'m'; if(h<24)return Math.round(h*10)/10+'h'; return Math.round(h/24*10)/10+'d'}
+function unlocked(){return STATE.awards.filter(a=>a.earned).length}
+function lockedAwards(){return STATE.awards.filter(a=>!a.earned)}
+function scoreAward(a){let s=0;if(a.tracking.left!==null)s+=Math.min(5000,a.tracking.left);else s+=999999;if(a.cost.energy)s+=a.cost.energy/10;if(a.cost.nerve)s+=a.cost.nerve/2;if(a.cost.timeHours)s+=a.cost.timeHours*3;if(a.tracking.mode==='manual')s+=100000;if(a.tracking.mode==='verify')s+=50000; if(a.priority==='high')s-=10000;if(a.priority==='medium')s-=3000;if(a.priority==='low')s-=500;return s}
+function filteredAwards(){let arr=STATE.awards.slice(); if(STATE.status==='locked')arr=arr.filter(a=>!a.earned); if(STATE.status==='earned')arr=arr.filter(a=>a.earned); if(STATE.cat!=='all')arr=arr.filter(a=>a.cat===STATE.cat); if(STATE.tracking!=='all')arr=arr.filter(a=>a.tracking.mode===STATE.tracking); const q=STATE.search.toLowerCase().trim(); if(q)arr=arr.filter(a=>(a.name+' '+a.desc+' '+a.cat+' '+(a.tracking.statKey||'')).toLowerCase().includes(q)); arr.sort((a,b)=>STATE.sort==='name'?a.name.localeCompare(b.name):STATE.sort==='progress'?(b.tracking.pct||0)-(a.tracking.pct||0):STATE.sort==='time'?(a.cost.timeHours??999999)-(b.cost.timeHours??999999):scoreAward(a)-scoreAward(b)); return arr}
+function render(){if(!STATE.data)return; renderTabs(); const c=$('content'); if(STATE.tab==='dashboard')return renderDashboard(c); if(STATE.tab==='next')return renderNext(c); if(STATE.tab==='optimizer')return renderOptimizer(c); if(STATE.tab==='explorer')return renderExplorer(c); if(STATE.tab==='tracker')return renderTracker(c); if(STATE.tab==='combos')return renderCombos(c); if(STATE.tab==='guide')return renderGuide(c)}
+function renderDashboard(c){const locked=lockedAwards(); const accurate=locked.filter(a=>a.tracking.mode==='accurate').length; const manual=locked.filter(a=>a.tracking.mode==='manual').length; const fast=locked.filter(a=>a.tracking.left!==null&&a.tracking.left<=100).length; c.innerHTML=`<div class="stats"><div class="stat"><span>Unlocked</span><b>${unlocked()}/${STATE.awards.length}</b></div><div class="stat"><span>Locked</span><b>${locked.length}</b></div><div class="stat"><span>Fast targets</span><b>${fast}</b></div><div class="stat"><span>Manual/RNG</span><b>${manual}</b></div></div><div class="section-title"><h2>Best next merits</h2><span class="muted">Safe ranking, locked-only</span></div><div class="grid">${locked.sort((a,b)=>scoreAward(a)-scoreAward(b)).slice(0,8).map(card).join('')}</div>`}
+function renderNext(c){const arr=lockedAwards().filter(a=>a.tracking.mode!=='manual').sort((a,b)=>scoreAward(a)-scoreAward(b)).slice(0,30); c.innerHTML=`<div class="section-title"><h2>Next merits</h2><span class="muted">Closest and most efficient locked awards</span></div><div class="grid">${arr.map(card).join('')}</div>`}
+function settingsHtml(){const s=STATE.settings; return `<div class="settings"><div class="setting"><label>Donator / Founder active</label><select onchange="STATE.settings.donator=this.value==='1';saveSettings()"><option value="1" ${s.donator?'selected':''}>Yes</option><option value="0" ${!s.donator?'selected':''}>No</option></select></div><div class="setting"><label>Xanax per day</label><select onchange="STATE.settings.xanax=Number(this.value);saveSettings()">${[0,1,2,3].map(n=>`<option value="${n}" ${s.xanax==n?'selected':''}>${n}</option>`).join('')}</select></div><div class="setting"><label>Daily energy refill</label><select onchange="STATE.settings.refill=this.value==='1';saveSettings()"><option value="0" ${!s.refill?'selected':''}>No</option><option value="1" ${s.refill?'selected':''}>Yes</option></select></div><div class="setting"><label>Cannabis nerve boost</label><select onchange="STATE.settings.cannabis=this.value==='1';saveSettings()"><option value="0" ${!s.cannabis?'selected':''}>No</option><option value="1" ${s.cannabis?'selected':''}>Yes</option></select></div><div class="setting"><label>Nerve bar</label><input type="number" value="${s.nerveBar}" onchange="STATE.settings.nerveBar=Number(this.value);saveSettings()"></div><div class="setting"><label>Average race duration min</label><input type="number" value="${s.raceMins}" onchange="STATE.settings.raceMins=Number(this.value);saveSettings()"></div></div>`}
+function renderOptimizer(c){const b=dailyBudget(); const arr=lockedAwards().filter(a=>a.tracking.mode!=='manual'&&a.tracking.mode!=='verify').sort((a,b)=>scoreAward(a)-scoreAward(b)).slice(0,18); c.innerHTML=`<div class="section-title"><h2>Merit optimizer</h2><span class="muted">Daily budget: ⚡ ${fmt(b.energy)} / 🧠 ${fmt(b.nerve)}</span></div>${settingsHtml()}<div class="grid">${arr.map(card).join('')}</div>`}
+function filterBar(){const cats=['all',...Array.from(new Set(STATE.awards.map(a=>a.cat))).sort()]; return `<div class="filters"><input placeholder="Search award, stat, category..." value="${STATE.search}" oninput="STATE.search=this.value;render()"><select onchange="STATE.cat=this.value;render()">${cats.map(x=>`<option value="${x}" ${STATE.cat===x?'selected':''}>${x}</option>`).join('')}</select><select onchange="STATE.status=this.value;render()"><option value="locked" ${STATE.status==='locked'?'selected':''}>Locked</option><option value="earned" ${STATE.status==='earned'?'selected':''}>Earned</option><option value="all" ${STATE.status==='all'?'selected':''}>All</option></select><select onchange="STATE.tracking=this.value;render()"><option value="all">All tracking</option><option value="accurate">Accurate</option><option value="estimated">Estimated</option><option value="manual">Manual</option><option value="verify">Needs verification</option></select><select onchange="STATE.sort=this.value;render()"><option value="roi">Best ROI</option><option value="progress">Progress</option><option value="time">Time</option><option value="name">Name</option></select></div>`}
+function renderExplorer(c){const arr=filteredAwards(); c.innerHTML=`<div class="section-title"><h2>Awards explorer</h2><span class="muted">${arr.length} results</span></div>${filterBar()}<div class="grid">${arr.map(card).join('')}</div>`}
+function renderTracker(c){const groups={high:[],medium:[],low:[],none:[]}; lockedAwards().forEach(a=>groups[a.priority||'none'].push(a)); c.innerHTML=`<div class="section-title"><h2>My tracker</h2><span class="muted">Priorities are saved in this browser</span></div><div class="cols">${[['high','⭐ High'],['medium','● Medium'],['low','○ Low'],['none','Unsorted']].map(([k,l])=>`<div class="col"><h3>${l} (${groups[k].length})</h3>${groups[k].slice(0,40).map(a=>`<div class="compact"><b>${a.name}</b><span class="muted">${a.tracking.left===null?'Manual':fmt(a.tracking.left)+' left'} · ${a.cat}</span></div>`).join('')}</div>`).join('')}</div>`}
+const COMBOS=[{name:'Bare + Unarmed + Stealth',ids:['H763','H515','H27'],setup:'Remove all armor, use fists/kick only, enable stealth and use weak targets.'},{name:'Rounds fired + weapon finishers',ids:['H140','H151','H834','H146','H148','H145','H147'],setup:'Use a firearm with high rate of fire while farming weak targets.'},{name:'Temp weapon / Pepper Spray',ids:['H143','H515','H763'],setup:'Equip Pepper Spray, no weapon or fists finish where possible.'},{name:'Travel + imports',ids:['H11','H165','H541','H542','H543'],setup:'Fly repeatedly and buy/import items abroad.'},{name:'Crimes chains',ids:['M242','M243','M244','M257','M272','M302'],setup:'Pick the closest crime category medals based on locked progress.'}];
+function renderCombos(c){let html='<div class="section-title"><h2>Combos</h2><span class="muted">Only shows combos with locked awards</span></div><div class="grid">'; for(const co of COMBOS){const awards=co.ids.map(id=>STATE.awards.find(a=>a.type===id[0]&&a.id==Number(id.slice(1)))).filter(Boolean).filter(a=>!a.earned); if(!awards.length)continue; html+=`<div class="card"><div class="name">${co.name}</div><div class="desc">${co.setup}</div><div class="meta"><span class="tag">${awards.length} locked awards</span></div>${awards.map(a=>`<div class="compact"><b>${a.name}</b><span class="muted">${a.tracking.left===null?'Manual':fmt(a.tracking.left)+' left'} · ${a.tracking.label}</span></div>`).join('')}</div>`} html+='</div>'; c.innerHTML=html}
+function renderGuide(c){const manual=lockedAwards().filter(a=>a.tracking.mode==='manual').slice(0,10); const verify=lockedAwards().filter(a=>a.tracking.mode==='verify').slice(0,10); c.innerHTML=`<div class="section-title"><h2>Guides & data quality</h2><span class="muted">Built to avoid fake progress</span></div><div class="guide"><b>Rule used by this clean build:</b><br>If Torn says an award is locked, the site never marks it as done, even if a personalstat exceeds the guessed goal. Unsafe awards are moved to Manual or Needs verification.</div><div class="section-title"><h2>Needs verification</h2></div><div class="grid">${verify.map(card).join('')||'<p class="muted">No suspicious awards detected.</p>'}</div><div class="section-title"><h2>Manual / RNG examples</h2></div><div class="grid">${manual.map(card).join('')}</div>`}
+function setPriority(type,id,p){const key=type+id; STATE.priorities[key]=STATE.priorities[key]===p?'none':p; saveJson('torn_merit_priorities',STATE.priorities); const a=STATE.awards.find(x=>x.type===type&&x.id===id); if(a)a.priority=STATE.priorities[key]; render()}
+function openDetails(type,id){const a=STATE.awards.find(x=>x.type===type&&x.id===id); if(!a)return; $('modalTitle').innerHTML=`<h2 style="margin:0">${a.name}</h2><p class="muted" style="margin:6px 0 0">${a.type==='H'?'Honor':'Medal'} #${a.id} · ${a.cat}</p>`; $('modalBody').innerHTML=`<p>${a.desc}</p><div class="meta"><span class="tag ${a.type==='H'?'honor':'medal'}">${a.type==='H'?'Honor':'Medal'}</span>${trackingTag(a.tracking)}<span class="tag">${a.tracking.statKey||'no stat key'}</span></div><div class="stats"><div class="stat"><span>Progress</span><b>${a.tracking.current===null?'Manual':fmt(a.tracking.current)+' / '+fmt(a.tracking.goal)}</b></div><div class="stat"><span>Remaining</span><b>${a.tracking.left===null?'—':fmt(a.tracking.left)}</b></div><div class="stat"><span>Energy</span><b>${a.cost.energy===null?'—':fmt(a.cost.energy)}</b></div><div class="stat"><span>Nerve</span><b>${a.cost.nerve===null?'—':fmt(a.cost.nerve)}</b></div></div><div class="guide"><b>Tracking note:</b><br>${a.tracking.reason}<br><br><b>Cost model:</b> ${a.cost.label}. Estimated time: ${a.cost.timeHours===null?'not calculable':formatTime(a.cost.timeHours)}.</div>`; $('modal').style.display='flex'}
+function closeModal(){$('modal').style.display='none'};
 </script>
-<div id="awardModal" class="modalWrap" onclick="if(event.target.id==='awardModal')closeModal()"></div>
-</body></html>
+</body>
+</html>
