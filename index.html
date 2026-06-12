@@ -454,9 +454,23 @@ function buildAwards(honorsDB,medalsDB,data){
   const goal=tr.mode==='manual'?null:(mapped?mapped.g:getGoalFromDesc(raw.description));
   const cat=TYPE_CAT[raw.type?.title||'misc']||'misc';
   const val=statKey?Math.max(0,stats[statKey]||0):0;
-  const pct=goal&&statKey?Math.min(100,Math.round(val/goal*1000)/10):0;
-  const left=goal&&statKey?Math.max(0,goal-val):null;
-  out.push({id:raw.id,type,name:raw.name,desc:raw.description,rarity:raw.rarity||'',cat,statKey,goal,val,pct,left,earned,tracking:tr.mode,trackingReason:tr.reason,trackingSource:tr.source});
+  let pct=goal&&statKey?Math.min(100,Math.round(val/goal*1000)/10):0;
+  let left=goal&&statKey?Math.max(0,goal-val):null;
+
+  // Hard safety rule:
+  // If Torn has NOT awarded this honor/medal yet, the UI must never show it as 100% done,
+  // even when a personalstats value appears to exceed the guessed/mapped goal.
+  // This prevents false positives like:
+  // - "Overdose on Cannabis" being treated as cantaken >= 1
+  // - "Burgle all 34 areas" being treated as criminaloffenses >= 34
+  // - "Win 100 races" being treated as racesentered >= 100
+  const lockedDespiteStats = !earned && goal && statKey && val >= goal;
+  if(lockedDespiteStats){
+    pct = 99;
+    left = null;
+  }
+
+  out.push({id:raw.id,type,name:raw.name,desc:raw.description,rarity:raw.rarity||'',cat,statKey,goal,val,pct,left,earned,tracking:tr.mode,trackingReason:tr.reason,trackingSource:tr.source,lockedDespiteStats});
  };
  for(const h of honorsDB) pushAward(h,'H');
  for(const m of medalsDB) pushAward(m,'M');
@@ -465,7 +479,13 @@ function buildAwards(honorsDB,medalsDB,data){
 function enrichAward(a){
  const pr=pget('priority_'+awardKey(a),'none'); const st=pget('status_'+awardKey(a), a.earned?'done':'todo');
  let effort='unknown', cost='unknown', speed=999999;
- if(a.left!==null){speed=a.left; if(a.left<=10) effort='instant'; else if(a.left<=50) effort='quick'; else if(a.left<=500) effort='grind'; else effort='long';}
+ if(a.lockedDespiteStats){
+   effort='verify';
+   speed=200000;
+ }else if(a.left!==null){
+   speed=a.left;
+   if(a.left<=10) effort='instant'; else if(a.left<=50) effort='quick'; else if(a.left<=500) effort='grind'; else effort='long';
+ }
  if(['travel','casino','drugs'].includes(a.cat)) cost='paid'; else if(['attacks','weapons','crimes','gym'].includes(a.cat)) cost='action'; else cost='mixed';
  return {...a,priority:pr,status:st,effort,cost,speed};
 }
@@ -476,8 +496,8 @@ function renderShell(){
 function setTab(t){STATE.tab=t; renderShell(); render()}
 function content(h){document.getElementById('content').innerHTML=h}
 function renderStats(){
- const d=STATE.data,a=STATE.awards; const missing=a.filter(x=>!x.earned).length; const rush=a.filter(x=>!x.earned&&x.left!==null&&x.left<=50).length; const high=a.filter(x=>!x.earned&&x.priority==='high').length; const exact=a.filter(x=>!x.earned&&x.tracking==='exact').length; const manual=a.filter(x=>!x.earned&&x.tracking==='manual').length;
- document.getElementById('stats').innerHTML=`<div class="kpis"><div class="kpi"><div class="l">Operative</div><div class="v">${d.name}</div><div class="s">Lvl ${d.level} · ${d.rank}</div></div><div class="kpi"><div class="l">Missing awards</div><div class="v">${missing}</div><div class="s">${exact} accurate · ${manual} manual</div></div><div class="kpi"><div class="l">Fast targets</div><div class="v">${rush}</div><div class="s">≤ 50 exact/estimated actions left</div></div><div class="kpi"><div class="l">High priority</div><div class="v">${high}</div><div class="s">Your pinned targets</div></div></div>`;
+ const d=STATE.data,a=STATE.awards; const missing=a.filter(x=>!x.earned).length; const rush=a.filter(x=>!x.earned&&!x.lockedDespiteStats&&x.left!==null&&x.left<=50).length; const high=a.filter(x=>!x.earned&&x.priority==='high').length; const exact=a.filter(x=>!x.earned&&x.tracking==='exact').length; const manual=a.filter(x=>!x.earned&&x.tracking==='manual').length; const verify=a.filter(x=>!x.earned&&x.lockedDespiteStats).length;
+ document.getElementById('stats').innerHTML=`<div class="kpis"><div class="kpi"><div class="l">Operative</div><div class="v">${d.name}</div><div class="s">Lvl ${d.level} · ${d.rank}</div></div><div class="kpi"><div class="l">Missing awards</div><div class="v">${missing}</div><div class="s">${exact} accurate · ${manual} manual · ${verify} verify</div></div><div class="kpi"><div class="l">Fast targets</div><div class="v">${rush}</div><div class="s">≤ 50 safe trackable actions left</div></div><div class="kpi"><div class="l">High priority</div><div class="v">${high}</div><div class="s">Your pinned targets</div></div></div>`;
 }
 function render(){renderStats(); if(STATE.tab==='dashboard') return renderDashboard(); if(STATE.tab==='next') return renderNext(); if(STATE.tab==='combos') return renderCombosSmart(); if(STATE.tab==='explorer') return renderExplorer(); if(STATE.tab==='tracker') return renderTracker(); if(STATE.tab==='guides') return renderGuides();}
 function card(a,opts={}){
@@ -487,6 +507,8 @@ function card(a,opts={}){
   prog=`<div class="tagrow"><span class="tag green">earned</span>${trackingTag(a)}</div>`;
  }else if(a.tracking==='manual'){
   prog=`<div class="tagrow">${trackingTag(a)}<span class="tag">manual checklist</span></div><div class="meta"><span>${a.trackingReason}</span></div>`;
+ }else if(a.lockedDespiteStats){
+  prog=`<div class="progress"><div class="track"><div class="fill" style="width:99%"></div></div><div class="pct">99%</div></div><div class="meta"><span>${fmt(a.val)} / ${fmt(a.goal)}</span><span>locked on Torn</span></div><div class="tagrow">${trackingTag(a)}<span class="tag red">needs verification</span></div>`;
  }else{
   prog=`<div class="progress"><div class="track"><div class="fill" style="width:${a.pct}%"></div></div><div class="pct">${a.pct}%</div></div><div class="meta"><span>${fmt(a.val)} / ${fmt(a.goal)}</span><span>${fmt(a.left)} left</span></div><div class="tagrow">${trackingTag(a)}</div>`;
  }
@@ -498,7 +520,7 @@ function clearPriority(k){pset('priority_'+k,'none');STATE.awards=STATE.awards.m
 function setStatus(k,v){pset('status_'+k,v);STATE.awards=STATE.awards.map(a=>awardKey(a)===k?{...a,status:v}:a);render()}
 function scoreAward(a){ if(a.earned) return 1e9; let s=0; if(a.left===null) s+=a.tracking==='manual'?250000:900000; else s+=a.left; if(a.priority==='high') s-=100000; if(a.priority==='medium') s-=50000; if(a.priority==='low') s-=10000; if(a.effort==='instant') s-=20000; if(a.effort==='quick') s-=10000; return s;}
 function renderDashboard(){
- const missing=STATE.awards.filter(a=>!a.earned).sort((a,b)=>scoreAward(a)-scoreAward(b)); const quick=missing.filter(a=>a.left!==null&&a.left<=50).slice(0,6); const cats=['attacks','weapons','crimes','travel','drugs','casino','gym','misc'];
+ const missing=STATE.awards.filter(a=>!a.earned).sort((a,b)=>scoreAward(a)-scoreAward(b)); const quick=missing.filter(a=>!a.lockedDespiteStats&&a.left!==null&&a.left<=50).slice(0,6); const cats=['attacks','weapons','crimes','travel','drugs','casino','gym','misc'];
  let catHtml=cats.map(c=>{const all=STATE.awards.filter(a=>a.cat===c);const done=all.filter(a=>a.earned).length;const pct=all.length?Math.round(done/all.length*100):0;return `<div class="smallcard"><b>${c.toUpperCase()}</b><div class="progress"><div class="track"><div class="fill" style="width:${pct}%"></div></div><div class="pct">${pct}%</div></div><div class="meta"><span>${done}/${all.length}</span><span>${all.length-done} missing</span></div></div>`}).join('');
  content(`<div class="sectionTitle"><div><h2>Command dashboard</h2><p>Your best opportunities and weak categories.</p></div></div><div class="widegrid"><div class="panel"><h3 style="margin-top:0">Fastest actionable merits</h3><div class="grid">${quick.map(a=>card(a)).join('')||'<div class="empty">No fast trackable awards found.</div>'}</div></div><div class="panel"><h3 style="margin-top:0">Category heatmap</h3>${catHtml}<button class="primary" style="width:100%;margin-top:10px" onclick="setTab('explorer')">Open full explorer</button></div></div>`)
 }
