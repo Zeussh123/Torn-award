@@ -57,7 +57,7 @@ body.blue nav{background:rgba(6,13,26,.96)}
 .rhdr{padding:11px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--brd)}
 .rhdr h3{font-size:13px;font-weight:700}
 .rhdr .cnt{font-family:var(--mono);font-size:11px;color:var(--muted)}
-.rrow{display:flex;align-items:flex-start;gap:12px;padding:12px 16px;border-bottom:1px solid var(--brd);transition:.15s}
+.rrow{display:flex;align-items:flex-start;gap:12px;padding:12px 16px;border-bottom:1px solid var(--brd);transition:.15s;cursor:pointer}
 .rrow:last-child{border-bottom:none}
 .rrow:hover{background:var(--surf2)}
 .rinfo{flex:1}
@@ -402,7 +402,10 @@ function renderRush(el){
       <div class="rbox">
         <div class="rhdr"><h3>${t(tier.k)}</h3><span class="cnt">${tier.items.length} award${tier.items.length>1?'s':''}</span></div>
         ${tier.items.map(a=>`
-          <div class="rrow">
+          <a class="rrow" href="https://www.torn.com/page.php?sid=awards&tab=${a.type==='H'?'honors':'medals'}" target="_blank" style="text-decoration:none;color:inherit;display:flex">
+            <img src="https://yata.yt/media/${a.type==='H'?'honors':'medals'}/${a.id}.png" 
+                 style="width:32px;height:32px;object-fit:contain;flex-shrink:0;margin-right:4px;align-self:center"
+                 onerror="this.style.display='none'" loading="lazy"/>
             <div class="rinfo">
               <div class="rname">${a.name}<span class="rbadge ${a.type==='H'?'bh':'bm'}">${a.type==='H'?'HONOR':'MEDAL'}</span></div>
               <div class="rdesc"><strong style="color:var(--amber);font-size:10px">${t('how')} </strong>${a.desc}</div>
@@ -413,7 +416,7 @@ function renderRush(el){
               <div class="rstat">${a.statKey||'?'}</div>
               <div class="rstat" style="color:var(--muted)">${fmt(a.val)}/${fmt(a.goal)}</div>
             </div>
-          </div>
+          </a>
         `).join('')}
       </div>
     `;
