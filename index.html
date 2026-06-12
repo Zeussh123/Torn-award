@@ -42,6 +42,9 @@ button,input,select,textarea{font-family:inherit}a{color:inherit}.mono{font-fami
 .costNote{font-size:10.5px;line-height:1.45;color:var(--muted)}
 
 @media(max-width:900px){.layout{grid-template-columns:1fr}.side{position:static;height:auto;display:flex;overflow:auto;border-right:0;border-bottom:1px solid var(--line)}.navbtn{width:auto;white-space:nowrap}.kpis{grid-template-columns:repeat(2,1fr)}.widegrid,.columns{grid-template-columns:1fr}.keyrow{flex-direction:column}}
+
+.costMini{display:flex;gap:6px;flex-wrap:wrap;margin:9px 0 2px}.cm{background:rgba(255,255,255,.045);border:1px solid var(--line);border-radius:999px;padding:4px 8px;font-family:var(--mono);font-size:10px;color:var(--muted)}.cm b{color:var(--text)}
+.modalWrap{position:fixed;inset:0;background:rgba(0,0,0,.72);backdrop-filter:blur(7px);display:none;align-items:center;justify-content:center;z-index:9999;padding:18px}.modalWrap.on{display:flex}.modal{width:min(860px,96vw);max-height:90vh;overflow:auto;background:linear-gradient(135deg,#11151c,#08090c);border:1px solid var(--line);border-radius:18px;box-shadow:0 30px 90px rgba(0,0,0,.7)}.modalHead{display:flex;align-items:flex-start;gap:14px;padding:18px;border-bottom:1px solid var(--line)}.modalHead img{width:54px;height:54px;object-fit:contain;border:1px solid var(--line);border-radius:12px;background:#07080a}.modalBody{padding:18px}.modalGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:12px 0}.modalCell{background:rgba(255,255,255,.035);border:1px solid var(--line);border-radius:12px;padding:12px}.modalCell b{display:block;font-size:18px}.modalCell span{font-family:var(--mono);font-size:10px;color:var(--muted);text-transform:uppercase}.closeBtn{margin-left:auto;background:#1b202a;border:1px solid var(--line);color:var(--text);border-radius:10px;padding:8px 10px;cursor:pointer}.optimizerGrid{display:grid;grid-template-columns:1.15fr .85fr;gap:12px}.budgetBox{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:12px}.budgetCell{background:linear-gradient(135deg,rgba(233,69,96,.08),rgba(255,255,255,.025));border:1px solid var(--line);border-radius:14px;padding:13px}.budgetCell b{font-size:22px}.budgetCell span{display:block;color:var(--muted);font-family:var(--mono);font-size:10px;text-transform:uppercase;margin-top:3px}.roi{font-family:var(--mono);font-size:10px;color:var(--green);margin-top:5px}@media(max-width:900px){.optimizerGrid,.budgetBox,.modalGrid{grid-template-columns:1fr}.modalHead{align-items:center}}
 </style>
 </head>
 <body>
@@ -454,202 +457,12 @@ function awardKey(a){return a.type+a.id}
 function pget(k,def=null){const p=prefs();return p[k]??def}
 function pset(k,v){const p=prefs();p[k]=v;savePrefs(p)}
 function apiIcon(a){return `https://yata.yt/media/${a.type==='H'?'honors':'medals'}/${a.id}.png`}
-function openAward(a){window.open(`https://www.torn.com/page.php?sid=awards&tab=${a.type==='H'?'honors':'medals'}`, '_blank')}
-async function loadApp(){
-  const key=document.getElementById('apiKey').value.trim(); if(!key) return;
-  document.getElementById('loadBtn').disabled=true; document.getElementById('login').style.display='none'; document.getElementById('app').style.display='grid';
-  content(`<div class="loading"><div class="spinner"></div><div>Pulling Torn intelligence...</div></div>`);
-  try{
-    const [u1,u2,h,m]=await Promise.all([
-      fetch(`https://api.torn.com/user/?selections=profile,honors,medals&key=${key}`).then(r=>r.json()),
-      fetch(`https://api.torn.com/user/?selections=personalstats&key=${key}`).then(r=>r.json()),
-      fetch(`https://api.torn.com/v2/torn/honors?key=${key}`).then(r=>r.json()),
-      fetch(`https://api.torn.com/v2/torn/medals?key=${key}`).then(r=>r.json())
-    ]);
-    if(u1.error) throw new Error(u1.error.error); if(u2.error) throw new Error(u2.error.error);
-    const honorsDB=(h.honors||[]).filter(x=>x.type&&x.type.title!=='default'&&x.crimes_version!=='v1');
-    const medalsDB=(m.medals||[]).filter(x=>x.crimes_version!=='v1');
-    STATE.data={name:u1.name,level:u1.level,rank:u1.rank,age:u1.age,earned_h:new Set(u1.honors_awarded||[]),earned_m:new Set(u1.medals_awarded||[]),stats:u2.personalstats||{}};
-    STATE.awards=buildAwards(honorsDB,medalsDB,STATE.data).map(enrichAward);
-    document.getElementById('changeKey').style.display='inline-block'; renderShell(); render();
-  }catch(e){content(`<div class="err">❌ ${e.message}<br><small>Check the key and hosting mode.</small></div>`);document.getElementById('login').style.display='block';document.getElementById('app').style.display='none'}
-  document.getElementById('loadBtn').disabled=false;
-}
-function logout(){document.getElementById('login').style.display='block';document.getElementById('app').style.display='none';document.getElementById('changeKey').style.display='none'}
-function buildAwards(honorsDB,medalsDB,data){
- const out=[]; const {earned_h,earned_m,stats}=data;
- const pushAward=(raw,type)=>{
-  const earned=(type==='H'?earned_h:earned_m).has(raw.id);
-  const mapped=getAwardMapping(type,raw.id);
-  const guessedKey=mapped?null:guessStatKey(raw.description,raw.name);
-  const tr=makeTracking(type,raw.id,raw.description,mapped,guessedKey,stats);
-  const statKey=tr.mode==='manual'?null:(tr.descMap?tr.descMap.s:(mapped?mapped.s:null));
-  const goal=tr.mode==='manual'?null:(tr.descMap?tr.descMap.g:(mapped?mapped.g:null));
-  const cat=TYPE_CAT[raw.type?.title||'misc']||'misc';
-  const val=statKey?Math.max(0,stats[statKey]||0):0;
-  let pct=goal&&statKey?Math.min(100,Math.round(val/goal*1000)/10):0;
-  let left=goal&&statKey?Math.max(0,goal-val):null;
-
-  // Hard safety rule:
-  // If Torn has NOT awarded this honor/medal yet, the UI must never show it as 100% done,
-  // even when a personalstats value appears to exceed the guessed/mapped goal.
-  // This prevents false positives like:
-  // - "Overdose on Cannabis" being treated as cantaken >= 1
-  // - "Burgle all 34 areas" being treated as criminaloffenses >= 34
-  // - "Win 100 races" being treated as racesentered >= 100
-  const lockedDespiteStats = !earned && goal && statKey && val >= goal;
-  if(lockedDespiteStats){
-    pct = 99;
-    left = null;
-  }
-
-  out.push({id:raw.id,type,name:raw.name,desc:raw.description,rarity:raw.rarity||'',cat,statKey,goal,val,pct,left,earned,tracking:tr.mode,trackingReason:tr.reason,trackingSource:tr.source,lockedDespiteStats});
- };
- for(const h of honorsDB) pushAward(h,'H');
- for(const m of medalsDB) pushAward(m,'M');
- return out;
-}
-function enrichAward(a){
- const pr=pget('priority_'+awardKey(a),'none'); const st=pget('status_'+awardKey(a), a.earned?'done':'todo');
- let effort='unknown', cost='unknown', speed=999999;
- if(a.lockedDespiteStats){
-   effort='verify';
-   speed=200000;
- }else if(a.left!==null){
-   speed=a.left;
-   if(a.left<=10) effort='instant'; else if(a.left<=50) effort='quick'; else if(a.left<=500) effort='grind'; else effort='long';
- }
- if(['travel','casino','drugs'].includes(a.cat)) cost='paid'; else if(['attacks','weapons','crimes','gym'].includes(a.cat)) cost='action'; else cost='mixed';
- const base={...a,priority:pr,status:st,effort,cost,speed};
- return {...base,costEstimate:actionCostModel(base)};
-}
-
-function calcSettings(){
- const p=prefs();
- return {
-  donator:p.calc_donator??true,
-  xanax:Math.max(0,Math.min(3,Number(p.calc_xanax??0))),
-  refill:p.calc_refill??false,
-  cannabis:p.calc_cannabis??false,
-  nnb:Math.max(15,Math.min(120,Number(p.calc_nnb??35))),
-  raceMinutes:Math.max(2,Math.min(60,Number(p.calc_race_minutes??5))),
-  attacksPerXanax:p.calc_attacks_per_xanax??25
- };
-}
-function setCalc(k,v){pset('calc_'+k,v);STATE.awards=STATE.awards.map(enrichAward);renderShell();render();}
-function dailyEnergyBudget(c=calcSettings()){
- // Torn Wiki: donator/subscriber refill is 5E/10m to 150; non-donator is 5E/15m to 100.
- const natural=c.donator?720:480;
- const startCap=c.donator?150:100;
- return natural + startCap + (c.xanax*250) + (c.refill?startCap:0);
-}
-function dailyNerveBudget(c=calcSettings()){
- // Torn Wiki: nerve regenerates 1 every 5 minutes. Cannabis gives 8-12 nerve; use 10 avg.
- return 288 + c.nnb + (c.cannabis?10:0);
-}
-function actionCostModel(a, c=calcSettings()){
- if(a.earned) return {kind:'done',energy:0,nerve:0,actions:0,hours:0,accuracy:'done',note:'Already unlocked on Torn.'};
- if(a.tracking==='manual' || a.left===null || a.lockedDespiteStats){
-   return {kind:'manual',energy:null,nerve:null,actions:null,hours:null,accuracy:'manual',note:a.trackingReason||'No exact State/Goal counter available. Manual or RNG progress.'};
- }
- const left=Math.max(0,a.left||0), stat=a.statKey||'', desc=(a.desc||'').toLowerCase();
- let energy=0, nerve=0, actions=left, hours=null, accuracy='estimated', note='Estimated from the mapped Torn personalstats counter.';
- const attackStats=new Set(['attackswon','attackhits','attackcriticalhits','attacksstealthed','defendswon','attacksdraw','attacksassisted','onehitkills','bountiescollected','moneymugged','attackdamage','rankedwarhits','rifhits','smghits','pishits','shohits','slahits','piehits','axehits','machits','h2hhits','grehits','yourunaway','theyrunaway','respectforfaction','bestkillstreak']);
- const nerveStats=new Set(['criminaloffenses','vandalism','theft','counterfeiting','fraud','illicitservices','cybercrime','extortion','illegalproduction','peoplebusted']);
- if(attackStats.has(stat)){
-   // Most attack awards require attacks; use 25E per attack. For rounds fired, actions vary wildly by weapon, so keep it manual-ish.
-   if(stat==='roundsfired'){
-     energy=Math.ceil(left/20)*25;
-     actions=Math.ceil(left/20);
-     accuracy='rough';
-     note='Rounds fired depends heavily on weapon speed, reloads, misses and fight length. Assumes ~20 rounds fired per 25E attack.';
-   }else if(stat==='attackdamage'){
-     energy=Math.ceil(left/5000)*25;
-     actions=Math.ceil(left/5000);
-     accuracy='rough';
-     note='Damage per attack depends on your battle stats, target and weapons. Assumes ~5,000 damage per attack.';
-   }else if(stat==='moneymugged'){
-     energy=25;
-     actions=1;
-     accuracy='manual';
-     note='Money mugged depends on the target cash. Energy shown is for one mug attempt; amount is not predictable.';
-   }else{
-     energy=left*25;
-     actions=left;
-     accuracy='good';
-     note='Assumes one 25E attack per progress point. Combo setups can reduce effective time when multiple awards progress together.';
-   }
-   hours=energy/dailyEnergyBudget(c)*24;
- }else if(nerveStats.has(stat)){
-   nerve=left*1;
-   actions=left;
-   accuracy='rough';
-   note='Uses 1 nerve per offense as a conservative baseline. Real Crimes 2.0 actions have different nerve costs, so treat this as a lower-bound estimate.';
-   hours=nerve/dailyNerveBudget(c)*24;
- }else if(stat==='raceswon'){
-   actions=left;
-   energy=0; nerve=0;
-   hours=left*c.raceMinutes;
-   accuracy='estimated';
-   note='Uses your configured average race length. Race wins depend on car/class/competition.';
- }else if(stat==='racesentered'){
-   actions=left; hours=left*c.raceMinutes; accuracy='estimated'; note='Uses your configured average race length.';
- }else if(stat==='traveltimes'){
-   actions=left; hours=left*2; accuracy='rough'; note='Assumes ~2h average round trip. Actual country routes vary a lot.';
- }else if(stat.endsWith('travel')){
-   actions=left; hours=left*2; accuracy='rough'; note='Assumes ~2h average round trip for country-specific travel awards.';
- }else if(stat==='traveltime'){
-   actions=null; hours=left/3600; accuracy='good'; note='Goal is time spent travelling; converted seconds to hours.';
- }else if(stat==='xantaken'){
-   actions=left; hours=c.xanax>0?(left/c.xanax*24):null; accuracy='good'; note='Based on your Xanax-per-day setting. Xanax gives +250 energy but has drug cooldown and overdose risk.';
- }else if(stat==='cantaken'){
-   actions=left; hours=c.cannabis?left*24:null; accuracy='estimated'; note='Cannabis use is limited by drug cooldown and RNG overdose risk; toggle Cannabis ON to estimate one use/day.';
- }else if(stat==='medicalitemsused'){
-   actions=left; hours=null; accuracy='manual'; note='Medical items are limited by cooldown and item availability. Exact time depends on med cooldown.';
- }else if(stat==='jobpointsused'){
-   actions=left; hours=null; accuracy='manual'; note='Job points/day depends on your job/company position. Configure manually in a future version.';
- }else if(stat==='age'||stat==='daysbeendonator'||stat==='factiondays'||stat==='activestreak'){
-   actions=left; hours=left*24; accuracy='good'; note='Time-gated award. Converted remaining days to calendar time.';
- }else{
-   actions=left; hours=null; accuracy='manual'; note='No resource model yet for this stat. Progress is trackable, but energy/nerve/time cost is not reliable.';
- }
- return {kind:'estimate',energy,nerve,actions,hours,accuracy,note};
-}
-function costHtml(a){
- const c=a.costEstimate||actionCostModel(a);
- if(c.kind==='done') return `<div class="costBox"><div class="costNote">✅ ${c.note}</div></div>`;
- if(c.kind==='manual') return `<div class="costBox"><div class="costGrid"><div class="costCell"><b>—</b><span>energy</span></div><div class="costCell"><b>—</b><span>nerve</span></div><div class="costCell"><b>manual</b><span>time</span></div></div><div class="costNote">🎲 ${c.note}</div></div>`;
- const en=c.energy==null?'—':fmt(Math.ceil(c.energy));
- const nv=c.nerve==null?'—':fmt(Math.ceil(c.nerve));
- const tm=c.hours==null?'manual':fmtTime(c.hours);
- return `<div class="costBox"><div class="costGrid"><div class="costCell"><b>⚡ ${en}</b><span>energy</span></div><div class="costCell"><b>🧠 ${nv}</b><span>nerve</span></div><div class="costCell"><b>⏱ ${tm}</b><span>${c.accuracy}</span></div></div><div class="costNote">${c.note}</div></div>`;
-}
-
-function renderShell(){
- const nav=[['dashboard','🏚️','Dashboard'],['next','🎯','Next merits'],['combos','⚡','Combo builder'],['explorer','🗂️','Awards explorer'],['tracker','📌','My tracker'],['guides','📖','Guides']];
- const c=calcSettings();
- document.getElementById('side').innerHTML=nav.map(n=>`<button class="navbtn ${STATE.tab===n[0]?'on':''}" onclick="setTab('${n[0]}')"><span>${n[1]}</span><span>${n[2]}</span></button>`).join('')+`<div style="height:12px"></div><div class="panel calcPanel" style="font-size:12px;color:var(--muted);line-height:1.6"><h4>Cost model</h4><div class="calcRow"><span>Donator / Founder</span><input type="checkbox" ${c.donator?'checked':''} onchange="setCalc('donator',this.checked)"></div><div class="calcRow"><span>Xanax / day</span><select onchange="setCalc('xanax',Number(this.value))"><option value="0" ${c.xanax===0?'selected':''}>0</option><option value="1" ${c.xanax===1?'selected':''}>1</option><option value="2" ${c.xanax===2?'selected':''}>2</option><option value="3" ${c.xanax===3?'selected':''}>3</option></select></div><div class="calcRow"><span>Daily energy refill</span><input type="checkbox" ${c.refill?'checked':''} onchange="setCalc('refill',this.checked)"></div><div class="calcRow"><span>Cannabis nerve</span><input type="checkbox" ${c.cannabis?'checked':''} onchange="setCalc('cannabis',this.checked)"></div><div class="calcRow"><span>Nerve bar</span><input type="number" value="${c.nnb}" min="15" max="120" onchange="setCalc('nnb',Number(this.value))"></div><div class="calcRow"><span>Race min.</span><input type="number" value="${c.raceMinutes}" min="2" max="60" onchange="setCalc('race_minutes',Number(this.value))"></div><div style="margin-top:8px;font-family:var(--mono);font-size:11px;color:var(--muted)">Daily budget: ⚡ ${fmt(Math.round(dailyEnergyBudget(c)))} · 🧠 ${fmt(Math.round(dailyNerveBudget(c)))}</div></div><div class="panel" style="font-size:12px;color:var(--muted);line-height:1.6"><b style="color:white">Tip:</b><br>Use Explorer to star priorities, then My Tracker becomes your personal checklist.</div>`;
-}
-function setTab(t){STATE.tab=t; renderShell(); render()}
-function content(h){document.getElementById('content').innerHTML=h}
-function renderStats(){
- const d=STATE.data,a=STATE.awards,c=calcSettings(); const missing=a.filter(x=>!x.earned).length; const rush=a.filter(x=>!x.earned&&!x.lockedDespiteStats&&x.left!==null&&x.left<=50).length; const high=a.filter(x=>!x.earned&&x.priority==='high').length; const exact=a.filter(x=>!x.earned&&x.tracking==='exact').length; const manual=a.filter(x=>!x.earned&&x.tracking==='manual').length; const verify=a.filter(x=>!x.earned&&x.lockedDespiteStats).length;
- document.getElementById('stats').innerHTML=`<div class="kpis"><div class="kpi"><div class="l">Operative</div><div class="v">${d.name}</div><div class="s">Lvl ${d.level} · ${d.rank}</div></div><div class="kpi"><div class="l">Missing awards</div><div class="v">${missing}</div><div class="s">${exact} accurate · ${manual} manual · ${verify} verify</div></div><div class="kpi"><div class="l">Daily budget</div><div class="v">⚡ ${fmt(Math.round(dailyEnergyBudget(c)))}</div><div class="s">🧠 ${fmt(Math.round(dailyNerveBudget(c)))} nerve/day · ${c.xanax} xanax</div></div><div class="kpi"><div class="l">High priority</div><div class="v">${high}</div><div class="s">Your pinned targets</div></div></div>`;
-}
-function render(){renderStats(); if(STATE.tab==='dashboard') return renderDashboard(); if(STATE.tab==='next') return renderNext(); if(STATE.tab==='combos') return renderCombosSmart(); if(STATE.tab==='explorer') return renderExplorer(); if(STATE.tab==='tracker') return renderTracker(); if(STATE.tab==='guides') return renderGuides();}
-function card(a,opts={}){
- const cls=`card priority-${a.priority||'none'} ${a.earned?'done':''}`;
- let prog='';
- if(a.earned){
-  prog=`<div class="tagrow"><span class="tag green">earned</span>${trackingTag(a)}</div>`;
- }else if(a.tracking==='manual'){
-  prog=`<div class="tagrow">${trackingTag(a)}<span class="tag">manual checklist</span></div><div class="meta"><span>${a.trackingReason}</span></div>`;
- }else if(a.lockedDespiteStats){
-  prog=`<div class="progress"><div class="track"><div class="fill" style="width:99%"></div></div><div class="pct">99%</div></div><div class="meta"><span>${fmt(a.val)} / ${fmt(a.goal)}</span><span>locked on Torn</span></div><div class="tagrow">${trackingTag(a)}<span class="tag red">needs verification</span></div>`;
- }else{
-  prog=`<div class="progress"><div class="track"><div class="fill" style="width:${a.pct}%"></div></div><div class="pct">${a.pct}%</div></div><div class="meta"><span>${fmt(a.val)} / ${fmt(a.goal)}</span><span>${fmt(a.left)} left</span></div><div class="tagrow">${trackingTag(a)}</div>`;
- }
- return `<div class="${cls}"><div class="cardHead"><img class="ico" src="${apiIcon(a)}" onerror="this.style.display='none'"><div class="ctxt"><div class="title">${a.name} <span class="tag ${a.type==='H'?'blue':'gold'}">${a.type==='H'?'HONOR':'MEDAL'}</span></div><div class="desc">${a.desc||'No description available.'}</div><div class="tagrow"><span class="tag">${a.cat}</span><span class="tag">${a.statKey||'manual'}</span><span class="tag ${a.effort==='instant'?'green':a.effort==='quick'?'gold':''}">${a.effort}</span>${a.priority!=='none'?`<span class="tag red">${a.priority}</span>`:''}</div>${prog}${costHtml(a)}</div></div><div class="actions"><button class="mini star ${a.priority==='high'?'on':''}" onclick="setPriority('${awardKey(a)}','high')">⭐ High</button><button class="mini ${a.priority==='medium'?'on':''}" onclick="setPriority('${awardKey(a)}','medium')">Medium</button><button class="mini ${a.priority==='low'?'on':''}" onclick="setPriority('${awardKey(a)}','low')">Low</button><button class="mini" onclick="clearPriority('${awardKey(a)}')">Clear</button><button class="mini donebtn" onclick="setStatus('${awardKey(a)}','progress')">In progress</button><button class="mini" onclick="openAwardByKey('${awardKey(a)}')">Open</button></div></div>`;
+function openAward(a){
+ const rel=relatedCombos(a);
+ const progress=a.earned?'Unlocked':(a.lockedDespiteStats?'Locked on Torn despite stat threshold':(a.left!==null?`${fmt(a.val)} / ${fmt(a.goal)} · ${fmt(a.left)} left`:'Manual tracking'));
+ const relHtml=rel.length?`<div class="panel" style="margin-top:12px"><h3 style="margin-top:0">Can be combined with</h3>${rel.map(c=>`<div class="awardLine"><span class="dot"></span><span style="flex:1"><b>${c.name}</b><br><small>${c.setup_en}</small></span><button class="mini" onclick="copyCombo('${c.id}')">Copy</button></div>`).join('')}</div>`:'';
+ document.getElementById('awardModal').innerHTML=`<div class="modal"><div class="modalHead"><img src="${apiIcon(a)}" onerror="this.style.display='none'"><div><div class="title" style="font-size:22px">${a.name} <span class="tag ${a.type==='H'?'blue':'gold'}">${a.type==='H'?'HONOR':'MEDAL'}</span></div><div class="desc">${a.desc||''}</div><div class="tagrow"><span class="tag">${a.cat}</span><span class="tag">${a.statKey||'manual'}</span><span class="tag ${a.tracking==='exact'?'green':a.tracking==='manual'?'red':'gold'}">${a.tracking}</span></div></div><button class="closeBtn" onclick="closeModal()">Close</button></div><div class="modalBody"><h3>Progress</h3><p class="desc">${progress}</p>${modalCostBlock(a)}<div class="panel"><h3 style="margin-top:0">Current model</h3><p class="desc">${dailyBudgetText()}</p></div>${relHtml}<div style="margin-top:12px"><button class="primary" onclick="openAwardByKey('${awardKey(a)}');window.open('https://www.torn.com/page.php?sid=awards&tab=${a.type==='H'?'honors':'medals'}','_blank')">Open in Torn</button></div></div></div>`;
+ document.getElementById('awardModal').classList.add('on');
 }
 function openAwardByKey(k){const a=STATE.awards.find(x=>awardKey(x)===k);if(a)openAward(a)}
 function setPriority(k,v){pset('priority_'+k,v);STATE.awards=STATE.awards.map(a=>awardKey(a)===k?{...a,priority:v}:a);render()}
@@ -661,6 +474,18 @@ function renderDashboard(){
  let catHtml=cats.map(c=>{const all=STATE.awards.filter(a=>a.cat===c);const done=all.filter(a=>a.earned).length;const pct=all.length?Math.round(done/all.length*100):0;return `<div class="smallcard"><b>${c.toUpperCase()}</b><div class="progress"><div class="track"><div class="fill" style="width:${pct}%"></div></div><div class="pct">${pct}%</div></div><div class="meta"><span>${done}/${all.length}</span><span>${all.length-done} missing</span></div></div>`}).join('');
  content(`<div class="sectionTitle"><div><h2>Command dashboard</h2><p>Your best opportunities, weak categories, and resource estimates based on your settings.</p></div></div><div class="widegrid"><div class="panel"><h3 style="margin-top:0">Fastest actionable merits</h3><div class="grid">${quick.map(a=>card(a)).join('')||'<div class="empty">No fast trackable awards found.</div>'}</div></div><div class="panel"><h3 style="margin-top:0">Category heatmap</h3>${catHtml}<button class="primary" style="width:100%;margin-top:10px" onclick="setTab('explorer')">Open full explorer</button></div></div>`)
 }
+
+function renderOptimizer(){
+ const c=calcSettings();
+ const missing=STATE.awards.filter(a=>!a.earned&&!a.lockedDespiteStats);
+ const exact=missing.filter(a=>a.tracking==='exact'&&a.costEstimate&&a.costEstimate.kind!=='manual').sort((a,b)=>meritRoi(a)-meritRoi(b)).slice(0,12);
+ const today=exact.filter(a=>{const co=a.costEstimate;return (co.energy||0)<=dailyEnergyBudget(c) && (co.nerve||0)<=dailyNerveBudget(c) && (co.hours==null||co.hours<=24)}).slice(0,6);
+ const manual=missing.filter(a=>a.tracking==='manual').slice(0,8);
+ const budget=`<div class="budgetBox"><div class="budgetCell"><b>⚡ ${fmt(Math.round(dailyEnergyBudget(c)))}</b><span>energy/day</span></div><div class="budgetCell"><b>🧠 ${fmt(Math.round(dailyNerveBudget(c)))}</b><span>nerve/day</span></div><div class="budgetCell"><b>${c.xanax}/3</b><span>xanax per day</span></div><div class="budgetCell"><b>${c.refill?'ON':'OFF'}</b><span>daily refill</span></div></div>`;
+ const mk=a=>{const co=a.costEstimate; const roi=co.kind==='manual'?'manual':`${co.hours==null?'?':fmtTime(co.hours)} · ⚡ ${co.energy==null?'—':fmt(Math.ceil(co.energy))} · 🧠 ${co.nerve==null?'—':fmt(Math.ceil(co.nerve))}`; return `<div class="smallcard"><b>${a.name} <span class="tag ${a.type==='H'?'blue':'gold'}">${a.type}</span></b><div class="meta"><span>${a.cat} · ${a.statKey||'manual'}</span><span>${a.left!==null?fmt(a.left)+' left':'manual'}</span></div><div class="roi">${roi}</div><div class="actions"><button class="mini" onclick="openAwardByKey('${awardKey(a)}')">Details</button><button class="mini star" onclick="setPriority('${awardKey(a)}','high')">⭐ High</button></div></div>`};
+ content(`<div class="sectionTitle"><div><h2>Merit optimizer</h2><p>Prioritizes missing awards by estimated time, energy and nerve. Manual/RNG awards are separated to avoid fake calculations.</p></div></div>${budget}<div class="optimizerGrid"><div class="panel"><h3 style="margin-top:0">Best ROI targets</h3><div class="grid">${exact.map(mk).join('')||'<div class="empty">No calculable targets found.</div>'}</div></div><div><div class="panel"><h3 style="margin-top:0">Possible within your daily budget</h3>${today.map(mk).join('')||'<div class="empty" style="padding:20px">Nothing clearly doable today with current settings.</div>'}</div><div class="panel" style="margin-top:12px"><h3 style="margin-top:0">Manual / RNG targets</h3><p class="desc">These can still be easy merits, but Torn does not expose exact progress through personalstats.</p>${manual.map(mk).join('')}</div></div></div>`)
+}
+
 function renderNext(){
  const groups=['attacks','weapons','crimes','travel','drugs','casino','gym','misc'];
  const html=groups.map(c=>{const best=STATE.awards.filter(a=>!a.earned&&a.cat===c).sort((a,b)=>scoreAward(a)-scoreAward(b)).slice(0,3);return `<div class="panel"><div class="sectionTitle"><div><h2>${c.toUpperCase()}</h2><p>Closest useful targets in this category.</p></div></div><div class="grid">${best.map(a=>card(a)).join('')||'<div class="empty">Nothing left here.</div>'}</div></div>`}).join(''); content(html);
@@ -691,4 +516,5 @@ function copyCombo(id){const c=ATTACK_COMBOS.find(x=>x.id===id); if(c) copyText(
 function copyText(x){navigator.clipboard?.writeText(x)}
 document.getElementById('apiKey').addEventListener('keydown',e=>{if(e.key==='Enter')loadApp()});
 </script>
+<div id="awardModal" class="modalWrap" onclick="if(event.target.id==='awardModal')closeModal()"></div>
 </body></html>
