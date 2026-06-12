@@ -604,182 +604,166 @@ function renderRush(el){
 
 // ── ATTACK COMBOS ──
 const ATTACK_COMBOS=[
-  {id:'bare_unarmed',name:'Bare Fists — No Armor, No Weapon',name_fr:'À Poil + Mains Nues',color:'#e94560',
-   setup_en:'Remove ALL armor + equip NO weapon (set melee to fists/kick only). Attack any weak target.',
-   setup_fr:'Retire TOUTE armure + AUCUNE arme (mets uniquement poings/kick). Attaque n'importe quelle cible faible.',
-   tip_en:'Best on L3MILK [1999595] (99 total stats). Each win = +1 Bare AND +1 Unarmed finishing hit simultaneously.',
-   tip_fr:'Parfait sur L3MILK [1999595] (99 stats). Chaque victoire = +1 Bare ET +1 coup final Unarmed en même temps.',
+  {id:'bare_unarmed',
+   name:'Bare Fists — No Armor, No Weapon',
+   name_fr:'À Poil + Mains Nues',
+   color:'#e94560',
+   setup_en:`Remove ALL armor + equip NO weapon (set melee to fists/kick only). Attack any weak target.`,
+   setup_fr:`Retire TOUTE armure + AUCUNE arme (mets uniquement poings/kick). Attaque n'importe quelle cible faible.`,
+   tip_en:`Best on L3MILK [1999595] (99 total stats). Each win = +1 Bare AND +1 Unarmed finishing hit simultaneously.`,
+   tip_fr:`Parfait sur L3MILK [1999595] (99 stats). Chaque victoire = +1 Bare ET +1 coup final Unarmed en même temps.`,
    hids:[515,763],mids:[]},
-  {id:'bare_stealth',name:'Bare + Unarmed + Stealth',name_fr:'À Poil + Mains Nues + Furtif',color:'#4a9eff',
-   setup_en:'Remove ALL armor + fists only + enable Stealth. Use Smoke Grenade temp for max stealth chance.',
-   setup_fr:'Retire toute armure + poings uniquement + active le Furtif. Utilise Smoke Grenade temp pour max furtif.',
-   tip_en:'Each stealthed win counts toward Night Walker (100) + Bare (250) + Unarmed (100) all at once.',
-   tip_fr:'Chaque victoire furtive compte pour Night Walker (100) + Bare (250) + Unarmed (100) en même temps.',
+  {id:'bare_stealth',
+   name:'Bare + Unarmed + Stealth',
+   name_fr:'À Poil + Mains Nues + Furtif',
+   color:'#4a9eff',
+   setup_en:`Remove ALL armor + fists only + enable Stealth. Use Smoke Grenade temp for max stealth chance.`,
+   setup_fr:`Retire toute armure + poings uniquement + active le Furtif. Utilise Smoke Grenade temp pour max furtif.`,
+   tip_en:`Each stealthed win counts toward Night Walker (100) + Bare (250) + Unarmed (100) all at once.`,
+   tip_fr:`Chaque victoire furtive compte pour Night Walker (100) + Bare (250) + Unarmed (100) en même temps.`,
    hids:[515,763,27],mids:[]},
-  {id:'pepper_unarmed',name:'Pepper Spray + Fists Finish',name_fr:'Pepper Spray + Finir aux Poings',color:'#f5a623',
-   setup_en:'Equip Pepper Spray temp ($800 at Big Al's) + no weapon. Pepper Spray cuts their DEX by 80% = easy wins.',
-   setup_fr:'Équipe Pepper Spray temp (800$ chez Big Al) + aucune arme. Réduit leur DEX de 80% = victoires faciles.',
-   tip_en:'Pin Puller (100 temp finishing hits) + Unarmed (100 h2h hits) + Bare (250 unarmored) all together.',
-   tip_fr:'Pin Puller (100 coups finaux temp) + Unarmed (100 h2h) + Bare (250 sans armure) tous ensemble.',
+  {id:'pepper_unarmed',
+   name:'Pepper Spray + Fists Finish',
+   name_fr:'Pepper Spray + Finir aux Poings',
+   color:'#f5a623',
+   setup_en:`Equip Pepper Spray temp ($800 at Big Al's) + no weapon. Pepper Spray cuts their DEX by 80% = easy wins.`,
+   setup_fr:`Équipe Pepper Spray temp (800$ chez Big Al) + aucune arme. Réduit leur DEX de 80% = victoires faciles.`,
+   tip_en:`Pin Puller (100 temp finishing hits) + Unarmed (100 h2h hits) + Bare (250 unarmored) all together.`,
+   tip_fr:`Pin Puller (100 coups finaux temp) + Unarmed (100 h2h) + Bare (250 sans armure) tous ensemble.`,
    hids:[143,515,763],mids:[]},
-  {id:'rifle_rounds',name:'Rifle Spam — Weapon Honor + Rounds Fired',name_fr:'Spam Fusil — Honor Arme + Balles Tirées',color:'#5ba8ff',
-   setup_en:'Equip rifle as primary. Set to use rifle 100% of turns. Every fight advances rifle finishing hits AND all rounds-fired honors at the same time.',
-   setup_fr:'Équipe un fusil comme arme primaire. Mets 100% sur fusil. Chaque combat fait progresser les coups finaux fusil ET tous les honors balles tirées en même temps.',
-   tip_en:'Spray And Pray (1k) + Two Halves (10k) + Lead Salad (100k) + Peppered (1M) all share roundsfired stat.',
-   tip_fr:'Spray And Pray (1k) + Two Halves (10k) + Lead Salad (100k) + Peppered (1M) partagent tous la stat roundsfired.',
+  {id:'rifle_rounds',
+   name:'Rifle Spam — Weapon Honor + Rounds Fired',
+   name_fr:'Spam Fusil — Honor Arme + Balles Tirées',
+   color:'#5ba8ff',
+   setup_en:`Equip rifle as primary. Set to use rifle 100% of turns. Every fight advances rifle finishing hits AND all rounds-fired honors at the same time.`,
+   setup_fr:`Équipe un fusil comme arme primaire. Mets 100% sur fusil. Chaque combat fait progresser les coups finaux fusil ET tous les honors balles tirées en même temps.`,
+   tip_en:`Spray And Pray (1k) + Two Halves (10k) + Lead Salad (100k) + Peppered (1M) all share roundsfired stat.`,
+   tip_fr:`Spray And Pray (1k) + Two Halves (10k) + Lead Salad (100k) + Peppered (1M) partagent tous la stat roundsfired.`,
    hids:[146,140,151,834],mids:[]},
-  {id:'grenade_finish',name:'Grenade Finish — Pin Puller + Rounds',name_fr:'Finir à la Grenade',color:'#2ecc71',
-   setup_en:'Equip SMG/rifle as primary + Grenade as temp. Spray rounds then finish with grenade. Max efficiency.',
-   setup_fr:'Équipe SMG/fusil + Grenade comme temp. Tire beaucoup de balles puis finis à la grenade. Max efficacité.',
-   tip_en:'Pin Puller + Spray And Pray + Two Halves all progress in the same attack. Great XP too.',
-   tip_fr:'Pin Puller + Spray And Pray + Two Halves progressent tous dans la même attaque. Excellent XP aussi.',
+  {id:'grenade_finish',
+   name:'Grenade Finish — Pin Puller + Rounds',
+   name_fr:'Finir à la Grenade',
+   color:'#2ecc71',
+   setup_en:`Equip SMG/rifle as primary + Grenade as temp. Spray rounds then finish with grenade.`,
+   setup_fr:`Équipe SMG/fusil + Grenade comme temp. Tire beaucoup de balles puis finis à la grenade.`,
+   tip_en:`Pin Puller + Spray And Pray + Two Halves all progress in the same attack.`,
+   tip_fr:`Pin Puller + Spray And Pray + Two Halves progressent tous dans la même attaque.`,
    hids:[143,140,151],mids:[]},
-  {id:'kick_leonidas',name:'Kick Finish — Leonidas + Unarmed',name_fr:'Finir au Kick — Leonidas + Unarmed',color:'#f5a623',
-   setup_en:'Unlock Kick (Education → Self Defense → Kickboxing). Set melee to kick only. Each finishing kick = Leonidas progress AND Unarmed hits.',
-   setup_fr:'Débloque Kick (Education → Self Defense → Kickboxing). Mets corps à corps sur kick uniquement. Chaque kick final = Leonidas ET coups finaux Unarmed.',
-   tip_en:'Leonidas needs just 1 finishing kick. Do it once instantly! Unarmed needs 100 total h2h finishing hits.',
-   tip_fr:'Leonidas = juste 1 kick final. Fais-le une fois instantanément ! Unarmed = 100 coups finaux h2h en tout.',
+  {id:'kick_leonidas',
+   name:'Kick Finish — Leonidas + Unarmed',
+   name_fr:'Finir au Kick — Leonidas + Unarmed',
+   color:'#f5a623',
+   setup_en:`Unlock Kick (Education > Self Defense > Kickboxing). Set melee to kick only. Each finishing kick = Leonidas + Unarmed hits.`,
+   setup_fr:`Débloque Kick (Education > Self Defense > Kickboxing). Mets corps à corps sur kick uniquement.`,
+   tip_en:`Leonidas needs just 1 finishing kick — do it once instantly! Unarmed needs 100 total.`,
+   tip_fr:`Leonidas = juste 1 kick final. Fais-le une fois instantanément ! Unarmed = 100 au total.`,
    hids:[871,515],mids:[]},
-  {id:'npc_chain',name:'NPC Fight — Boss Fight + Chains',name_fr:'Combat NPC — Boss Fight + Chaînes',color:'#2ecc71',
-   setup_en:'Join active NPC fight (Duke/Jimmy/Leslie) on Torn Discord. Wait for debuffs then hit once. Counts toward Boss Fight + chain honors.',
-   setup_fr:'Rejoins un combat NPC actif (Duke/Jimmy/Leslie) sur le Discord Torn. Attends les debuffs puis frappe une fois. Compte pour Boss Fight + honors de chaîne.',
-   tip_en:'Use TornTools extension to track NPC spawns. Boss Fight [665] needed for a merit.',
-   tip_fr:'Utilise l'extension TornTools pour tracker les spawns NPC. Boss Fight [665] nécessaire pour un mérite.',
+  {id:'npc_chain',
+   name:'NPC Fight — Boss Fight + Chains',
+   name_fr:'Combat NPC — Boss Fight + Chaînes',
+   color:'#2ecc71',
+   setup_en:`Join active NPC fight (Duke/Jimmy/Leslie) on Torn Discord. Wait for debuffs then hit once.`,
+   setup_fr:`Rejoins un combat NPC actif (Duke/Jimmy/Leslie) sur le Discord Torn. Attends les debuffs puis frappe une fois.`,
+   tip_en:`Use TornTools extension to track NPC spawns. Boss Fight [665] needed for a merit.`,
+   tip_fr:`Utilise TornTools pour tracker les spawns NPC. Boss Fight [665] nécessaire pour un mérite.`,
    hids:[665,253,255,257],mids:[]},
-  {id:'stealth_camo',name:'Stealth Attacks — Night Walker + Camos + Medals',name_fr:'Attaques Furtives — Night Walker + Camos + Médailles',color:'#4a9eff',
-   setup_en:'Enable stealth + Smoke Grenade temp. Every stealthed win = Night Walker + ALL camo honors + attack medals simultaneously.',
-   setup_fr:'Active le furtif + Smoke Grenade temp. Chaque victoire furtive = Night Walker + TOUS les Camos + médailles attaque en même temps.',
-   tip_en:'Smoke + Flash on turn 1 = maximum stealth. Use on weak targets for efficiency.',
-   tip_fr:'Smoke + Flash au tour 1 = maximum furtif. Utilise sur des cibles faibles pour l'efficacité.',
+  {id:'stealth_camo',
+   name:'Stealth — Night Walker + Camos + Medals',
+   name_fr:'Furtif — Night Walker + Camos + Médailles',
+   color:'#4a9eff',
+   setup_en:`Enable stealth + Smoke Grenade temp. Every stealthed win = Night Walker + ALL camo honors + attack medals simultaneously.`,
+   setup_fr:`Active le furtif + Smoke Grenade temp. Chaque victoire furtive = Night Walker + TOUS les Camos + médailles attaque.`,
+   tip_en:`Smoke + Flash on turn 1 = maximum stealth. Use on weak targets.`,
+   tip_fr:`Smoke + Flash au tour 1 = maximum furtif. Utilise sur des cibles faibles.`,
    hids:[27,39,40,41,42,43],mids:[174,175,176]},
-  {id:'lovestruck',name:'Defeat Married Couple — Lovestruck',name_fr:'Battre un Couple — Lovestruck',color:'#e94560',
-   setup_en:'Find two married players (check profiles) and defeat them one after the other while both are still married.',
-   setup_fr:'Trouve deux joueurs mariés (vérifie les profils) et bats-les l'un après l'autre pendant qu'ils sont encore mariés.',
-   tip_en:'Lovestruck + Camo progress + attack medals all stack. Use a faction married couple for easy setup.',
-   tip_fr:'Lovestruck + progression Camos + médailles attaque s'accumulent. Utilise un couple marié de faction.',
-   hids:[838,39,40,41],mids:[]},
-  {id:'phoenix',name:'Lose then Win — Phoenix',name_fr:'Perdre puis Gagner — Phoenix',color:'#f5a623',
-   setup_en:'Lose to someone, then beat them back within 10 minutes. Coordinate with a faction member: they attack you first, you attack back.',
-   setup_fr:'Perds contre quelqu'un, puis bats-le en retour dans les 10 minutes. Coordonne avec un membre de faction : il t'attaque d'abord, tu attaques en retour.',
-   tip_en:'Phoenix [317] is instant once setup. Pick someone weaker so you're sure to win the return fight.',
-   tip_fr:'Phoenix [317] est instantané une fois le setup fait. Choisis quelqu'un de plus faible pour être sûr de gagner.',
+  {id:'phoenix',
+   name:'Lose then Win — Phoenix',
+   name_fr:'Perdre puis Gagner — Phoenix',
+   color:'#f5a623',
+   setup_en:`Lose to someone, then beat them back within 10 minutes. Coordinate with a faction member: they attack you first, you attack back.`,
+   setup_fr:`Perds contre quelqu'un, puis bats-le en retour dans les 10 minutes. Coordonne avec ta faction.`,
+   tip_en:`Pick someone weaker for the return fight so you are sure to win.`,
+   tip_fr:`Choisis quelqu'un de plus faible pour le retour pour être sûr de gagner.`,
    hids:[317],mids:[]},
 ];
 
 function renderCombos(el){
   const {earned_h,earned_m}=S.data;
-  const activeCombos=ATTACK_COMBOS.filter(c=>{
-    return c.hids.some(id=>!earned_h.has(id))||c.mids.some(id=>!earned_m.has(id));
-  });
-
-  let html=`<div class="sec">${lang==='fr'?'⚡ Combos par Setup d\'Attaque':'⚡ Combos by Attack Setup'}</div>`;
-  html+=`<p style="color:var(--muted);font-size:12px;margin-bottom:16px">${lang==='fr'?'Chaque setup permet d\'obtenir plusieurs honors en même temps. Awards déjà obtenus sont grisés.':'Each setup earns multiple honors at once. Already earned awards are greyed out.'}</p>`;
-
-  for(const combo of activeCombos){
+  const active=ATTACK_COMBOS.filter(c=>c.hids.some(id=>!earned_h.has(id))||c.mids.some(id=>!earned_m.has(id)));
+  let html=`<div class="sec">${lang==='fr'?'⚡ Combos par Setup':'⚡ Combos by Attack Setup'}</div>`;
+  html+=`<p style="color:var(--muted);font-size:12px;margin-bottom:16px">${lang==='fr'?'Chaque setup permet d\'obtenir plusieurs honors en même temps.':'Each setup earns multiple honors at once. Already earned awards are greyed out.'}</p>`;
+  for(const c of active){
     const awards=[
-      ...combo.hids.map(id=>{const a=S.allAwards.find(x=>x.type==='H'&&x.id===id);return a?{...a,earned:earned_h.has(id)}:{id,type:'H',name:'Honor #'+id,earned:earned_h.has(id),left:null};}),
-      ...combo.mids.map(id=>{const a=S.allAwards.find(x=>x.type==='M'&&x.id===id);return a?{...a,earned:earned_m.has(id)}:{id,type:'M',name:'Medal #'+id,earned:earned_m.has(id),left:null};}),
+      ...c.hids.map(id=>{const a=S.allAwards.find(x=>x.type==='H'&&x.id===id);return a?{...a,earned:earned_h.has(id)}:{id,type:'H',name:'Honor #'+id,earned:earned_h.has(id),left:null};}),
+      ...c.mids.map(id=>{const a=S.allAwards.find(x=>x.type==='M'&&x.id===id);return a?{...a,earned:earned_m.has(id)}:{id,type:'M',name:'Medal #'+id,earned:earned_m.has(id),left:null};}),
     ];
-    html+=`
-      <div class="cbox" style="border-left:3px solid ${combo.color};border-color:${combo.color}33">
-        <h3 style="color:${combo.color}">${lang==='fr'?combo.name_fr:combo.name}</h3>
-        <div class="cdesc">
-          <span style="color:var(--amber);font-size:10px;font-weight:700">⚙️ ${lang==='fr'?'Setup':'Setup'}:</span>
-          ${lang==='fr'?combo.setup_fr:combo.setup_en}
-        </div>
-        <div style="font-size:11px;color:var(--blue);margin-bottom:10px;padding:6px 8px;background:var(--blue-d);border-radius:4px">
-          💡 ${lang==='fr'?combo.tip_fr:combo.tip_en}
-        </div>
-        ${awards.map(a=>`
-          <a class="crow ${a.earned?'cdone':''}"
-             href="https://www.torn.com/page.php?sid=awards&tab=${a.type==='H'?'honors':'medals'}"
-             target="_blank" style="text-decoration:none;color:inherit;display:flex;align-items:center">
-            <img src="https://yata.yt/media/${a.type==='H'?'honors':'medals'}/${a.id}.png"
-                 style="width:22px;height:22px;object-fit:contain;flex-shrink:0;margin-right:6px"
-                 onerror="this.style.display='none'" loading="lazy"/>
-            <div class="cdot"></div>
-            <div style="flex:1">${a.name} <span style="color:var(--muted);font-size:10px">[${a.type==='H'?'H':'M'}]</span></div>
-            <div style="font-family:var(--mono);font-size:11px;color:${a.earned?'var(--green)':'var(--red)'}">
-              ${a.earned?t('earned'):(a.left!==null?fmt(a.left)+' '+t('left'):'—')}
-            </div>
-          </a>
-        `).join('')}
-      </div>
-    `;
+    html+=`<div class="cbox" style="border-left:3px solid ${c.color};border-color:${c.color}33">
+      <h3 style="color:${c.color}">${lang==='fr'?c.name_fr:c.name}</h3>
+      <div class="cdesc"><span style="color:var(--amber);font-size:10px;font-weight:700">⚙️ Setup: </span>${lang==='fr'?c.setup_fr:c.setup_en}</div>
+      <div style="font-size:11px;color:var(--blue);margin-bottom:10px;padding:6px 8px;background:var(--blue-d);border-radius:4px">💡 ${lang==='fr'?c.tip_fr:c.tip_en}</div>
+      ${awards.map(a=>`<a class="crow ${a.earned?'cdone':''}" href="https://www.torn.com/page.php?sid=awards&tab=${a.type==='H'?'honors':'medals'}" target="_blank" style="text-decoration:none;color:inherit;display:flex;align-items:center">
+        <img src="https://yata.yt/media/${a.type==='H'?'honors':'medals'}/${a.id}.png" style="width:22px;height:22px;object-fit:contain;flex-shrink:0;margin-right:6px" onerror="this.style.display='none'" loading="lazy"/>
+        <div class="cdot"></div>
+        <div style="flex:1">${a.name} <span style="color:var(--muted);font-size:10px">[${a.type==='H'?'H':'M'}]</span></div>
+        <div style="font-family:var(--mono);font-size:11px;color:${a.earned?'var(--green)':'var(--red)'}">${a.earned?t('earned'):(a.left!==null?fmt(a.left)+' '+t('left'):'—')}</div>
+      </a>`).join('')}
+    </div>`;
   }
-  if(!activeCombos.length) html+=`<div class="empty">🏆 All combo awards earned!</div>`;
+  if(!active.length) html+=`<div class="empty">🏆 All combo awards earned!</div>`;
   el.innerHTML=html;
 }
 
-// ── TUTOS ──
 function renderTutos(el){
   const {earned_h,earned_m}=S.data;
-  const notEarned=(type,id)=>type==='H'?!earned_h.has(id):!earned_m.has(id);
-
-  const TUTOS=[
-    {cat_en:'⚡ Instant — Do it right now',cat_fr:'⚡ Instantané — Faisable maintenant',color:'#e94560',items:[
-      {name:'Domino Effect',type:'H',id:230,en:'Defeat L3MILK [1999595] — level 4, only 99 total stats. Always works.',fr:'Bats L3MILK [1999595] — niveau 4, seulement 99 stats totales. Fonctionne toujours.'},
-      {name:'Pocket Money',type:'H',id:12,en:'Invest any amount in City → Bank. Even $1 works.',fr:'Investis n'importe quel montant en City → Bank. Même $1 fonctionne.'},
-      {name:'Flatline',type:'H',id:254,en:'One-hit kill someone from full HP. Use powerful weapon on very weak target.',fr:'Tue quelqu'un en un coup depuis les HP pleins. Arme puissante sur cible très faible.'},
-      {name:'Leonidas',type:'H',id:871,en:'Unlock Kick (Education → Self Defense → Kickboxing). Finish 1 fight with a kick.',fr:'Débloque Kick (Education → Self Defense → Kickboxing). Termine 1 combat avec un kick.'},
-      {name:'Semper Fortis',type:'H',id:481,en:'Beat someone with more stats than you. Penguinbob is a known easy target.',fr:'Bats quelqu'un avec plus de stats que toi. Penguinbob est une cible facile connue.'},
-      {name:'Manu Forti',type:'H',id:627,en:'Beat someone with 2x your stats. Penguinbob works here too.',fr:'Bats quelqu'un avec 2x tes stats. Penguinbob fonctionne ici aussi.'},
-      {name:'Vae Victis',type:'H',id:631,en:'Beat someone with 5x your stats. Penguinbob works here too.',fr:'Bats quelqu'un avec 5x tes stats. Penguinbob fonctionne ici aussi.'},
-      {name:'Historian',type:'H',id:845,en:'Read any Chronicle (City → Chronicle). Stay on page up to 10 minutes.',fr:'Lis n'importe quelle Chronique (City → Chronicle). Reste sur la page 10 minutes max.'},
-      {name:'Awesome',type:'H',id:427,en:'Casino → spin Wheel of Awesome. 1 merit instantly.',fr:'Casino → tourne la Wheel of Awesome. 1 mérite instantanément.'},
-      {name:'Lame',type:'H',id:431,en:'Casino → spin Wheel of Lame. 1 merit instantly.',fr:'Casino → tourne la Wheel of Lame. 1 mérite instantanément.'},
-      {name:'Mediocre',type:'H',id:437,en:'Casino → spin Wheel of Mediocrity. 1 merit instantly.',fr:'Casino → tourne la Wheel of Mediocrity. 1 mérite instantanément.'},
-      {name:'Landlord',type:'H',id:860,en:'Buy a Trailer ($5,000) and lease it to a friend for 3+ days.',fr:'Achète un Trailer (5 000$) et loue-le à un ami pour 3+ jours.'},
-      {name:'Phoenix',type:'H',id:317,en:'Lose to someone then beat them back within 10 min. Coordinate with a faction member.',fr:'Perds contre quelqu'un puis bats-le en retour dans les 10 min. Coordonne avec ta faction.'},
-      {name:'Gone Fishing',type:'H',id:902,en:'Get defeated by a Trout. Ask a faction member to attack you with a Sea Trout.',fr:'Fais-toi battre par une Truite. Demande à un membre de faction de t'attaquer avec une Sea Trout.'},
-      {name:'Friendly Fire',type:'H',id:605,en:'Defeat a faction member. Ask weakest member to remove armor/weapons.',fr:'Bats un membre de ta faction. Demande au plus faible de retirer armure/armes.'},
-      {name:'Going Postal',type:'H',id:896,en:'Defeat a company co-worker. Works on DarkPulse employees.',fr:'Bats un collègue de société. Fonctionne sur les employés DarkPulse.'},
-      {name:'Lovestruck',type:'H',id:838,en:'Defeat two married players back to back while both are still married.',fr:'Bats deux joueurs mariés de suite pendant qu'ils sont encore mariés.'},
+  const ne=(type,id)=>type==='H'?!earned_h.has(id):!earned_m.has(id);
+  const secs=[
+    {ce:`⚡ Instant — Do it right now`,cf:`⚡ Instantané — Faisable maintenant`,col:'#e94560',items:[
+      {name:'Domino Effect',type:'H',id:230,en:`Defeat L3MILK [1999595] — level 4, only 99 total stats. Always works.`,fr:`Bats L3MILK [1999595] — niveau 4, seulement 99 stats totales. Fonctionne toujours.`},
+      {name:'Pocket Money',type:'H',id:12,en:`Invest any amount in City → Bank. Even $1 works.`,fr:`Investis n'importe quel montant en City → Bank. Même $1 fonctionne.`},
+      {name:'Flatline',type:'H',id:254,en:`One-hit kill from full HP. Use powerful weapon on very weak target.`,fr:`Tue en un coup depuis les HP pleins. Arme puissante sur cible très faible.`},
+      {name:'Leonidas',type:'H',id:871,en:`Unlock Kick (Education > Self Defense > Kickboxing). Finish 1 fight with a kick.`,fr:`Débloque Kick (Education > Self Defense > Kickboxing). Termine 1 combat avec un kick.`},
+      {name:'Semper Fortis',type:'H',id:481,en:`Beat someone with more stats than you. Penguinbob is a known easy target.`,fr:`Bats quelqu'un avec plus de stats. Penguinbob est une cible facile connue.`},
+      {name:'Manu Forti',type:'H',id:627,en:`Beat someone with 2x your stats. Penguinbob works here too.`,fr:`Bats quelqu'un avec 2x tes stats. Penguinbob fonctionne ici aussi.`},
+      {name:'Vae Victis',type:'H',id:631,en:`Beat someone with 5x your stats. Penguinbob works here too.`,fr:`Bats quelqu'un avec 5x tes stats. Penguinbob fonctionne ici aussi.`},
+      {name:'Historian',type:'H',id:845,en:`Read any Chronicle (City → Chronicle). Stay on page up to 10 minutes.`,fr:`Lis n'importe quelle Chronique (City → Chronicle). Reste sur la page 10 minutes max.`},
+      {name:'Awesome',type:'H',id:427,en:`Casino → spin Wheel of Awesome. 1 merit instantly.`,fr:`Casino → tourne la Wheel of Awesome. 1 mérite instantanément.`},
+      {name:'Lame',type:'H',id:431,en:`Casino → spin Wheel of Lame. 1 merit instantly.`,fr:`Casino → tourne la Wheel of Lame. 1 mérite instantanément.`},
+      {name:'Mediocre',type:'H',id:437,en:`Casino → spin Wheel of Mediocrity. 1 merit instantly.`,fr:`Casino → tourne la Wheel of Mediocrity. 1 mérite instantanément.`},
+      {name:'Landlord',type:'H',id:860,en:`Buy a Trailer ($5,000) and lease it to a friend for 3+ days.`,fr:`Achète un Trailer (5 000$) et loue-le à un ami pour 3+ jours.`},
+      {name:'Phoenix',type:'H',id:317,en:`Lose to someone then beat them back within 10 min. Coordinate with a faction member.`,fr:`Perds contre quelqu'un puis bats-le en retour dans les 10 min. Coordonne avec ta faction.`},
+      {name:'Gone Fishing',type:'H',id:902,en:`Get defeated by a Trout. Ask a faction member to attack you with a Sea Trout.`,fr:`Fais-toi battre par une Truite. Demande à un membre de faction de t'attaquer avec une Sea Trout.`},
+      {name:'Friendly Fire',type:'H',id:605,en:`Defeat a faction member. Ask weakest member to remove armor/weapons.`,fr:`Bats un membre de ta faction. Demande au plus faible de retirer armure/armes.`},
+      {name:'Going Postal',type:'H',id:896,en:`Defeat a company co-worker. Works on DarkPulse employees.`,fr:`Bats un collègue de société. Fonctionne sur les employés DarkPulse.`},
+      {name:'Lovestruck',type:'H',id:838,en:`Defeat two married players back to back while both are still married.`,fr:`Bats deux joueurs mariés de suite pendant qu'ils sont encore mariés.`},
+      {name:'Yoink',type:'H',id:955,en:`Mug someone who just mugged someone else within 5 min. Coordinate: A mugs B, you mug A.`,fr:`Mug quelqu'un qui vient de mugger quelqu'un dans les 5 min. A mug B, tu muges A.`},
     ]},
-    {cat_en:'💰 Costs a little',cat_fr:'💰 Coûte un peu',color:'#f5a623',items:[
-      {name:'Spray And Pray',type:'H',id:140,en:'Fire 1,000 rounds. Buy cheap fast SMG (MAC-10) and spam attacks on weak targets.',fr:'Tire 1 000 balles. Achète un SMG rapide pas cher (MAC-10) et spam des attaques.'},
-      {name:'Blood Money',type:'H',id:247,en:'Mug someone for $1M+. Attack a rich player and use the Mug option.',fr:'Mug quelqu'un pour 1M$+. Attaque un joueur riche et utilise l'option Mug.'},
-      {name:'Yoink',type:'H',id:955,en:'Mug someone who just mugged someone else within 5 min. Coordinate: A mugs B, you mug A.',fr:'Mug quelqu'un qui vient de mugger quelqu'un dans les 5 min. Coordonne: A mug B, tu muges A.'},
-      {name:'Pin Puller',type:'H',id:143,en:'100 temp weapon finishing hits. Pepper Spray ($800) on weak targets = easy.',fr:'100 coups finaux arme temporaire. Pepper Spray (800$) sur cibles faibles = facile.'},
-      {name:'Boss Fight',type:'H',id:665,en:'Join an NPC fight on Torn Discord. Wait for debuffs then hit once. Use TornTools extension.',fr:'Rejoins un combat NPC sur le Discord Torn. Attends les debuffs puis frappe une fois. Utilise TornTools.'},
-      {name:'Church Mouse',type:'H',id:739,en:'Get mugged for exactly $1. Walk with $1 cash and ask someone to mug you.',fr:'Fais-toi mugger pour exactement $1. Balade-toi avec $1 et demande à quelqu'un de te mugger.'},
+    {ce:`💰 Costs a little`,cf:`💰 Coûte un peu`,col:'#f5a623',items:[
+      {name:'Spray And Pray',type:'H',id:140,en:`Fire 1,000 rounds. Buy cheap fast SMG and spam attacks on weak targets.`,fr:`Tire 1 000 balles. Achète un SMG rapide pas cher et spam des attaques.`},
+      {name:'Pin Puller',type:'H',id:143,en:`100 temp weapon finishing hits. Pepper Spray ($800 at Big Al's) on weak targets.`,fr:`100 coups finaux arme temporaire. Pepper Spray (800$) chez Big Al sur cibles faibles.`},
+      {name:'Boss Fight',type:'H',id:665,en:`Join NPC fight on Torn Discord. Wait for debuffs then hit once. Use TornTools.`,fr:`Rejoins un combat NPC sur le Discord Torn. Attends les debuffs puis frappe une fois.`},
+      {name:'Blood Money',type:'H',id:247,en:`Mug someone for $1M+. Attack a rich player and use the Mug option.`,fr:`Mug quelqu'un pour 1M$+. Attaque un joueur riche et utilise l'option Mug.`},
+      {name:'Church Mouse',type:'H',id:739,en:`Get mugged for exactly $1. Walk with $1 cash and ask someone to mug you.`,fr:`Fais-toi mugger pour exactement $1. Balade-toi avec $1 et demande à quelqu'un de te mugger.`},
     ]},
-    {cat_en:'📅 Takes time — Do passively',cat_fr:'📅 Prend du temps — Faire passivement',color:'#4a9eff',items:[
-      {name:'Night Walker',type:'H',id:27,en:'100 stealthed wins. Enable stealth + Smoke Grenade temp. Do naturally during daily attacks.',fr:'100 victoires furtives. Active furtif + Smoke Grenade temp. Fais naturellement lors des attaques quotidiennes.'},
-      {name:'Bare',type:'H',id:763,en:'250 unarmored wins. Remove all armor before attacking. Combine with Unarmed for double progress.',fr:'250 victoires sans armure. Retire toute armure avant d'attaquer. Combine avec Unarmed pour double progrès.'},
-      {name:'Unarmed',type:'H',id:515,en:'100 fist/kick finishing hits. Remove all weapons, fight with fists only.',fr:'100 coups finaux poings/kick. Retire toutes les armes, combat uniquement aux poings.'},
-      {name:'Survivalist',type:'H',id:500,en:'Win with only 1% HP left. Use a very weak weapon vs weak target. Must start with >1% HP.',fr:'Gagne avec seulement 1% de vie. Utilise une arme très faible contre une cible faible. Commence avec >1% de vie.'},
-      {name:'Sidekick',type:'H',id:490,en:'Assist in 250 attacks. Join faction attacks in progress.',fr:'Aide dans 250 attaques. Rejoins les attaques de faction en cours.'},
-      {name:'2800 FT/S',type:'H',id:146,en:'100 rifle finishing hits. Equip a rifle and set it to use 100% in attack settings.',fr:'100 coups finaux au fusil. Équipe un fusil et mets-le à 100% dans les paramètres d'attaque.'},
+    {ce:`📅 Takes time — Do passively`,cf:`📅 Prend du temps — Faire passivement`,col:'#4a9eff',items:[
+      {name:'Night Walker',type:'H',id:27,en:`100 stealthed wins. Enable stealth + Smoke Grenade temp daily.`,fr:`100 victoires furtives. Active furtif + Smoke Grenade temp chaque jour.`},
+      {name:'Bare',type:'H',id:763,en:`250 unarmored wins. Remove all armor before attacking.`,fr:`250 victoires sans armure. Retire toute armure avant d'attaquer.`},
+      {name:'Unarmed',type:'H',id:515,en:`100 fist/kick finishing hits. Remove all weapons, fight with fists only.`,fr:`100 coups finaux poings/kick. Retire toutes les armes, combat uniquement aux poings.`},
+      {name:'Survivalist',type:'H',id:500,en:`Win with only 1% HP left. Use very weak weapon vs weak target. Must start with >1% HP.`,fr:`Gagne avec seulement 1% de vie. Arme très faible vs cible faible. Commence avec >1% de vie.`},
+      {name:'Sidekick',type:'H',id:490,en:`Assist in 250 attacks. Join faction attacks in progress.`,fr:`Aide dans 250 attaques. Rejoins les attaques de faction en cours.`},
     ]},
   ];
-
   let html=`<div class="sec">${lang==='fr'?'📖 Guide — Mérites Rapides':'📖 Guide — Fast Merits'}</div>`;
-  for(const sec of TUTOS){
-    const items=sec.items.filter(i=>notEarned(i.type,i.id));
+  for(const s of secs){
+    const items=s.items.filter(i=>ne(i.type,i.id));
     if(!items.length) continue;
-    html+=`
-      <div style="margin-bottom:20px">
-        <div style="font-family:var(--mono);font-size:11px;color:${sec.color};letter-spacing:1px;margin-bottom:8px">
-          ${lang==='fr'?sec.cat_fr:sec.cat_en} <span style="color:var(--muted);font-weight:400">(${items.length})</span>
-        </div>
-        ${items.map(item=>`
-          <a href="https://www.torn.com/page.php?sid=awards&tab=${item.type==='H'?'honors':'medals'}"
-             target="_blank"
-             style="text-decoration:none;color:inherit;display:flex;align-items:flex-start;gap:10px;padding:11px 14px;background:var(--surf);border:1px solid var(--brd);border-radius:8px;margin-bottom:6px;transition:border-color .15s"
-             onmouseover="this.style.borderColor='${sec.color}'" onmouseout="this.style.borderColor='var(--brd)'">
-            <img src="https://yata.yt/media/${item.type==='H'?'honors':'medals'}/${item.id}.png"
-                 style="width:36px;height:36px;object-fit:contain;flex-shrink:0"
-                 onerror="this.style.display='none'" loading="lazy"/>
-            <div style="flex:1">
-              <div style="font-weight:600;font-size:13px;margin-bottom:3px">${item.name}</div>
-              <div style="font-size:12px;color:var(--muted);line-height:1.5">${lang==='fr'?item.fr:item.en}</div>
-            </div>
-            <div style="color:${sec.color};font-size:16px;flex-shrink:0;align-self:center">→</div>
-          </a>
-        `).join('')}
-      </div>
-    `;
+    html+=`<div style="margin-bottom:20px">
+      <div style="font-family:var(--mono);font-size:11px;color:${s.col};letter-spacing:1px;margin-bottom:8px">${lang==='fr'?s.cf:s.ce} <span style="color:var(--muted);font-weight:400">(${items.length})</span></div>
+      ${items.map(i=>`<a href="https://www.torn.com/page.php?sid=awards&tab=${i.type==='H'?'honors':'medals'}" target="_blank" style="text-decoration:none;color:inherit;display:flex;align-items:flex-start;gap:10px;padding:11px 14px;background:var(--surf);border:1px solid var(--brd);border-radius:8px;margin-bottom:6px;transition:border-color .15s" onmouseover="this.style.borderColor='${s.col}'" onmouseout="this.style.borderColor='var(--brd)'">
+        <img src="https://yata.yt/media/${i.type==='H'?'honors':'medals'}/${i.id}.png" style="width:36px;height:36px;object-fit:contain;flex-shrink:0" onerror="this.style.display='none'" loading="lazy"/>
+        <div style="flex:1"><div style="font-weight:600;font-size:13px;margin-bottom:3px">${i.name}</div><div style="font-size:12px;color:var(--muted);line-height:1.5">${lang==='fr'?i.fr:i.en}</div></div>
+        <div style="color:${s.col};font-size:16px;flex-shrink:0;align-self:center">→</div>
+      </a>`).join('')}
+    </div>`;
   }
   if(!html.includes('surf')) html+=`<div class="empty">🏆 All guide awards already earned!</div>`;
   el.innerHTML=html;
