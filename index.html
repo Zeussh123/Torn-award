@@ -6,669 +6,504 @@
 <title>Torn Awards Tracker</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Inter:wght@300;400;500;600;700&display=swap');
-
-/* ── DARK (default) ── */
-:root {
-  --bg:       #0d0d0f;
-  --surf:     #141417;
-  --surf2:    #1c1c21;
-  --brd:      #2a2a32;
-  --text:     #e8e8f0;
-  --muted:    #6b6b80;
-  --red:      #e94560;
-  --red-d:    rgba(233,69,96,.15);
-  --amber:    #f5a623;
-  --amber-d:  rgba(245,166,35,.12);
-  --green:    #2ecc71;
-  --green-d:  rgba(46,204,113,.12);
-  --blue:     #4a9eff;
-  --blue-d:   rgba(74,158,255,.12);
-  --mono:     'Share Tech Mono',monospace;
-  --sans:     'Inter',sans-serif;
-}
-/* ── BLUE DARK ── */
-body.blue {
-  --bg:      #060d1a;
-  --surf:    #0d1b2e;
-  --surf2:   #112236;
-  --brd:     #1c3354;
-  --text:    #dde8f8;
-  --muted:   #4d6a8a;
-  --blue:    #5ba8ff;
-  --blue-d:  rgba(91,168,255,.15);
-}
-
+:root{--bg:#0d0d0f;--surf:#141417;--surf2:#1c1c21;--brd:#2a2a32;--text:#e8e8f0;--muted:#6b6b80;--red:#e94560;--red-d:rgba(233,69,96,.15);--amber:#f5a623;--amber-d:rgba(245,166,35,.12);--green:#2ecc71;--green-d:rgba(46,204,113,.12);--blue:#4a9eff;--blue-d:rgba(74,158,255,.12);--mono:'Share Tech Mono',monospace;--sans:'Inter',sans-serif}
+body.blue{--bg:#060d1a;--surf:#0d1b2e;--surf2:#112236;--brd:#1c3354;--text:#dde8f8;--muted:#4d6a8a;--blue:#5ba8ff;--blue-d:rgba(91,168,255,.15)}
 *{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--bg);color:var(--text);font-family:var(--sans);min-height:100vh;transition:background .3s,color .3s}
-
-/* NAV */
-nav{position:sticky;top:0;z-index:100;background:rgba(13,13,15,.96);backdrop-filter:blur(12px);border-bottom:1px solid var(--brd);padding:0 20px;display:flex;align-items:center;gap:16px;height:56px}
-.logo{font-family:var(--mono);font-size:15px;color:var(--red);letter-spacing:2px;white-space:nowrap}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);min-height:100vh;transition:background .3s}
+nav{position:sticky;top:0;z-index:100;background:rgba(13,13,15,.96);backdrop-filter:blur(12px);border-bottom:1px solid var(--brd);padding:0 20px;display:flex;align-items:center;gap:12px;height:54px}
+body.blue nav{background:rgba(6,13,26,.96)}
+.logo{font-family:var(--mono);font-size:14px;color:var(--red);letter-spacing:2px;white-space:nowrap}
 .logo small{color:var(--muted);font-size:10px;display:block;letter-spacing:1px}
-nav .spacer{flex:1}
-.nav-btn{background:var(--surf2);border:1px solid var(--brd);color:var(--muted);padding:6px 14px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;transition:.15s;letter-spacing:.5px}
-.nav-btn:hover,.nav-btn.active{border-color:var(--red);color:var(--red);background:var(--red-d)}
-.theme-btn{width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;padding:0}
+.sp{flex:1}
+.nbtn{background:var(--surf2);border:1px solid var(--brd);color:var(--muted);padding:5px 12px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;transition:.15s}
+.nbtn:hover,.nbtn.on{border-color:var(--red);color:var(--red);background:var(--red-d)}
+.tbtn{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;padding:0}
 
 /* LOGIN */
-#login{max-width:520px;margin:80px auto;padding:0 20px;text-align:center}
-#login h1{font-size:30px;font-weight:700;margin-bottom:8px}
+#login{max-width:500px;margin:70px auto;padding:0 20px;text-align:center}
+#login h1{font-size:28px;font-weight:700;margin-bottom:8px}
 #login h1 em{color:var(--red);font-style:normal}
-#login p{color:var(--muted);font-size:14px;margin-bottom:32px;line-height:1.7}
-.input-row{display:flex;gap:8px}
-.input-row input{flex:1;background:var(--surf);border:1px solid var(--brd);color:var(--text);padding:12px 16px;border-radius:8px;font-family:var(--mono);font-size:13px;outline:none;transition:.2s}
-.input-row input:focus{border-color:var(--red)}
-.btn{background:var(--red);color:#fff;border:none;padding:12px 22px;border-radius:8px;font-weight:700;font-size:14px;cursor:pointer;transition:.15s;white-space:nowrap}
+#login p{color:var(--muted);font-size:13px;margin-bottom:28px;line-height:1.7}
+.row{display:flex;gap:8px}
+.row input{flex:1;background:var(--surf);border:1px solid var(--brd);color:var(--text);padding:11px 15px;border-radius:8px;font-family:var(--mono);font-size:13px;outline:none;transition:.2s}
+.row input:focus{border-color:var(--red)}
+.btn{background:var(--red);color:#fff;border:none;padding:11px 20px;border-radius:8px;font-weight:700;font-size:13px;cursor:pointer;transition:.15s;white-space:nowrap}
 .btn:hover{opacity:.85}
 .btn:disabled{opacity:.4;cursor:not-allowed}
-.note{margin-top:16px;font-size:12px;color:var(--muted);line-height:1.7}
+.note{margin-top:14px;font-size:11px;color:var(--muted);line-height:1.8}
 .note a{color:var(--blue);text-decoration:none}
 .note strong{color:var(--amber)}
-.lang-toggle{display:flex;gap:8px;justify-content:center;margin-bottom:24px}
-.lang-btn{background:var(--surf2);border:1px solid var(--brd);color:var(--muted);padding:6px 18px;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer}
-.lang-btn.active{background:var(--red-d);border-color:var(--red);color:var(--red)}
+.lngs{display:flex;gap:8px;justify-content:center;margin-bottom:22px}
+.lbtn{background:var(--surf2);border:1px solid var(--brd);color:var(--muted);padding:6px 16px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;transition:.15s}
+.lbtn.on{background:var(--red-d);border-color:var(--red);color:var(--red)}
 
-/* STATS BAR */
-#stats-bar{display:none;background:var(--surf);border-bottom:1px solid var(--brd);padding:12px 20px;gap:12px;flex-wrap:wrap;align-items:center}
-.stat-chip{background:var(--surf2);border:1px solid var(--brd);border-radius:20px;padding:5px 14px;font-size:12px;font-family:var(--mono)}
-.stat-chip span{color:var(--red);font-weight:700}
-.player-name{font-size:16px;font-weight:700;margin-right:4px}
-.player-sub{color:var(--muted);font-size:12px;font-family:var(--mono)}
+/* STATSBAR */
+#sbar{display:none;background:var(--surf);border-bottom:1px solid var(--brd);padding:10px 20px;gap:10px;flex-wrap:wrap;align-items:center}
+.chip{background:var(--surf2);border:1px solid var(--brd);border-radius:20px;padding:4px 12px;font-size:11px;font-family:var(--mono)}
+.chip span{color:var(--red);font-weight:700}
+.chip.rush{border-color:rgba(233,69,96,.3)}
 
 /* TABS */
-#tabs{display:none;background:var(--bg);border-bottom:1px solid var(--brd);padding:0 20px;display:none;gap:0}
-.tab{padding:14px 18px;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;transition:.15s;white-space:nowrap}
+#tabs{display:none;border-bottom:1px solid var(--brd);padding:0 20px;overflow-x:auto;white-space:nowrap;background:var(--bg)}
+.tab{display:inline-block;padding:12px 16px;font-size:12px;font-weight:600;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;transition:.15s}
 .tab:hover{color:var(--text)}
-.tab.active{color:var(--red);border-color:var(--red)}
+.tab.on{color:var(--red);border-color:var(--red)}
 
 /* MAIN */
 #main{max-width:1100px;margin:0 auto;padding:20px}
 
-/* SECTION LABEL */
-.sec-label{font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin:24px 0 12px;display:flex;align-items:center;gap:10px}
-.sec-label::after{content:'';flex:1;height:1px;background:var(--brd)}
-
-/* AWARD CARD */
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:10px}
-.card{background:var(--surf);border:1px solid var(--brd);border-radius:10px;padding:16px;transition:.15s}
-.card:hover{border-color:#3a3a50}
-.card.rush{border-color:rgba(233,69,96,.35);background:linear-gradient(135deg,rgba(233,69,96,.05),var(--surf))}
-.card.done{opacity:.45}
-.card-head{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:8px}
-.card-name{font-weight:600;font-size:14px;line-height:1.3}
-.badge{font-size:10px;font-family:var(--mono);padding:2px 8px;border-radius:4px;white-space:nowrap;flex-shrink:0}
+/* RUSH */
+.rbox{background:var(--surf);border:1px solid var(--brd);border-radius:10px;margin-bottom:10px;overflow:hidden}
+.rhdr{padding:11px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--brd)}
+.rhdr h3{font-size:13px;font-weight:700}
+.rhdr .cnt{font-family:var(--mono);font-size:11px;color:var(--muted)}
+.rrow{display:flex;align-items:flex-start;gap:12px;padding:12px 16px;border-bottom:1px solid var(--brd);transition:.15s}
+.rrow:last-child{border-bottom:none}
+.rrow:hover{background:var(--surf2)}
+.rinfo{flex:1}
+.rname{font-size:13px;font-weight:600;margin-bottom:3px}
+.rdesc{font-size:11px;color:var(--muted);line-height:1.5}
+.rright{text-align:right;flex-shrink:0;min-width:90px}
+.rnum{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--red)}
+.rstat{font-size:10px;color:var(--muted);font-family:var(--mono)}
+.rbadge{display:inline-block;font-family:var(--mono);font-size:9px;padding:2px 6px;border-radius:3px;margin-left:5px;vertical-align:middle}
 .bh{background:var(--blue-d);color:var(--blue);border:1px solid rgba(74,158,255,.25)}
 .bm{background:var(--amber-d);color:var(--amber);border:1px solid rgba(245,166,35,.25)}
 .bd{background:var(--green-d);color:var(--green);border:1px solid rgba(46,204,113,.25)}
-.br{background:var(--red-d);color:var(--red);border:1px solid rgba(233,69,96,.3)}
 
-/* HOW TO */
-.how-to{font-size:12px;color:var(--muted);margin-bottom:10px;line-height:1.5;border-left:2px solid var(--brd);padding-left:8px}
-.how-to strong{color:var(--amber);display:block;margin-bottom:2px;font-size:11px;letter-spacing:.5px}
+/* GRID */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:10px}
+.card{background:var(--surf);border:1px solid var(--brd);border-radius:10px;padding:14px;transition:.15s}
+.card:hover{border-color:#3a3a50}
+.card.rush{border-color:rgba(233,69,96,.35);background:linear-gradient(135deg,rgba(233,69,96,.04),var(--surf))}
+.card.done{opacity:.4}
+.chtop{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:8px}
+.chname{font-weight:600;font-size:13px;line-height:1.3}
+.chdesc{font-size:11px;color:var(--muted);margin-bottom:10px;line-height:1.5;border-left:2px solid var(--brd);padding-left:7px}
+.pbar{display:flex;align-items:center;gap:8px}
+.ptrack{flex:1;height:3px;background:var(--brd);border-radius:2px;overflow:hidden}
+.pfill{height:100%;border-radius:2px;transition:width .4s}
+.ph{background:var(--red)}.pm{background:var(--amber)}.pl{background:var(--blue)}.pd{background:var(--green)}
+.ppct{font-family:var(--mono);font-size:10px;color:var(--muted);width:34px;text-align:right}
+.pnums{font-family:var(--mono);font-size:10px;color:var(--muted);margin-top:3px}
+.pnums strong{color:var(--text)}
 
-/* PROGRESS */
-.prog-wrap{display:flex;align-items:center;gap:8px}
-.prog-bar{flex:1;height:3px;background:var(--brd);border-radius:2px;overflow:hidden}
-.prog-fill{height:100%;border-radius:2px;transition:width .4s}
-.pf-high{background:var(--red)}
-.pf-mid{background:var(--amber)}
-.pf-low{background:var(--blue)}
-.pf-done{background:var(--green)}
-.prog-pct{font-family:var(--mono);font-size:11px;color:var(--muted);width:36px;text-align:right}
-.prog-nums{font-family:var(--mono);font-size:11px;color:var(--muted);margin-top:4px}
-.prog-nums strong{color:var(--text)}
+/* COMBO */
+.cbox{background:var(--surf);border:1px solid rgba(245,166,35,.2);border-radius:10px;padding:16px;margin-bottom:10px}
+.cbox h3{color:var(--amber);font-family:var(--mono);font-size:11px;letter-spacing:1px;margin-bottom:4px}
+.cdesc{color:var(--muted);font-size:12px;margin-bottom:12px;line-height:1.5}
+.crow{display:flex;align-items:center;gap:8px;padding:4px 0;font-size:12px}
+.cdot{width:5px;height:5px;border-radius:50%;background:var(--amber);flex-shrink:0}
+.cdone{opacity:.4}.cdone .cdot{background:var(--green)}
 
-/* COMBO BOX */
-.combo-box{background:var(--surf);border:1px solid rgba(245,166,35,.2);border-radius:10px;padding:18px;margin-bottom:10px}
-.combo-box h3{color:var(--amber);font-family:var(--mono);font-size:12px;letter-spacing:1px;margin-bottom:4px}
-.combo-desc{color:var(--muted);font-size:12px;margin-bottom:12px;line-height:1.5}
-.combo-row{display:flex;align-items:center;gap:8px;padding:5px 0;font-size:13px}
-.combo-dot{width:5px;height:5px;border-radius:50%;background:var(--amber);flex-shrink:0}
-.combo-row.cdone{opacity:.4}
-.combo-row.cdone .combo-dot{background:var(--green)}
-
-/* RUSH TIER */
-.rush-box{background:var(--surf);border:1px solid var(--brd);border-radius:10px;margin-bottom:10px;overflow:hidden}
-.rush-hdr{padding:12px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--brd)}
-.rush-hdr h3{font-size:13px;font-weight:700}
-.rush-hdr .cnt{font-family:var(--mono);font-size:11px;color:var(--muted)}
-.rush-row{display:flex;align-items:center;gap:12px;padding:11px 16px;border-bottom:1px solid var(--brd);transition:.15s}
-.rush-row:last-child{border-bottom:none}
-.rush-row:hover{background:var(--surf2)}
-.rush-info{flex:1}
-.rush-name{font-size:13px;font-weight:600;margin-bottom:2px}
-.rush-how{font-size:11px;color:var(--muted);line-height:1.4}
-.rush-left{text-align:right;flex-shrink:0}
-.rush-num{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--red)}
-.rush-stat{font-size:10px;color:var(--muted);font-family:var(--mono)}
-
-/* SEARCH + FILTER */
-.filter-bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:16px}
-.filter-bar input{background:var(--surf);border:1px solid var(--brd);color:var(--text);padding:8px 14px;border-radius:7px;font-size:13px;outline:none;width:220px}
-.filter-bar input:focus{border-color:var(--red)}
-.fcat{background:var(--surf2);border:1px solid var(--brd);color:var(--muted);padding:7px 14px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;transition:.15s}
+/* FILTERS */
+.fbar{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:14px}
+.fbar input{background:var(--surf);border:1px solid var(--brd);color:var(--text);padding:7px 12px;border-radius:6px;font-size:12px;outline:none;width:200px}
+.fbar input:focus{border-color:var(--red)}
+.fcat{background:var(--surf2);border:1px solid var(--brd);color:var(--muted);padding:6px 12px;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;transition:.15s}
 .fcat:hover{border-color:var(--red);color:var(--text)}
 .fcat.on{background:var(--red-d);border-color:var(--red);color:var(--red)}
-.toggle-lbl{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:5px;cursor:pointer;margin-left:auto}
-.toggle-lbl input{accent-color:var(--red)}
+.tlbl{font-size:11px;color:var(--muted);display:flex;align-items:center;gap:5px;cursor:pointer;margin-left:auto}
+.tlbl input{accent-color:var(--red)}
+.rarity{font-size:10px;font-family:var(--mono);color:var(--muted);margin-top:3px}
 
-/* LOADING / ERROR / EMPTY */
-.loading{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:80px 20px;gap:16px;color:var(--muted)}
-.spin{width:30px;height:30px;border:2px solid var(--brd);border-top-color:var(--red);border-radius:50%;animation:spin .7s linear infinite}
+/* LOADING/ERR */
+.loading{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:80px 20px;gap:14px;color:var(--muted)}
+.spin{width:28px;height:28px;border:2px solid var(--brd);border-top-color:var(--red);border-radius:50%;animation:spin .7s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
-.err{background:var(--red-d);border:1px solid rgba(233,69,96,.3);border-radius:8px;padding:14px 18px;color:var(--red);font-size:14px;margin:20px 0}
-.empty{text-align:center;padding:60px 20px;color:var(--muted);font-size:14px}
+.err{background:var(--red-d);border:1px solid rgba(233,69,96,.3);border-radius:8px;padding:14px 18px;color:var(--red);font-size:13px;margin:20px 0}
+.empty{text-align:center;padding:60px 20px;color:var(--muted);font-size:13px}
+.sec{font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin:20px 0 10px;display:flex;align-items:center;gap:8px}
+.sec::after{content:'';flex:1;height:1px;background:var(--brd)}
 
-@media(max-width:600px){
-  .grid{grid-template-columns:1fr}
-  nav{padding:0 12px;gap:10px}
-  #main{padding:12px}
-  .filter-bar{gap:6px}
-}
+@media(max-width:600px){.grid{grid-template-columns:1fr}nav{padding:0 12px}#main{padding:12px}.fbar{gap:4px}}
 </style>
 </head>
-<body>
-
+<body class="blue">
 <nav>
   <div class="logo">DARKPULSE<small>AWARDS TRACKER</small></div>
-  <div class="spacer"></div>
-  <div id="nav-links" style="display:none;gap:6px;display:none">
-    <button class="nav-btn" onclick="setLang('en')" id="btn-en">EN</button>
-    <button class="nav-btn" onclick="setLang('fr')" id="btn-fr">FR</button>
-  </div>
-  <button class="nav-btn theme-btn" onclick="toggleTheme()" id="theme-btn" title="Toggle theme">🌊</button>
+  <div class="sp"></div>
+  <div id="nlngs" style="display:none;gap:6px"></div>
+  <button class="nbtn tbtn" onclick="toggleTheme()" id="tbtn">🌑</button>
 </nav>
 
-<!-- LOGIN -->
 <div id="login">
-  <div class="lang-toggle">
-    <button class="lang-btn active" onclick="setLang('en')" id="login-en">🇬🇧 English</button>
-    <button class="lang-btn" onclick="setLang('fr')" id="login-fr">🇫🇷 Français</button>
+  <div class="lngs">
+    <button class="lbtn on" onclick="setLang('en')" id="len">🇬🇧 English</button>
+    <button class="lbtn" onclick="setLang('fr')" id="lfr">🇫🇷 Français</button>
   </div>
-  <h1 id="t-title">Track Your <em>Torn Awards</em></h1>
-  <p id="t-subtitle">Enter your Torn API key to see your honors & medals progress,<br>find what to rush next, and discover smart combos.</p>
-  <div class="input-row">
-    <input type="password" id="api-input" id="t-placeholder" placeholder="Your Torn API key..." autocomplete="off"/>
-    <button class="btn" id="load-btn" onclick="loadData()">Load</button>
+  <h1 id="tt"></h1>
+  <p id="ts"></p>
+  <div class="row">
+    <input type="password" id="key" placeholder="Your Torn API key..." autocomplete="off"/>
+    <button class="btn" id="lbtn" onclick="go()">Load</button>
   </div>
-  <p class="note" id="t-note">
-    Your key is never stored on any server — all requests go directly from your browser to Torn's API.<br>
-    Get your key at <a href="https://www.torn.com/preferences.php#tab=api" target="_blank">torn.com/preferences → API</a> (Limited access is enough)<br>
-    <strong>⚠️ Must be hosted to work — upload to GitHub Pages or Netlify Drop.</strong>
-  </p>
+  <p class="note" id="tn"></p>
 </div>
 
-<!-- STATS BAR -->
-<div id="stats-bar"></div>
-
-<!-- TABS -->
-<div id="tabs" style="display:none">
-  <div class="tab active" data-tab="rush" onclick="setTab('rush')" id="tab-rush">🔥 Rush</div>
-  <div class="tab" data-tab="combo" onclick="setTab('combo')" id="tab-combo">⚡ Combos</div>
-  <div class="tab" data-tab="all" onclick="setTab('all')" id="tab-all">📋 All</div>
-  <div class="tab" data-tab="attacks" onclick="setTab('attacks')">⚔️ Attacks</div>
-  <div class="tab" data-tab="weapons" onclick="setTab('weapons')">🔫 Weapons</div>
-  <div class="tab" data-tab="crimes" onclick="setTab('crimes')">🕵️ Crimes</div>
-  <div class="tab" data-tab="travel" onclick="setTab('travel')">✈️ Travel</div>
-  <div class="tab" data-tab="drugs" onclick="setTab('drugs')">💊 Drugs</div>
-  <div class="tab" data-tab="misc" onclick="setTab('misc')">🎲 Misc</div>
-</div>
-
+<div id="sbar"></div>
+<div id="tabs" style="display:none"></div>
 <div id="main" style="display:none"></div>
 
 <script>
-// ══════════════════════════════════════════════════════
-//  I18N
-// ══════════════════════════════════════════════════════
-const I18N = {
-  en: {
-    title:    'Track Your <em>Torn Awards</em>',
-    subtitle: 'Enter your Torn API key to see your honors & medals progress,<br>find what to rush next, and discover smart combos.',
-    note:     'Your key is never stored — all requests go directly from your browser to Torn\'s API.<br>Get your key at <a href="https://www.torn.com/preferences.php#tab=api" target="_blank">torn.com/preferences → API</a> (Limited access is enough)<br><strong>⚠️ Must be hosted — upload to GitHub Pages or Netlify Drop.</strong>',
-    load:     'Load',
-    rushTab:  '🔥 Rush',
-    comboTab: '⚡ Combos',
-    allTab:   '📋 All',
-    rushTitle:'🔥 Rush These — Closest to Done',
-    within:   'Within',
-    left:     'left',
-    howTo:    'How to:',
-    earned:   '✓ Earned',
-    noRush:   'No rushable awards found! Try increasing the range.',
-    noAwards: 'No awards match your filters.',
-    showEarned:'Show earned',
-    search:   'Search awards...',
-    changeKey:'Change Key',
-    tier1:    '⚡ Within 50 — Do it now!',
-    tier2:    '🔥 Within 200',
-    tier3:    '🎯 Within 1,000',
-    tier4:    '📅 Within 5,000',
-    comboTitle:'⚡ Combos — Multiple Awards at Once',
-    comboDesc: 'These groups of awards all progress from the same action. Grind one thing, earn multiple!',
-    statLabel: 'Stat:',
-    honor:    'HONOR',
-    medal:    'MEDAL',
-  },
-  fr: {
-    title:    'Suivre Vos <em>Awards Torn</em>',
-    subtitle: 'Entrez votre clé API Torn pour voir votre progression,<br>trouver ce que vous pouvez rusher, et découvrir des combos.',
-    note:     'Votre clé n\'est jamais stockée — toutes les requêtes vont directement à l\'API de Torn.<br>Obtenez votre clé sur <a href="https://www.torn.com/preferences.php#tab=api" target="_blank">torn.com/preferences → API</a> (Accès limité suffit)<br><strong>⚠️ Doit être hébergé — uploadez sur GitHub Pages ou Netlify Drop.</strong>',
-    load:     'Charger',
-    rushTab:  '🔥 Rush',
-    comboTab: '⚡ Combos',
-    allTab:   '📋 Tous',
-    rushTitle:'🔥 À Rusher — Les Plus Proches',
-    within:   'Moins de',
-    left:     'restant',
-    howTo:    'Comment:',
-    earned:   '✓ Obtenu',
-    noRush:   'Aucun award à rusher trouvé ! Essayez d\'augmenter la plage.',
-    noAwards: 'Aucun award ne correspond à vos filtres.',
-    showEarned:'Afficher obtenus',
-    search:   'Rechercher...',
-    changeKey:'Changer de clé',
-    tier1:    '⚡ Moins de 50 — À faire maintenant !',
-    tier2:    '🔥 Moins de 200',
-    tier3:    '🎯 Moins de 1 000',
-    tier4:    '📅 Moins de 5 000',
-    comboTitle:'⚡ Combos — Plusieurs Awards en Même Temps',
-    comboDesc: 'Ces groupes d\'awards progressent tous avec la même action. Farmez une chose, gagnez plusieurs awards !',
-    statLabel: 'Stat:',
-    honor:    'HONOR',
-    medal:    'MÉDAILLE',
-  }
+// ══ I18N ══
+const T={
+  en:{title:'Track Your <em>Torn Awards</em>',sub:'Enter your API key to see your progress, find rushable awards & smart combos.',note:'Key never stored — requests go directly to Torn API from your browser.<br>Get key at <a href="https://www.torn.com/preferences.php#tab=api" target="_blank">torn.com → Preferences → API</a> (Limited access is enough)<br><strong>⚠️ Must be hosted (GitHub Pages / Netlify) — local file:// won\'t work.</strong>',load:'Load',change:'Change Key',rush:'🔥 Rush',combos:'⚡ Combos',all:'All',attacks:'⚔️ Attacks',weapons:'🔫 Weapons',crimes:'🕵️ Crimes',travel:'✈️ Travel',drugs:'💊 Drugs',casino:'🎰 Casino',misc:'🎲 Misc',gym:'💪 Gym',t1:'⚡ Do it NOW — within 50',t2:'🔥 This week — within 200',t3:'🎯 Within 1,000',t4:'📅 Within 5,000',noRush:'No rushable awards found!',noAwards:'No awards match your filters.',showEarned:'Show earned',search:'Search...',how:'How:',left:'left',earned:'✓ Done',comboTitle:'⚡ Combos — Grind Multiple at Once',comboSub:'These award groups all progress from the same action.',loading:'Loading awards from Torn API...'},
+  fr:{title:'Suivi de Vos <em>Awards Torn</em>',sub:'Entrez votre clé API pour voir votre progression, trouver ce que vous pouvez rusher et découvrir des combos.',note:'Clé jamais stockée — les requêtes vont directement à l\'API Torn depuis votre navigateur.<br>Obtenez votre clé sur <a href="https://www.torn.com/preferences.php#tab=api" target="_blank">torn.com → Préférences → API</a> (Accès limité suffit)<br><strong>⚠️ Doit être hébergé (GitHub Pages / Netlify) — le fichier local file:// ne fonctionne pas.</strong>',load:'Charger',change:'Changer de clé',rush:'🔥 Rush',combos:'⚡ Combos',all:'Tous',attacks:'⚔️ Attaques',weapons:'🔫 Armes',crimes:'🕵️ Crimes',travel:'✈️ Voyage',drugs:'💊 Drogues',casino:'🎰 Casino',misc:'🎲 Misc',gym:'💪 Gym',t1:'⚡ À faire MAINTENANT — moins de 50',t2:'🔥 Cette semaine — moins de 200',t3:'🎯 Moins de 1 000',t4:'📅 Moins de 5 000',noRush:'Aucun award à rusher trouvé !',noAwards:'Aucun award ne correspond à vos filtres.',showEarned:'Afficher obtenus',search:'Rechercher...',how:'Comment:',left:'restant',earned:'✓ Obtenu',comboTitle:'⚡ Combos — Plusieurs Awards en Même Temps',comboSub:'Ces groupes d\'awards progressent tous avec la même action.',loading:'Chargement des awards depuis l\'API Torn...'}
 };
-let lang = localStorage.getItem('lang') || 'en';
 
-// ══════════════════════════════════════════════════════
-//  AWARDS DATABASE — Real names & descriptions from Torn wiki
-//  Format: {id, name, name_fr, cat, stat, goal, how, how_fr, difficulty}
-//  difficulty: easy/medium/hard/event
-// ══════════════════════════════════════════════════════
-const AWARDS = [
-  // ── ATTACKS ──
-  {id:39,  type:'H', name:'Woodland Camo',      name_fr:'Camouflage Forêt',     cat:'attacks', stat:'attackswon',       goal:5,      how:'Win 5 attacks',                                        how_fr:'Gagner 5 attaques',                          diff:'easy'},
-  {id:40,  type:'H', name:'Desert Storm Camo',  name_fr:'Camouflage Désert',    cat:'attacks', stat:'attackswon',       goal:20,     how:'Win 20 attacks',                                       how_fr:'Gagner 20 attaques',                         diff:'easy'},
-  {id:41,  type:'H', name:'Urban Camo',          name_fr:'Camouflage Urbain',   cat:'attacks', stat:'attackswon',       goal:50,     how:'Win 50 attacks',                                       how_fr:'Gagner 50 attaques',                         diff:'easy'},
-  {id:42,  type:'H', name:'Arctic Camo',         name_fr:'Camouflage Arctique', cat:'attacks', stat:'attackswon',       goal:100,    how:'Win 100 attacks',                                      how_fr:'Gagner 100 attaques',                        diff:'easy'},
-  {id:43,  type:'H', name:'Fall Camo',           name_fr:'Camouflage Automne',  cat:'attacks', stat:'attackswon',       goal:250,    how:'Win 250 attacks',                                      how_fr:'Gagner 250 attaques',                        diff:'easy'},
-  {id:15,  type:'H', name:'Kill Streaker 1',     name_fr:'Kill Streak 1',       cat:'attacks', stat:'bestkillstreak',   goal:10,     how:'Achieve a 10 kill streak — attack 10 different people in a row without losing', how_fr:'Atteindre un kill streak de 10 — attaquer 10 personnes différentes de suite sans perdre', diff:'medium'},
-  {id:16,  type:'H', name:'Kill Streaker 2',     name_fr:'Kill Streak 2',       cat:'attacks', stat:'bestkillstreak',   goal:100,    how:'Achieve a 100 kill streak',                            how_fr:'Atteindre un kill streak de 100',            diff:'hard'},
-  {id:254, type:'H', name:'Flatline',            name_fr:'Flatline',            cat:'attacks', stat:'onehitkills',      goal:1,      how:'Achieve a one hit kill — deplete opponent\'s HP in 1 hit', how_fr:'Tuer quelqu\'un en un seul coup — vider ses HP en 1 hit', diff:'medium'},
-  {id:20,  type:'H', name:'Precision',           name_fr:'Précision',           cat:'attacks', stat:'attackcriticalhits', goal:25,   how:'Achieve 25 critical hits during attacks',              how_fr:'Obtenir 25 coups critiques pendant les attaques', diff:'easy'},
-  {id:481, type:'H', name:'Semper Fortis',       name_fr:'Semper Fortis',       cat:'attacks', stat:'attackswon',       goal:1,      how:'Defeat someone more powerful than you (higher battle stats)', how_fr:'Battre quelqu\'un plus puissant que toi (meilleures stats de combat)', diff:'easy'},
-  {id:500, type:'H', name:'Survivalist',         name_fr:'Survivant',           cat:'attacks', stat:'attackswon',       goal:1,      how:'Win an attack with only 1% life remaining — use a very weak weapon or let them hit you a lot first. You need to start with >1% HP.', how_fr:'Gagner une attaque avec seulement 1% de vie — utilise une arme très faible ou laisse-toi frapper d\'abord. Tu dois commencer avec >1% de vie.', diff:'medium'},
-  {id:22,  type:'H', name:'Self Defense',        name_fr:'Légitime Défense',    cat:'attacks', stat:'defendswon',       goal:50,     how:'Win 50 defends — wait for people to attack you and win', how_fr:'Gagner 50 défenses — attends que des gens t\'attaquent et gagne', diff:'medium'},
-  {id:27,  type:'H', name:'Night Walker',        name_fr:'Fantôme',             cat:'attacks', stat:'attacksstealthed', goal:100,    how:'Win 100 stealthed attacks — use the Stealth option when attacking', how_fr:'Gagner 100 attaques furtives — utilise l\'option Furtif lors des attaques', diff:'medium'},
-  {id:490, type:'H', name:'Sidekick',            name_fr:'Acolyte',             cat:'attacks', stat:'attacksassisted',  goal:250,    how:'Assist in 250 attacks — join attacks started by faction members', how_fr:'Aider dans 250 attaques — rejoins les attaques commencées par ta faction', diff:'medium'},
-  // ── WEAPONS ──
-  {id:140, type:'H', name:'Spray And Pray',      name_fr:'Arrosage',            cat:'weapons', stat:'roundsfired',      goal:2500,   how:'Fire 2,500 rounds — use automatic weapons (SMG, rifle) during attacks', how_fr:'Tirer 2 500 cartouches — utilise des armes automatiques (SMG, fusil) lors des attaques', diff:'easy'},
-  {id:146, type:'H', name:'2800 FT/S',           name_fr:'2800 FT/S',           cat:'weapons', stat:'rifhits',          goal:100,    how:'100 Rifle finishing hits — finish attacks using a rifle', how_fr:'100 coups finaux au fusil — termine les attaques avec un fusil', diff:'easy'},
-  {id:148, type:'H', name:'Act of Faith',        name_fr:'Acte de Foi',         cat:'weapons', stat:'smghits',          goal:100,    how:'100 SMG finishing hits — finish attacks using a sub-machine gun', how_fr:'100 coups finaux au SMG — termine les attaques avec un SMG', diff:'easy'},
-  {id:150, type:'H', name:'Slasher',             name_fr:'Slasher',             cat:'weapons', stat:'slahits',          goal:100,    how:'100 Slashing weapon finishing hits — use knives, swords, etc.', how_fr:'100 coups finaux avec arme tranchante — utilise des couteaux, épées, etc.', diff:'easy'},
-  {id:147, type:'H', name:'Cartridge Packer',    name_fr:'Fusil à Pompe',       cat:'weapons', stat:'shohits',          goal:100,    how:'100 Shotgun finishing hits',                            how_fr:'100 coups finaux au fusil à pompe',          diff:'easy'},
-  {id:28,  type:'H', name:'Machinist',           name_fr:'Mécanicien',          cat:'weapons', stat:'machits',          goal:100,    how:'100 Mechanical weapon finishing hits',                  how_fr:'100 coups finaux avec arme mécanique',       diff:'easy'},
-  {id:149, type:'H', name:'The Stabbist',        name_fr:'Le Poignardeur',      cat:'weapons', stat:'piehits',          goal:100,    how:'100 Piercing weapon finishing hits',                   how_fr:'100 coups finaux avec arme perçante',        diff:'easy'},
-  {id:142, type:'H', name:'Axe Wound',           name_fr:'Blessure à la Hache', cat:'weapons', stat:'axehits',          goal:100,    how:'100 Clubbed/Axe weapon finishing hits',                how_fr:'100 coups finaux à la hache',                diff:'easy'},
-  {id:515, type:'H', name:'Unarmed',             name_fr:'À Mains Nues',        cat:'weapons', stat:'h2hhits',          goal:100,    how:'100 Fist/Kick finishing hits — fight without any weapon', how_fr:'100 coups finaux à mains nues — bats-toi sans arme', diff:'easy'},
-  // ── CRIMES ──
-  {id:208, type:'H', name:'Criminal I',          name_fr:'Criminel I',          cat:'crimes',  stat:'criminaloffenses', goal:100,    how:'Commit 100 crimes — any type counts',                  how_fr:'Commettre 100 crimes — tout type compte',    diff:'easy'},
-  {id:209, type:'H', name:'Criminal II',         name_fr:'Criminel II',         cat:'crimes',  stat:'criminaloffenses', goal:1000,   how:'Commit 1,000 crimes',                                  how_fr:'Commettre 1 000 crimes',                     diff:'easy'},
-  {id:210, type:'H', name:'Criminal III',        name_fr:'Criminel III',        cat:'crimes',  stat:'criminaloffenses', goal:5000,   how:'Commit 5,000 crimes',                                  how_fr:'Commettre 5 000 crimes',                     diff:'medium'},
-  {id:204, type:'H', name:'Thief I',             name_fr:'Voleur I',            cat:'crimes',  stat:'theft',            goal:100,    how:'Commit 100 Theft crimes — pick the Theft category in Crimes', how_fr:'Commettre 100 crimes de Vol — sélectionne Theft dans Crimes', diff:'easy'},
-  {id:205, type:'H', name:'Thief II',            name_fr:'Voleur II',           cat:'crimes',  stat:'theft',            goal:1000,   how:'Commit 1,000 Theft crimes',                            how_fr:'Commettre 1 000 crimes de Vol',              diff:'easy'},
-  {id:200, type:'H', name:'Vandal I',            name_fr:'Vandale I',           cat:'crimes',  stat:'vandalism',        goal:100,    how:'Commit 100 Vandalism crimes',                          how_fr:'Commettre 100 crimes de Vandalisme',         diff:'easy'},
-  {id:201, type:'H', name:'Vandal II',           name_fr:'Vandale II',          cat:'crimes',  stat:'vandalism',        goal:1000,   how:'Commit 1,000 Vandalism crimes',                        how_fr:'Commettre 1 000 crimes de Vandalisme',       diff:'easy'},
-  {id:552, type:'H', name:'Mastermind',          name_fr:'Cerveau',             cat:'crimes',  stat:'organisedcrimes',  goal:100,    how:'Participate in 100 Organized Crimes — join your faction\'s OCs', how_fr:'Participer à 100 Crimes Organisés — rejoins les OC de ta faction', diff:'medium'},
-  // ── TRAVEL ──
-  {id:300, type:'H', name:'Traveler I',          name_fr:'Voyageur I',          cat:'travel',  stat:'traveltimes',      goal:10,     how:'Travel abroad 10 times — go to City → Travel',        how_fr:'Voyager à l\'étranger 10 fois — va dans City → Travel', diff:'easy'},
-  {id:301, type:'H', name:'Traveler II',         name_fr:'Voyageur II',         cat:'travel',  stat:'traveltimes',      goal:50,     how:'Travel abroad 50 times',                               how_fr:'Voyager à l\'étranger 50 fois',              diff:'easy'},
-  {id:302, type:'H', name:'Traveler III',        name_fr:'Voyageur III',        cat:'travel',  stat:'traveltimes',      goal:100,    how:'Travel abroad 100 times',                              how_fr:'Voyager à l\'étranger 100 fois',             diff:'medium'},
-  // ── DRUGS ──
-  {id:400, type:'H', name:'Xanax User I',        name_fr:'Consommateur Xanax I',  cat:'drugs', stat:'xantaken',         goal:10,     how:'Take Xanax 10 times — buy from the city pharmacy or players', how_fr:'Prendre du Xanax 10 fois — achète en ville ou chez d\'autres joueurs', diff:'medium'},
-  {id:401, type:'H', name:'Xanax User II',       name_fr:'Consommateur Xanax II', cat:'drugs', stat:'xantaken',         goal:100,    how:'Take Xanax 100 times',                                 how_fr:'Prendre du Xanax 100 fois',                  diff:'hard'},
-  {id:406, type:'H', name:'Drug User I',         name_fr:'Drogué I',            cat:'drugs',   stat:'drugsused',        goal:10,     how:'Use any drug 10 times',                                how_fr:'Prendre n\'importe quelle drogue 10 fois',   diff:'easy'},
-  {id:407, type:'H', name:'Drug User II',        name_fr:'Drogué II',           cat:'drugs',   stat:'drugsused',        goal:100,    how:'Use any drug 100 times',                               how_fr:'Prendre n\'importe quelle drogue 100 fois',  diff:'medium'},
-  // ── FACTION ──
-  {id:253, type:'H', name:'Chainer 1',           name_fr:'Chaîneur 1',          cat:'faction', stat:'_chain10',         goal:1,      how:'Participate in a 10-hit chain — your faction must chain 10 consecutive attacks', how_fr:'Participer à une chaîne de 10 — ta faction doit enchaîner 10 attaques consécutives', diff:'easy'},
-  {id:255, type:'H', name:'Chainer 2',           name_fr:'Chaîneur 2',          cat:'faction', stat:'_chain100',        goal:1,      how:'Participate in a 100-hit chain',                       how_fr:'Participer à une chaîne de 100',             diff:'medium'},
-  // ── MISC ──
-  {id:247, type:'H', name:'Blood Money',         name_fr:'Argent Sanglant',     cat:'misc',    stat:'largestmug',       goal:1000000, how:'Make $1,000,000 from a single mugging — attack a rich player and use the "Mug" option', how_fr:'Faire 1 000 000$ en un seul mugging — attaque un joueur riche avec l\'option Mug', diff:'medium'},
-  {id:700, type:'H', name:'Active I',            name_fr:'Actif I',             cat:'misc',    stat:'activestreak',     goal:30,     how:'Log in every day for 30 consecutive days',             how_fr:'Se connecter chaque jour pendant 30 jours consécutifs', diff:'medium'},
-  {id:701, type:'H', name:'Active II',           name_fr:'Actif II',            cat:'misc',    stat:'activestreak',     goal:60,     how:'Log in every day for 60 consecutive days',             how_fr:'Se connecter chaque jour pendant 60 jours consécutifs', diff:'hard'},
-  {id:800, type:'H', name:'Bounty Hunter I',     name_fr:'Chasseur de Primes I',cat:'misc',    stat:'bountiesplaced',   goal:10,     how:'Place 10 bounties — go to a player\'s profile → Place Bounty', how_fr:'Placer 10 primes — va sur le profil d\'un joueur → Place Bounty', diff:'easy'},
-  // ── MEDALS ──
-  {id:1,   type:'M', name:'Donator I',           name_fr:'Donateur I',          cat:'donator', stat:'daysbeendonator',  goal:30,     how:'Be a Torn donator for 30 days total',                  how_fr:'Être donateur sur Torn pendant 30 jours au total', diff:'easy'},
-  {id:2,   type:'M', name:'Donator II',          name_fr:'Donateur II',         cat:'donator', stat:'daysbeendonator',  goal:90,     how:'Be a Torn donator for 90 days total',                  how_fr:'Être donateur sur Torn pendant 90 jours au total', diff:'easy'},
-  {id:3,   type:'M', name:'Donator III',         name_fr:'Donateur III',        cat:'donator', stat:'daysbeendonator',  goal:180,    how:'Be a Torn donator for 180 days',                       how_fr:'Être donateur pendant 180 jours',            diff:'medium'},
-  {id:89,  type:'M', name:'Aggressor I',         name_fr:'Agresseur I',         cat:'attacks', stat:'attackswon',       goal:100,    how:'Win 100 attacks total',                                how_fr:'Gagner 100 attaques au total',               diff:'easy'},
-  {id:90,  type:'M', name:'Aggressor II',        name_fr:'Agresseur II',        cat:'attacks', stat:'attackswon',       goal:1000,   how:'Win 1,000 attacks total',                              how_fr:'Gagner 1 000 attaques au total',             diff:'medium'},
-  {id:91,  type:'M', name:'Aggressor III',       name_fr:'Agresseur III',       cat:'attacks', stat:'attackswon',       goal:5000,   how:'Win 5,000 attacks total',                              how_fr:'Gagner 5 000 attaques au total',             diff:'hard'},
-  {id:174, type:'M', name:'Traveler I',          name_fr:'Voyageur I',          cat:'travel',  stat:'traveltimes',      goal:10,     how:'Travel abroad 10 times',                               how_fr:'Voyager à l\'étranger 10 fois',              diff:'easy'},
-  {id:175, type:'M', name:'Traveler II',         name_fr:'Voyageur II',         cat:'travel',  stat:'traveltimes',      goal:100,    how:'Travel abroad 100 times',                              how_fr:'Voyager à l\'étranger 100 fois',             diff:'medium'},
-  {id:190, type:'M', name:'Drug User I',         name_fr:'Drogué I',            cat:'drugs',   stat:'drugsused',        goal:100,    how:'Use any drug 100 times',                               how_fr:'Prendre n\'importe quelle drogue 100 fois',  diff:'medium'},
-  {id:204, type:'M', name:'Millionaire',         name_fr:'Millionnaire',        cat:'misc',    stat:'networth',         goal:1000000, how:'Reach a networth of $1,000,000',                      how_fr:'Atteindre une valeur nette de 1 000 000$',   diff:'easy'},
-  {id:207, type:'M', name:'Multi-Millionaire',   name_fr:'Multi-Millionnaire',  cat:'misc',    stat:'networth',         goal:10000000, how:'Reach a networth of $10,000,000',                   how_fr:'Atteindre une valeur nette de 10 000 000$',  diff:'easy'},
-  {id:210, type:'M', name:'Billionaire',         name_fr:'Milliardaire',        cat:'misc',    stat:'networth',         goal:1000000000, how:'Reach a networth of $1,000,000,000',              how_fr:'Atteindre une valeur nette de 1 000 000 000$', diff:'hard'},
-  {id:215, type:'M', name:'Racer I',             name_fr:'Pilote I',            cat:'racing',  stat:'racesentered',     goal:100,    how:'Enter 100 races — go to City → Racing',               how_fr:'Participer à 100 courses — va dans City → Racing', diff:'medium'},
-  {id:242, type:'M', name:'Bounty Hunter I',     name_fr:'Chasseur de Primes I',cat:'misc',    stat:'bountiesplaced',   goal:10,     how:'Place 10 bounties on other players',                   how_fr:'Placer 10 primes sur d\'autres joueurs',     diff:'easy'},
-];
+// Map honor/medal type to category tab
+const TYPE_CAT={
+  'attacking':'attacks','camo':'attacks','weapons':'weapons','crimes':'crimes',
+  'travel':'travel','drugs':'drugs','casino':'casino','gym':'gym',
+  'misc':'misc','money':'misc','hospital':'misc','jail':'misc',
+  'education':'misc','items':'misc','missions':'misc','competitions':'misc',
+  'commitment':'misc','level':'misc','networth':'misc','default':'misc'
+};
 
-const COMBOS = [
-  {
-    name: 'Rifle Hits',    name_fr: 'Frappes au Fusil',
-    desc: 'Every rifle finishing hit advances all rifle tiers simultaneously.',
-    desc_fr: 'Chaque coup final au fusil fait progresser tous les niveaux de fusil en même temps.',
-    ids: [146]
-  },
-  {
-    name: 'Slash Hits',    name_fr: 'Frappes Tranchantes',
-    desc: 'Every slash finishing hit advances all slash tiers simultaneously.',
-    desc_fr: 'Chaque coup final tranchant fait progresser tous les niveaux tranchants en même temps.',
-    ids: [150]
-  },
-  {
-    name: 'Attack Wins + Camos', name_fr: 'Victoires + Camos',
-    desc: 'Every attack win advances all Camo honors AND Aggressor medals simultaneously.',
-    desc_fr: 'Chaque victoire fait progresser tous les Camos ET les médailles Agresseur en même temps.',
-    ids: [39,40,41,42,43,89,90,91]
-  },
-  {
-    name: 'Crimes Combo',  name_fr: 'Combo Crimes',
-    desc: 'Theft crimes count toward both Thief honors AND Criminal honors. Vandalism also counts toward Criminal. Do theft crimes to progress 3 award types at once!',
-    desc_fr: 'Les crimes de Vol comptent pour les honors Voleur ET Criminel. Le Vandalisme compte aussi pour Criminel. Faites du vol pour progresser sur 3 types en même temps !',
-    ids: [204,205,208,209,210,200,201]
-  },
-  {
-    name: 'Travel',        name_fr: 'Voyage',
-    desc: 'Every trip abroad counts toward both Travel honors AND Travel medals.',
-    desc_fr: 'Chaque voyage à l\'étranger compte pour les honors ET médailles de Voyage.',
-    ids: [300,301,302,174,175]
-  },
-  {
-    name: 'Weapons — all at once', name_fr: 'Armes — tout en même temps',
-    desc: 'Choose ONE weapon type and stick to it — each finishing hit advances ALL tiers of that weapon type at the same time (I, II, III, IV).',
-    desc_fr: 'Choisis UN type d\'arme et reste sur lui — chaque coup final fait progresser TOUS les niveaux de ce type d\'arme en même temps.',
-    ids: [140,146,148,150,147,28,142,515]
-  },
-];
-
-// ══════════════════════════════════════════════════════
-//  STATE
-// ══════════════════════════════════════════════════════
-let S = {tab:'rush', search:'', showEarned:false, theme:'blue', data:null};
-
-// ══════════════════════════════════════════════════════
-//  HELPERS
-// ══════════════════════════════════════════════════════
-const fmt = n => Number(n).toLocaleString();
-const t   = k => I18N[lang][k] || k;
-
-function applyLang() {
-  document.getElementById('t-title').innerHTML    = t('title');
-  document.getElementById('t-subtitle').innerHTML = t('subtitle');
-  document.getElementById('t-note').innerHTML     = t('note');
-  document.getElementById('load-btn').textContent = t('load');
-  document.getElementById('tab-rush').textContent = t('rushTab');
-  document.getElementById('tab-combo').textContent= t('comboTab');
-  document.getElementById('tab-all').textContent  = t('allTab');
-  document.getElementById('login-en').classList.toggle('active', lang==='en');
-  document.getElementById('login-fr').classList.toggle('active', lang==='fr');
-  document.getElementById('btn-en').classList.toggle('active', lang==='en');
-  document.getElementById('btn-fr').classList.toggle('active', lang==='fr');
-  if (S.data) renderContent();
+// Stat key mapping from description keywords
+function guessStatKey(desc,name){
+  const d=desc.toLowerCase(),n=name.toLowerCase();
+  if(d.includes('kill streak')||d.includes('best kill streak')) return 'bestkillstreak';
+  if(d.includes('win') && d.includes('attack')) return 'attackswon';
+  if(d.includes('critical hit')) return 'attackcriticalhits';
+  if(d.includes('stealthed attack')) return 'attacksstealthed';
+  if(d.includes('defend')) return 'defendswon';
+  if(d.includes('assist')) return 'attacksassisted';
+  if(d.includes('one hit kill')) return 'onehitkills';
+  if(d.includes('finishing hit') && d.includes('rifle')) return 'rifhits';
+  if(d.includes('finishing hit') && d.includes('smg')) return 'smghits';
+  if(d.includes('finishing hit') && d.includes('pistol')) return 'pishits';
+  if(d.includes('finishing hit') && d.includes('shotgun')) return 'shohits';
+  if(d.includes('finishing hit') && d.includes('slashing')) return 'slahits';
+  if(d.includes('finishing hit') && d.includes('piercing')) return 'piehits';
+  if(d.includes('finishing hit') && d.includes('clubbing')) return 'axehits';
+  if(d.includes('finishing hit') && d.includes('mechanical')) return 'machits';
+  if(d.includes('finishing hit') && d.includes('fist')) return 'h2hhits';
+  if(d.includes('finishing hit') && d.includes('kick')) return 'h2hhits';
+  if(d.includes('finishing hit') && d.includes('heavy artillery')) return 'machits';
+  if(d.includes('finishing hit') && d.includes('machine gun')) return 'machits';
+  if(d.includes('finishing hit') && d.includes('temporary')) return 'grehits';
+  if(d.includes('fire') && d.includes('round')) return 'roundsfired';
+  if(d.includes('bounty') && d.includes('collect')) return 'bountiescollected';
+  if(d.includes('bounty') && d.includes('place')) return 'bountiesplaced';
+  if(d.includes('mug')) return 'moneymugged';
+  if(d.includes('theft crime')) return 'theft';
+  if(d.includes('vandalism')||d.includes('vandal')||d.includes('graffiti crew')) return 'vandalism';
+  if(d.includes('fraud')) return 'fraud';
+  if(d.includes('criminal offense')||d.includes('criminal offenses')) return 'criminaloffenses';
+  if(d.includes('computer crime')) return 'cybercrime';
+  if(d.includes('organized crime')) return 'organisedcrimes';
+  if(d.includes('murder crime')) return 'criminaloffenses';
+  if(d.includes('auto theft')) return 'criminaloffenses';
+  if(d.includes('drug dealing')||d.includes('drug crime')) return 'drugsused';
+  if(d.includes('travel') && d.includes('time')) return 'traveltimes';
+  if(d.includes('travel') && d.includes('100 time')) return 'traveltimes';
+  if(d.includes('travel') && d.includes('25 time')) return 'traveltimes';
+  if(d.includes('travel') && d.includes('500 time')) return 'traveltimes';
+  if(d.includes('travel') && d.includes('1,000 time')) return 'traveltimes';
+  if(d.includes('import')) return 'itemsboughtabroad';
+  if(d.includes('xanax')) return 'xantaken';
+  if(d.includes('ecstasy')) return 'exttaken';
+  if(d.includes('cannabis')) return 'cantaken';
+  if(d.includes(' drug')) return 'drugsused';
+  if(d.includes('race')) return 'racesentered';
+  if(d.includes('networth')||d.includes('$100,000 for')||d.includes('$1,000,000 for')||d.includes('recorded networth')) return 'networth';
+  if(d.includes('donator')) return 'daysbeendonator';
+  if(d.includes('strength')) return 'strength';
+  if(d.includes('defense')) return 'defense';
+  if(d.includes('dexterity')) return 'dexterity';
+  if(d.includes('speed')) return 'speed';
+  if(d.includes('total stat')) return 'totalstats';
+  if(d.includes('hospital')) return 'hospital';
+  if(d.includes('active') && d.includes('day')) return 'activestreak';
+  if(d.includes('job point')) return 'jobpointsused';
+  if(d.includes('medical item')) return 'medicalitemsused';
+  if(d.includes('city') && d.includes('find')) return 'cityfinds';
+  return null;
 }
 
-function setLang(l) {
-  lang = l;
-  localStorage.setItem('lang', l);
+function getGoalFromDesc(desc){
+  // Extract number from description
+  const m=desc.match(/(?:achieve|win|commit|travel|fire|collect|use|find|import|bust|reach level|reach the rank|have|make|earn|attain|participate in|complete|gain)\s+(?:a\s+)?(?:total of\s+)?(?:best\s+)?(?:kill streak of\s+)?([\d,]+)/i);
+  if(m) return parseInt(m[1].replace(/,/g,''));
+  const m2=desc.match(/\$([\d,]+)/);
+  if(m2) return parseInt(m2[1].replace(/,/g,''));
+  return null;
+}
+
+// ══ STATE ══
+let lang=localStorage.getItem('lang')||'en';
+let theme=localStorage.getItem('theme')||'blue';
+let S={tab:'rush',search:'',showEarned:false,data:null,allAwards:null};
+
+// ══ INIT ══
+(function(){
+  document.body.className=theme==='blue'?'blue':'';
+  document.getElementById('tbtn').textContent=theme==='blue'?'🌑':'🌊';
   applyLang();
+  document.getElementById('key').addEventListener('keydown',e=>{if(e.key==='Enter')go()});
+})();
+
+function applyLang(){
+  const t=T[lang];
+  document.getElementById('tt').innerHTML=t.title;
+  document.getElementById('ts').textContent=t.sub;
+  document.getElementById('tn').innerHTML=t.note;
+  document.getElementById('lbtn').textContent=t.load;
+  document.getElementById('len').classList.toggle('on',lang==='en');
+  document.getElementById('lfr').classList.toggle('on',lang==='fr');
+  // Nav lang buttons
+  const nl=document.getElementById('nlngs');
+  nl.innerHTML=`<button class="nbtn${lang==='en'?' on':''}" onclick="setLang('en')">EN</button><button class="nbtn${lang==='fr'?' on':''}" onclick="setLang('fr')">FR</button>`;
+  if(S.data) renderContent();
 }
 
-function toggleTheme() {
-  S.theme = S.theme === 'blue' ? 'dark' : 'blue';
-  document.body.className = S.theme === 'blue' ? 'blue' : '';
-  document.getElementById('theme-btn').textContent = S.theme === 'blue' ? '🌑' : '🌊';
-  localStorage.setItem('theme', S.theme);
-}
+function setLang(l){lang=l;localStorage.setItem('lang',l);applyLang();}
+function toggleTheme(){theme=theme==='blue'?'dark':'blue';localStorage.setItem('theme',theme);document.body.className=theme==='blue'?'blue':'';document.getElementById('tbtn').textContent=theme==='blue'?'🌑':'🌊';}
+const fmt=n=>Number(n).toLocaleString();
+const t=k=>T[lang][k]||k;
 
-// ══════════════════════════════════════════════════════
-//  API
-// ══════════════════════════════════════════════════════
-async function loadData() {
-  const key = document.getElementById('api-input').value.trim();
-  if (!key) return;
-  const btn = document.getElementById('load-btn');
-  btn.disabled = true; btn.textContent = '...';
-  document.getElementById('login').style.display = 'none';
-  document.getElementById('main').style.display = 'block';
-  document.getElementById('main').innerHTML = '<div class="loading"><div class="spin"></div><span>Loading your Torn data...</span></div>';
+// ══ LOAD DATA ══
+async function go(){
+  const key=document.getElementById('key').value.trim();
+  if(!key)return;
+  const btn=document.getElementById('lbtn');
+  btn.disabled=true;btn.textContent='...';
+  document.getElementById('login').style.display='none';
+  document.getElementById('main').style.display='block';
+  document.getElementById('main').innerHTML=`<div class="loading"><div class="spin"></div><span>${t('loading')}</span></div>`;
 
-  try {
-    const [d1,d2] = await Promise.all([
+  try{
+    // Load everything in parallel
+    const [u1,u2,torn1,torn2]=await Promise.all([
       fetch(`https://api.torn.com/user/?selections=profile,honors,medals&key=${key}`).then(r=>r.json()),
       fetch(`https://api.torn.com/user/?selections=personalstats&key=${key}`).then(r=>r.json()),
+      fetch(`https://api.torn.com/v2/torn/honors?key=${key}`).then(r=>r.json()),
+      fetch(`https://api.torn.com/v2/torn/medals?key=${key}`).then(r=>r.json()),
     ]);
-    if (d1.error) throw new Error(d1.error.error);
-    if (d2.error) throw new Error(d2.error.error);
 
-    S.data = {
-      name:   d1.name, level: d1.level, age: d1.age, rank: d1.rank,
-      honors: d1.honors_awarded||[], medals: d1.medals_awarded||[],
-      stats:  d2.personalstats||{},
+    if(u1.error) throw new Error(u1.error.error);
+    if(u2.error) throw new Error(u2.error.error);
+
+    // Build award DB from API data (filter out default/country honors)
+    const honorsDB=(torn1.honors||[]).filter(h=>h.type&&h.type.title!=='default');
+    const medalsDB=(torn2.medals||[]);
+
+    S.data={
+      name:u1.name,level:u1.level,age:u1.age,rank:u1.rank,
+      earned_h:new Set(u1.honors_awarded||[]),
+      earned_m:new Set(u1.medals_awarded||[]),
+      stats:u2.personalstats||{},
     };
 
-    renderStatsBar();
+    // Build computed award list
+    S.allAwards=buildAwards(honorsDB,medalsDB,S.data);
+
+    renderSbar();
     renderTabs();
     renderContent();
-    document.getElementById('nav-links').style.display = 'flex';
-  } catch(e) {
-    document.getElementById('main').innerHTML = `<div class="err">❌ Error: ${e.message}<br><small>Check your API key and make sure the site is hosted (not opened as a local file).</small></div>`;
-    document.getElementById('login').style.display = 'block';
+    document.getElementById('nlngs').style.display='flex';
+  }catch(e){
+    document.getElementById('main').innerHTML=`<div class="err">❌ ${e.message}<br><small>Check your API key and make sure this page is hosted (not opened as a local file).</small></div>`;
+    document.getElementById('login').style.display='block';
   }
-  btn.disabled = false; btn.textContent = t('load');
+  btn.disabled=false;btn.textContent=t('load');
 }
 
-// ══════════════════════════════════════════════════════
-//  COMPUTE
-// ══════════════════════════════════════════════════════
-function compute() {
-  const {honors, medals, stats} = S.data;
-  return AWARDS.map(a => {
-    const earned = a.type==='H' ? honors.includes(a.id) : medals.includes(a.id);
-    const val  = stats[a.stat] || 0;
-    const pct  = a.stat.startsWith('_') ? 0 : Math.min(100, Math.round(val/a.goal*1000)/10);
-    const left = a.stat.startsWith('_') ? 1 : Math.max(0, a.goal - val);
-    return {...a, earned, val, pct, left};
-  });
+function buildAwards(honorsDB,medalsDB,data){
+  const {earned_h,earned_m,stats}=data;
+  const out=[];
+
+  for(const h of honorsDB){
+    const earned=earned_h.has(h.id);
+    const statKey=guessStatKey(h.description,h.name);
+    const goal=getGoalFromDesc(h.description);
+    const cat=TYPE_CAT[h.type?.title||'misc']||'misc';
+    const val=statKey?Math.max(0,stats[statKey]||0):0;
+    const pct=goal&&statKey?Math.min(100,Math.round(val/goal*1000)/10):0;
+    const left=goal&&statKey?Math.max(0,goal-val):null;
+    out.push({id:h.id,type:'H',name:h.name,desc:h.description,rarity:h.rarity||'',cat,statKey,goal,val,pct,left,earned});
+  }
+
+  for(const m of medalsDB){
+    const earned=earned_m.has(m.id);
+    const statKey=guessStatKey(m.description,m.name);
+    const goal=getGoalFromDesc(m.description);
+    const cat=TYPE_CAT[m.type?.title||'misc']||'misc';
+    const val=statKey?Math.max(0,stats[statKey]||0):0;
+    const pct=goal&&statKey?Math.min(100,Math.round(val/goal*1000)/10):0;
+    const left=goal&&statKey?Math.max(0,goal-val):null;
+    out.push({id:m.id,type:'M',name:m.name,desc:m.description,rarity:m.rarity||'',cat,statKey,goal,val,pct,left,earned});
+  }
+
+  return out;
 }
 
-// ══════════════════════════════════════════════════════
-//  RENDER STATS BAR
-// ══════════════════════════════════════════════════════
-function renderStatsBar() {
-  const {name,level,age,rank,honors,medals,stats} = S.data;
-  const all = compute();
-  const rushable = all.filter(a=>!a.earned&&a.left>0&&a.left<=500).length;
-  document.getElementById('stats-bar').style.display='flex';
-  document.getElementById('stats-bar').innerHTML=`
-    <span class="player-name">${name}</span>
-    <span class="player-sub">Lvl ${level} · ${rank}</span>
-    <div style="flex:1"></div>
-    <div class="stat-chip">Honors <span>${honors.length}</span></div>
-    <div class="stat-chip">Medals <span>${medals.length}</span></div>
-    <div class="stat-chip" style="border-color:rgba(233,69,96,.3)">Rushable <span>${rushable}</span></div>
-    <button class="nav-btn" onclick="logout()" style="margin-left:8px">${t('changeKey')}</button>
+// ══ STATS BAR ══
+function renderSbar(){
+  const {name,level,rank,earned_h,earned_m}=S.data;
+  const all=S.allAwards;
+  const rushable=all.filter(a=>!a.earned&&a.left!==null&&a.left>0&&a.left<=500).length;
+  const sbar=document.getElementById('sbar');
+  sbar.style.display='flex';
+  sbar.innerHTML=`
+    <strong style="font-size:15px">${name}</strong>
+    <span style="color:var(--muted);font-size:11px;font-family:var(--mono)">Lvl ${level} · ${rank}</span>
+    <div class="sp"></div>
+    <div class="chip">Honors <span>${earned_h.size}</span></div>
+    <div class="chip">Medals <span>${earned_m.size}</span></div>
+    <div class="chip rush">🔥 <span>${rushable}</span> rushable</div>
+    <button class="nbtn" onclick="logout()">${t('change')}</button>
   `;
 }
 
-// ══════════════════════════════════════════════════════
-//  RENDER TABS
-// ══════════════════════════════════════════════════════
-function renderTabs() {
-  document.getElementById('tabs').style.display='flex';
+// ══ TABS ══
+function renderTabs(){
+  const tabs=['rush','combos','all','attacks','weapons','crimes','travel','drugs','casino','gym','misc'];
+  const el=document.getElementById('tabs');
+  el.style.display='block';
+  el.innerHTML=tabs.map(tab=>`<div class="tab${S.tab===tab?' on':''}" data-tab="${tab}" onclick="setTab('${tab}')">${t(tab)||tab}</div>`).join('');
 }
 
-function setTab(tab) {
-  S.tab = tab;
-  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active', t.dataset.tab===tab));
+function setTab(tab){
+  S.tab=tab;
+  document.querySelectorAll('.tab').forEach(el=>el.classList.toggle('on',el.dataset.tab===tab));
   renderContent();
 }
 
-// ══════════════════════════════════════════════════════
-//  RENDER CONTENT
-// ══════════════════════════════════════════════════════
-function renderContent() {
-  const el = document.getElementById('main');
-  if (S.tab === 'rush')  { renderRush(el);  return; }
-  if (S.tab === 'combo') { renderCombos(el); return; }
+// ══ RENDER CONTENT ══
+function renderContent(){
+  const el=document.getElementById('main');
+  if(!S.data||!S.allAwards)return;
+  if(S.tab==='rush'){renderRush(el);return;}
+  if(S.tab==='combos'){renderCombos(el);return;}
   renderGrid(el);
 }
 
 // ── RUSH ──
-function renderRush(el) {
-  const all = compute().filter(a=>!a.earned&&a.left>0&&!a.stat.startsWith('_'));
+function renderRush(el){
+  const all=S.allAwards.filter(a=>!a.earned&&a.left!==null&&a.left>0);
   all.sort((a,b)=>a.left-b.left);
 
-  const tiers = [
-    {key:'tier1', max:50,    items:all.filter(a=>a.left<=50)},
-    {key:'tier2', max:200,   items:all.filter(a=>a.left>50&&a.left<=200)},
-    {key:'tier3', max:1000,  items:all.filter(a=>a.left>200&&a.left<=1000)},
-    {key:'tier4', max:5000,  items:all.filter(a=>a.left>1000&&a.left<=5000)},
+  const tiers=[
+    {k:'t1',max:50,items:all.filter(a=>a.left<=50)},
+    {k:'t2',max:200,items:all.filter(a=>a.left>50&&a.left<=200)},
+    {k:'t3',max:1000,items:all.filter(a=>a.left>200&&a.left<=1000)},
+    {k:'t4',max:5000,items:all.filter(a=>a.left>1000&&a.left<=5000)},
   ];
 
-  let html = '';
-  for (const tier of tiers) {
-    if (!tier.items.length) continue;
-    html += `
-      <div class="rush-box">
-        <div class="rush-hdr">
-          <h3>${t(tier.key)}</h3>
-          <span class="cnt">${tier.items.length} award${tier.items.length>1?'s':''}</span>
-        </div>
+  let html='';
+  for(const tier of tiers){
+    if(!tier.items.length)continue;
+    html+=`
+      <div class="rbox">
+        <div class="rhdr"><h3>${t(tier.k)}</h3><span class="cnt">${tier.items.length} award${tier.items.length>1?'s':''}</span></div>
         ${tier.items.map(a=>`
-          <div class="rush-row">
-            <div class="rush-info">
-              <div class="rush-name">${lang==='fr'?a.name_fr:a.name} <span style="color:var(--muted);font-size:11px;font-weight:400">[${a.type==='H'?t('honor'):t('medal')}]</span></div>
-              <div class="rush-how"><strong>${t('howTo')}</strong> ${lang==='fr'?a.how_fr:a.how}</div>
+          <div class="rrow">
+            <div class="rinfo">
+              <div class="rname">${a.name}<span class="rbadge ${a.type==='H'?'bh':'bm'}">${a.type==='H'?'HONOR':'MEDAL'}</span></div>
+              <div class="rdesc"><strong style="color:var(--amber);font-size:10px">${t('how')} </strong>${a.desc}</div>
+              ${a.rarity?`<div class="rarity">${a.rarity}</div>`:''}
             </div>
-            <div class="rush-left">
-              <div class="rush-num">${fmt(a.left)} ${t('left')}</div>
-              <div class="rush-stat">${a.stat}</div>
+            <div class="rright">
+              <div class="rnum">${fmt(a.left)} ${t('left')}</div>
+              <div class="rstat">${a.statKey||'?'}</div>
+              <div class="rstat" style="color:var(--muted)">${fmt(a.val)}/${fmt(a.goal)}</div>
             </div>
           </div>
         `).join('')}
       </div>
     `;
   }
-  el.innerHTML = html || `<div class="empty">${t('noRush')}</div>`;
+  el.innerHTML=html||`<div class="empty">${t('noRush')}</div>`;
 }
 
 // ── COMBOS ──
-function renderCombos(el) {
-  const {honors, medals, stats} = S.data;
-  let html = `<div class="sec-label">${t('comboTitle')}</div><p style="color:var(--muted);font-size:13px;margin-bottom:16px">${t('comboDesc')}</p>`;
+function renderCombos(el){
+  const COMBOS=[
+    {name:'Attack Wins + Camos',name_fr:'Victoires + Camos',desc:'Every attack win counts toward ALL camo honors AND attack medals simultaneously.',desc_fr:'Chaque victoire compte pour TOUS les camos ET les médailles d\'attaque en même temps.',statKey:'attackswon'},
+    {name:'Rifle Hits',name_fr:'Frappes Fusil',desc:'Use a rifle to finish attacks — every finishing hit advances all rifle tiers at once.',desc_fr:'Utilise un fusil pour terminer les attaques — chaque coup final avance tous les niveaux en même temps.',statKey:'rifhits'},
+    {name:'Slash Hits',name_fr:'Frappes Tranchantes',desc:'Use a slashing weapon to finish attacks — every finishing hit advances all slash tiers at once.',desc_fr:'Utilise une arme tranchante — chaque coup final avance tous les niveaux tranchants en même temps.',statKey:'slahits'},
+    {name:'Crimes Combo',name_fr:'Combo Crimes',desc:'Theft crimes count toward Theft honors AND total criminal offenses medals. Vandalism also counts toward criminal offenses.',desc_fr:'Les crimes de vol comptent pour les honors Vol ET les médailles d\'offenses totales. Le vandalisme compte aussi.',statKey:'criminaloffenses'},
+    {name:'Rounds Fired',name_fr:'Cartouches Tirées',desc:'Every round fired advances Spray And Pray, Two Halves, Lead Salad AND Peppered simultaneously.',desc_fr:'Chaque balle tirée fait progresser Spray And Pray, Two Halves, Lead Salad ET Peppered en même temps.',statKey:'roundsfired'},
+  ];
 
-  for (const combo of COMBOS) {
-    const items = combo.ids.map(id => {
-      const a = AWARDS.find(x=>x.id===id);
-      if (!a) return null;
-      const earned = a.type==='H' ? honors.includes(a.id) : medals.includes(a.id);
-      const val  = stats[a.stat]||0;
-      const left = Math.max(0, a.goal-val);
-      return {...a, earned, val, left};
-    }).filter(Boolean);
+  const {earned_h,earned_m,stats}=S.data;
+  let html=`<div class="sec">${t('comboTitle')}</div><p style="color:var(--muted);font-size:12px;margin-bottom:14px">${t('comboSub')}</p>`;
 
-    if (items.every(i=>i.earned)) continue;
+  for(const combo of COMBOS){
+    const relatedAwards=S.allAwards.filter(a=>a.statKey===combo.statKey&&!a.earned&&a.left!==null).sort((a,b)=>a.left-b.left).slice(0,8);
+    if(!relatedAwards.length)continue;
 
-    html += `
-      <div class="combo-box">
+    html+=`
+      <div class="cbox">
         <h3>${lang==='fr'?combo.name_fr:combo.name}</h3>
-        <div class="combo-desc">${lang==='fr'?combo.desc_fr:combo.desc}</div>
-        ${items.map(i=>`
-          <div class="combo-row ${i.earned?'cdone':''}">
-            <div class="combo-dot"></div>
-            <div style="flex:1;font-size:13px">${lang==='fr'?i.name_fr:i.name} <span style="color:var(--muted);font-size:11px">[${i.stat}]</span></div>
-            <div style="font-family:var(--mono);font-size:12px;color:${i.earned?'var(--green)':'var(--red)'}">
-              ${i.earned ? t('earned') : fmt(i.left)+' '+t('left')}
+        <div class="cdesc">${lang==='fr'?combo.desc_fr:combo.desc}</div>
+        ${relatedAwards.map(a=>`
+          <div class="crow ${a.earned?'cdone':''}">
+            <div class="cdot"></div>
+            <div style="flex:1">${a.name} <span style="color:var(--muted);font-size:10px">[${a.type==='H'?'Honor':'Medal'}]</span></div>
+            <div style="font-family:var(--mono);font-size:11px;color:${a.earned?'var(--green)':'var(--red)'}">
+              ${a.earned?t('earned'):fmt(a.left)+' '+t('left')}
             </div>
           </div>
         `).join('')}
       </div>
     `;
   }
-  el.innerHTML = html;
+  el.innerHTML=html;
 }
 
 // ── GRID ──
-function renderGrid(el) {
-  let all = compute();
-  if (S.tab !== 'all') all = all.filter(a=>a.cat===S.tab);
-  if (!S.showEarned) all = all.filter(a=>!a.earned);
-  if (S.search) {
-    const q = S.search.toLowerCase();
-    all = all.filter(a=>(lang==='fr'?a.name_fr:a.name).toLowerCase().includes(q) || (lang==='fr'?a.how_fr:a.how).toLowerCase().includes(q));
+function renderGrid(el){
+  let all=S.allAwards;
+  if(S.tab!=='all') all=all.filter(a=>a.cat===S.tab);
+  if(!S.showEarned) all=all.filter(a=>!a.earned);
+  if(S.search){
+    const q=S.search.toLowerCase();
+    all=all.filter(a=>a.name.toLowerCase().includes(q)||a.desc.toLowerCase().includes(q));
   }
   all.sort((a,b)=>b.pct-a.pct);
 
-  const fc = pfClass;
-  const filterBar = `
-    <div class="filter-bar">
+  const fbar=`
+    <div class="fbar">
       <input type="search" placeholder="${t('search')}" oninput="S.search=this.value;renderContent()" value="${S.search}"/>
-      <label class="toggle-lbl"><input type="checkbox" ${S.showEarned?'checked':''} onchange="S.showEarned=this.checked;renderContent()"/> ${t('showEarned')}</label>
+      <label class="tlbl"><input type="checkbox" ${S.showEarned?'checked':''} onchange="S.showEarned=this.checked;renderContent()"/> ${t('showEarned')}</label>
     </div>
   `;
 
-  if (!all.length) { el.innerHTML = filterBar+`<div class="empty">${t('noAwards')}</div>`; return; }
+  if(!all.length){el.innerHTML=fbar+`<div class="empty">${t('noAwards')}</div>`;return;}
 
-  const cards = all.map(a => {
-    const isRush = !a.earned && a.left>0 && a.left<=500;
-    const fc = a.earned?'pf-done':(a.pct>=80?'pf-high':(a.pct>=50?'pf-mid':'pf-low'));
-    const badge = a.earned
-      ? `<span class="badge bd">${t('earned')}</span>`
-      : (isRush?`<span class="badge br">🔥 RUSH</span>`:`<span class="badge ${a.type==='H'?'bh':'bm'}">${a.type==='H'?t('honor'):t('medal')}</span>`);
+  const cards=all.map(a=>{
+    const isRush=!a.earned&&a.left!==null&&a.left>0&&a.left<=500;
+    const fc=a.earned?'pd':(a.pct>=80?'ph':(a.pct>=50?'pm':'pl'));
+    const badge=a.earned?`<span class="rbadge bd">${t('earned')}</span>`:(isRush?`<span class="rbadge" style="background:var(--red-d);color:var(--red);border:1px solid rgba(233,69,96,.3)">🔥RUSH</span>`:`<span class="rbadge ${a.type==='H'?'bh':'bm'}">${a.type==='H'?'HONOR':'MEDAL'}</span>`);
     return `
       <div class="card ${a.earned?'done':(isRush?'rush':'')}">
-        <div class="card-head">
-          <div class="card-name">${lang==='fr'?a.name_fr:a.name}</div>
-          ${badge}
-        </div>
-        <div class="how-to"><strong>${t('howTo')}</strong>${lang==='fr'?a.how_fr:a.how}</div>
-        <div class="prog-wrap">
-          <div class="prog-bar"><div class="prog-fill ${fc}" style="width:${a.pct}%"></div></div>
-          <div class="prog-pct">${a.pct}%</div>
-        </div>
-        <div class="prog-nums"><strong>${fmt(a.val)}</strong> / ${fmt(a.goal)}${!a.earned?` — <strong>${fmt(a.left)}</strong> ${t('left')}`:''}</div>
+        <div class="chtop"><div class="chname">${a.name}</div>${badge}</div>
+        <div class="chdesc">${a.desc}</div>
+        ${a.goal&&a.statKey?`
+          <div class="pbar"><div class="ptrack"><div class="pfill ${fc}" style="width:${a.pct}%"></div></div><div class="ppct">${a.pct}%</div></div>
+          <div class="pnums"><strong>${fmt(a.val)}</strong> / ${fmt(a.goal)}${!a.earned&&a.left!==null?` — <strong>${fmt(a.left)}</strong> ${t('left')}`:''}</div>
+        `:`<div class="pnums" style="color:var(--muted)">No progress tracking for this award</div>`}
+        ${a.rarity?`<div class="rarity">${a.rarity}</div>`:''}
       </div>
     `;
   }).join('');
 
-  el.innerHTML = filterBar + `<div class="grid">${cards}</div>`;
+  el.innerHTML=fbar+`<div class="grid">${cards}</div>`;
 }
 
-function pfClass(a) { return a.earned?'pf-done':(a.pct>=80?'pf-high':(a.pct>=50?'pf-mid':'pf-low')); }
-
-function logout() {
-  S.data=null;
+function logout(){
+  S.data=null;S.allAwards=null;
   document.getElementById('login').style.display='block';
   document.getElementById('main').style.display='none';
-  document.getElementById('stats-bar').style.display='none';
+  document.getElementById('sbar').style.display='none';
   document.getElementById('tabs').style.display='none';
-  document.getElementById('nav-links').style.display='none';
-  document.getElementById('api-input').value='';
+  document.getElementById('nlngs').style.display='none';
+  document.getElementById('key').value='';
 }
-
-// ══════════════════════════════════════════════════════
-//  INIT
-// ══════════════════════════════════════════════════════
-(function init() {
-  const savedTheme = localStorage.getItem('theme') || 'blue';
-  S.theme = savedTheme;
-  document.body.className = savedTheme === 'blue' ? 'blue' : '';
-  document.getElementById('theme-btn').textContent = savedTheme==='blue'?'🌑':'🌊';
-  applyLang();
-  document.getElementById('api-input').addEventListener('keydown', e => { if(e.key==='Enter') loadData(); });
-})();
 </script>
 </body>
 </html>
