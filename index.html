@@ -116,6 +116,18 @@ body.blue nav{background:rgba(6,13,26,.96)}
 .sec{font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin:20px 0 10px;display:flex;align-items:center;gap:8px}
 .sec::after{content:'';flex:1;height:1px;background:var(--brd)}
 
+.planhead{background:linear-gradient(135deg,var(--surf),var(--surf2));border:1px solid var(--brd);border-radius:12px;padding:16px;margin-bottom:14px}
+.planhead h2{font-size:18px;margin-bottom:6px}
+.planhead p{font-size:12px;color:var(--muted);line-height:1.6}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.secondary{background:var(--surf2);border:1px solid var(--brd);color:var(--text)}
+.mini{font-size:10px;color:var(--muted);font-family:var(--mono)}
+.card.click{cursor:pointer}
+.card.click:hover{transform:translateY(-1px);border-color:var(--red)}
+.score{font-family:var(--mono);font-size:10px;color:var(--amber);margin-top:6px}
+.warn{background:var(--amber-d);border:1px solid rgba(245,166,35,.25);border-radius:8px;padding:10px 12px;color:var(--amber);font-size:12px;margin-bottom:12px;line-height:1.5}
+
+
 @media(max-width:600px){.grid{grid-template-columns:1fr}nav{padding:0 12px}#main{padding:12px}.fbar{gap:4px}}
 </style>
 </head>
@@ -148,8 +160,8 @@ body.blue nav{background:rgba(6,13,26,.96)}
 <script>
 // ══ I18N ══
 const T={
-  en:{title:'Track Your <em>Torn Awards</em>',sub:'Enter your API key to see your progress, find rushable awards & smart combos.',note:'Key never stored — requests go directly to Torn API from your browser.<br>Get key at <a href="https://www.torn.com/preferences.php#tab=api" target="_blank">torn.com → Preferences → API</a> (Limited access is enough)<br><strong>⚠️ Must be hosted (GitHub Pages / Netlify) — local file:// won\'t work.</strong>',load:'Load',change:'Change Key',rush:'🔥 Rush',combos:'⚡ Combos',all:'All',attacks:'⚔️ Attacks',weapons:'🔫 Weapons',crimes:'🕵️ Crimes',travel:'✈️ Travel',drugs:'💊 Drugs',casino:'🎰 Casino',misc:'🎲 Misc',gym:'💪 Gym',t1:'⚡ Do it NOW — within 50',t2:'🔥 This week — within 200',t3:'🎯 Within 1,000',t4:'📅 Within 5,000',noRush:'No rushable awards found!',noAwards:'No awards match your filters.',showEarned:'Show earned',search:'Search...',how:'How:',left:'left',earned:'✓ Done',comboTitle:'⚡ Combos — Grind Multiple at Once',comboSub:'These award groups all progress from the same action.',loading:'Loading awards from Torn API...',tutos:'📖 Guides'},
-  fr:{title:'Suivi de Vos <em>Awards Torn</em>',sub:'Entrez votre clé API pour voir votre progression, trouver ce que vous pouvez rusher et découvrir des combos.',note:'Clé jamais stockée — les requêtes vont directement à l\'API Torn depuis votre navigateur.<br>Obtenez votre clé sur <a href="https://www.torn.com/preferences.php#tab=api" target="_blank">torn.com → Préférences → API</a> (Accès limité suffit)<br><strong>⚠️ Doit être hébergé (GitHub Pages / Netlify) — le fichier local file:// ne fonctionne pas.</strong>',load:'Charger',change:'Changer de clé',rush:'🔥 Rush',combos:'⚡ Combos',all:'Tous',attacks:'⚔️ Attaques',weapons:'🔫 Armes',crimes:'🕵️ Crimes',travel:'✈️ Voyage',drugs:'💊 Drogues',casino:'🎰 Casino',misc:'🎲 Misc',gym:'💪 Gym',t1:'⚡ À faire MAINTENANT — moins de 50',t2:'🔥 Cette semaine — moins de 200',t3:'🎯 Moins de 1 000',t4:'📅 Moins de 5 000',noRush:'Aucun award à rusher trouvé !',noAwards:'Aucun award ne correspond à vos filtres.',showEarned:'Afficher obtenus',search:'Rechercher...',how:'Comment:',left:'restant',earned:'✓ Obtenu',comboTitle:'⚡ Combos — Plusieurs Awards en Même Temps',comboSub:'Ces groupes d\'awards progressent tous avec la même action.',loading:'Chargement des awards depuis l\'API Torn...',tutos:'📖 Guides'}
+  en:{title:'Track Your <em>Torn Awards</em>',sub:'Enter your API key to see your progress, find rushable awards & smart combos.',note:'Key never stored — requests go directly to Torn API from your browser.<br>Get key at <a href="https://www.torn.com/preferences.php#tab=api" target="_blank">torn.com → Preferences → API</a> (Limited access is enough)<br><strong>⚠️ Must be hosted (GitHub Pages / Netlify) — local file:// won\'t work.</strong>',load:'Load',change:'Change Key',rush:'🔥 Rush',combos:'⚡ Combos',all:'All',attacks:'⚔️ Attacks',weapons:'🔫 Weapons',crimes:'🕵️ Crimes',travel:'✈️ Travel',drugs:'💊 Drugs',casino:'🎰 Casino',misc:'🎲 Misc',gym:'💪 Gym',t1:'⚡ Do it NOW — within 50',t2:'🔥 This week — within 200',t3:'🎯 Within 1,000',t4:'📅 Within 5,000',noRush:'No rushable awards found!',noAwards:'No awards match your filters.',showEarned:'Show earned',search:'Search...',how:'How:',left:'left',earned:'✓ Done',comboTitle:'⚡ Combos — Grind Multiple at Once',comboSub:'These award groups all progress from the same action.',loading:'Loading awards from Torn API...',tutos:'📖 Guides',planner:'🧠 Plan',nextBest:'Best next merits',copyPlan:'Copy plan',openAwards:'Open awards page',plannerSub:'Prioritized by closeness, ease and reliability. Use this as your daily checklist.',unknown:'Manual check needed'},
+  fr:{title:'Suivi de Vos <em>Awards Torn</em>',sub:'Entrez votre clé API pour voir votre progression, trouver ce que vous pouvez rusher et découvrir des combos.',note:'Clé jamais stockée — les requêtes vont directement à l\'API Torn depuis votre navigateur.<br>Obtenez votre clé sur <a href="https://www.torn.com/preferences.php#tab=api" target="_blank">torn.com → Préférences → API</a> (Accès limité suffit)<br><strong>⚠️ Doit être hébergé (GitHub Pages / Netlify) — le fichier local file:// ne fonctionne pas.</strong>',load:'Charger',change:'Changer de clé',rush:'🔥 Rush',combos:'⚡ Combos',all:'Tous',attacks:'⚔️ Attaques',weapons:'🔫 Armes',crimes:'🕵️ Crimes',travel:'✈️ Voyage',drugs:'💊 Drogues',casino:'🎰 Casino',misc:'🎲 Misc',gym:'💪 Gym',t1:'⚡ À faire MAINTENANT — moins de 50',t2:'🔥 Cette semaine — moins de 200',t3:'🎯 Moins de 1 000',t4:'📅 Moins de 5 000',noRush:'Aucun award à rusher trouvé !',noAwards:'Aucun award ne correspond à vos filtres.',showEarned:'Afficher obtenus',search:'Rechercher...',how:'Comment:',left:'restant',earned:'✓ Obtenu',comboTitle:'⚡ Combos — Plusieurs Awards en Même Temps',comboSub:'Ces groupes d\'awards progressent tous avec la même action.',loading:'Chargement des awards depuis l\'API Torn...',tutos:'📖 Guides',planner:'🧠 Plan',nextBest:'Meilleurs mérites suivants',copyPlan:'Copier le plan',openAwards:'Ouvrir les awards',plannerSub:'Priorisé par proximité, facilité et fiabilité. Utilise ça comme checklist quotidienne.',unknown:'Vérification manuelle'}
 };
 
 // Map honor/medal type to category tab
@@ -539,7 +551,7 @@ function renderSbar(){
 
 // ══ TABS ══
 function renderTabs(){
-  const tabs=['rush','combos','tutos','all','attacks','weapons','crimes','travel','drugs','casino','gym','misc'];
+  const tabs=['rush','planner','combos','tutos','all','attacks','weapons','crimes','travel','drugs','casino','gym','misc'];
   const el=document.getElementById('tabs');
   el.style.display='block';
   el.innerHTML=tabs.map(tab=>`<div class="tab${S.tab===tab?' on':''}" data-tab="${tab}" onclick="setTab('${tab}')">${t(tab)||tab}</div>`).join('');
@@ -556,6 +568,7 @@ function renderContent(){
   const el=document.getElementById('main');
   if(!S.data||!S.allAwards)return;
   if(S.tab==='rush'){renderRush(el);return;}
+  if(S.tab==='planner'){renderPlanner(el);return;}
   if(S.tab==='combos'){renderCombos(el);return;}
   if(S.tab==='tutos'){renderTutos(el);return;}
   renderGrid(el);
@@ -600,6 +613,72 @@ function renderRush(el){
     `;
   }
   el.innerHTML=html||`<div class="empty">${t('noRush')}</div>`;
+}
+
+
+function awardUrl(a){
+  return `https://www.torn.com/page.php?sid=awards&tab=${a.type==='H'?'honors':'medals'}`;
+}
+function planScore(a){
+  if(a.earned || a.left===null || !a.goal || !a.statKey) return -999999;
+  let score = 0;
+  score += Math.max(0, 100000 - a.left);
+  if(a.left <= 50) score += 50000;
+  else if(a.left <= 200) score += 25000;
+  else if(a.left <= 1000) score += 10000;
+  if(a.pct >= 90) score += 20000;
+  else if(a.pct >= 75) score += 10000;
+  if(['attacks','weapons','travel','drugs','gym','crimes'].includes(a.cat)) score += 3000;
+  return score;
+}
+function copyPlan(){
+  const plan = S.allAwards
+    .filter(a=>!a.earned && a.left!==null && a.left>0)
+    .sort((a,b)=>planScore(b)-planScore(a))
+    .slice(0,15)
+    .map((a,i)=>`${i+1}. ${a.name} [${a.type}] — ${fmt(a.left)} left — ${a.desc}`)
+    .join('\n');
+  navigator.clipboard?.writeText(plan);
+}
+function renderPlanner(el){
+  const candidates=S.allAwards
+    .filter(a=>!a.earned && a.left!==null && a.left>0 && a.goal && a.statKey)
+    .sort((a,b)=>planScore(b)-planScore(a))
+    .slice(0,24);
+
+  const missing=S.allAwards.filter(a=>!a.earned && (!a.goal || !a.statKey)).length;
+
+  let html=`
+    <div class="planhead">
+      <h2>${t('nextBest')}</h2>
+      <p>${t('plannerSub')}</p>
+      <div class="actions">
+        <button class="btn" onclick="copyPlan()">${t('copyPlan')}</button>
+        <button class="btn secondary" onclick="window.open('https://www.torn.com/page.php?sid=awards','_blank')">${t('openAwards')}</button>
+      </div>
+    </div>
+    ${missing?`<div class="warn">⚠️ ${missing} awards cannot be tracked automatically because Torn does not expose a clear progress stat or this tracker has no mapping yet. They still appear in the normal tabs as manual checks.</div>`:''}
+  `;
+  if(!candidates.length){el.innerHTML=html+`<div class="empty">${t('noRush')}</div>`;return;}
+
+  html+=`<div class="grid">`+candidates.map(a=>{
+    const fc=a.pct>=80?'ph':(a.pct>=50?'pm':'pl');
+    const level=a.left<=50?'⚡ Now':a.left<=200?'🔥 Soon':a.left<=1000?'🎯 Grind':'📅 Long';
+    return `
+      <div class="card click ${a.left<=500?'rush':''}" onclick="window.open('${awardUrl(a)}','_blank')">
+        <div class="chtop">
+          <div class="chname">${a.name}</div>
+          <span class="rbadge ${a.type==='H'?'bh':'bm'}">${a.type==='H'?'HONOR':'MEDAL'}</span>
+        </div>
+        <div class="chdesc">${a.desc}</div>
+        <div class="pbar"><div class="ptrack"><div class="pfill ${fc}" style="width:${a.pct}%"></div></div><div class="ppct">${a.pct}%</div></div>
+        <div class="pnums"><strong>${fmt(a.val)}</strong> / ${fmt(a.goal)} — <strong>${fmt(a.left)}</strong> ${t('left')}</div>
+        <div class="score">${level} · ${a.cat} · ${a.statKey}</div>
+        ${a.rarity?`<div class="rarity">${a.rarity}</div>`:''}
+      </div>
+    `;
+  }).join('')+`</div>`;
+  el.innerHTML=html;
 }
 
 // ── ATTACK COMBOS ──
@@ -794,7 +873,7 @@ function renderGrid(el){
     const fc=a.earned?'pd':(a.pct>=80?'ph':(a.pct>=50?'pm':'pl'));
     const badge=a.earned?`<span class="rbadge bd">${t('earned')}</span>`:(isRush?`<span class="rbadge" style="background:var(--red-d);color:var(--red);border:1px solid rgba(233,69,96,.3)">🔥RUSH</span>`:`<span class="rbadge ${a.type==='H'?'bh':'bm'}">${a.type==='H'?'HONOR':'MEDAL'}</span>`);
     return `
-      <div class="card ${a.earned?'done':(isRush?'rush':'')}">
+      <div class="card click ${a.earned?'done':(isRush?'rush':'')}" onclick="window.open(awardUrl(a),'_blank')">
         <div class="chtop"><div class="chname">${a.name}</div>${badge}</div>
         <div class="chdesc">${a.desc}</div>
         ${a.goal&&a.statKey?`
