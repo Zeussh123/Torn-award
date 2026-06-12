@@ -1,158 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Torn Awards Tracker</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Torn Merit OS</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Inter:wght@300;400;500;600;700&display=swap');
-:root{--bg:#0d0d0f;--surf:#141417;--surf2:#1c1c21;--brd:#2a2a32;--text:#e8e8f0;--muted:#6b6b80;--red:#e94560;--red-d:rgba(233,69,96,.15);--amber:#f5a623;--amber-d:rgba(245,166,35,.12);--green:#2ecc71;--green-d:rgba(46,204,113,.12);--blue:#4a9eff;--blue-d:rgba(74,158,255,.12);--mono:'Share Tech Mono',monospace;--sans:'Inter',sans-serif}
-body.blue{--bg:#060d1a;--surf:#0d1b2e;--surf2:#112236;--brd:#1c3354;--text:#dde8f8;--muted:#4d6a8a;--blue:#5ba8ff;--blue-d:rgba(91,168,255,.15)}
-*{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--bg);color:var(--text);font-family:var(--sans);min-height:100vh;transition:background .3s}
-nav{position:sticky;top:0;z-index:100;background:rgba(13,13,15,.96);backdrop-filter:blur(12px);border-bottom:1px solid var(--brd);padding:0 20px;display:flex;align-items:center;gap:12px;height:54px}
-body.blue nav{background:rgba(6,13,26,.96)}
-.logo{font-family:var(--mono);font-size:14px;color:var(--red);letter-spacing:2px;white-space:nowrap}
-.logo small{color:var(--muted);font-size:10px;display:block;letter-spacing:1px}
-.sp{flex:1}
-.nbtn{background:var(--surf2);border:1px solid var(--brd);color:var(--muted);padding:5px 12px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;transition:.15s}
-.nbtn:hover,.nbtn.on{border-color:var(--red);color:var(--red);background:var(--red-d)}
-.tbtn{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;padding:0}
-
-/* LOGIN */
-#login{max-width:500px;margin:70px auto;padding:0 20px;text-align:center}
-#login h1{font-size:28px;font-weight:700;margin-bottom:8px}
-#login h1 em{color:var(--red);font-style:normal}
-#login p{color:var(--muted);font-size:13px;margin-bottom:28px;line-height:1.7}
-.row{display:flex;gap:8px}
-.row input{flex:1;background:var(--surf);border:1px solid var(--brd);color:var(--text);padding:11px 15px;border-radius:8px;font-family:var(--mono);font-size:13px;outline:none;transition:.2s}
-.row input:focus{border-color:var(--red)}
-.btn{background:var(--red);color:#fff;border:none;padding:11px 20px;border-radius:8px;font-weight:700;font-size:13px;cursor:pointer;transition:.15s;white-space:nowrap}
-.btn:hover{opacity:.85}
-.btn:disabled{opacity:.4;cursor:not-allowed}
-.note{margin-top:14px;font-size:11px;color:var(--muted);line-height:1.8}
-.note a{color:var(--blue);text-decoration:none}
-.note strong{color:var(--amber)}
-.lngs{display:flex;gap:8px;justify-content:center;margin-bottom:22px}
-.lbtn{background:var(--surf2);border:1px solid var(--brd);color:var(--muted);padding:6px 16px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;transition:.15s}
-.lbtn.on{background:var(--red-d);border-color:var(--red);color:var(--red)}
-
-/* STATSBAR */
-#sbar{display:none;background:var(--surf);border-bottom:1px solid var(--brd);padding:10px 20px;gap:10px;flex-wrap:wrap;align-items:center}
-.chip{background:var(--surf2);border:1px solid var(--brd);border-radius:20px;padding:4px 12px;font-size:11px;font-family:var(--mono)}
-.chip span{color:var(--red);font-weight:700}
-.chip.rush{border-color:rgba(233,69,96,.3)}
-
-/* TABS */
-#tabs{display:none;border-bottom:1px solid var(--brd);padding:0 20px;overflow-x:auto;white-space:nowrap;background:var(--bg)}
-.tab{display:inline-block;padding:12px 16px;font-size:12px;font-weight:600;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;transition:.15s}
-.tab:hover{color:var(--text)}
-.tab.on{color:var(--red);border-color:var(--red)}
-
-/* MAIN */
-#main{max-width:1100px;margin:0 auto;padding:20px}
-
-/* RUSH */
-.rbox{background:var(--surf);border:1px solid var(--brd);border-radius:10px;margin-bottom:10px;overflow:hidden}
-.rhdr{padding:11px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--brd)}
-.rhdr h3{font-size:13px;font-weight:700}
-.rhdr .cnt{font-family:var(--mono);font-size:11px;color:var(--muted)}
-.rrow{display:flex;align-items:flex-start;gap:12px;padding:12px 16px;border-bottom:1px solid var(--brd);transition:.15s;cursor:pointer}
-.rrow:last-child{border-bottom:none}
-.rrow:hover{background:var(--surf2)}
-.rinfo{flex:1}
-.rname{font-size:13px;font-weight:600;margin-bottom:3px}
-.rdesc{font-size:11px;color:var(--muted);line-height:1.5}
-.rright{text-align:right;flex-shrink:0;min-width:90px}
-.rnum{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--red)}
-.rstat{font-size:10px;color:var(--muted);font-family:var(--mono)}
-.rbadge{display:inline-block;font-family:var(--mono);font-size:9px;padding:2px 6px;border-radius:3px;margin-left:5px;vertical-align:middle}
-.bh{background:var(--blue-d);color:var(--blue);border:1px solid rgba(74,158,255,.25)}
-.bm{background:var(--amber-d);color:var(--amber);border:1px solid rgba(245,166,35,.25)}
-.bd{background:var(--green-d);color:var(--green);border:1px solid rgba(46,204,113,.25)}
-
-/* GRID */
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:10px}
-.card{background:var(--surf);border:1px solid var(--brd);border-radius:10px;padding:14px;transition:.15s}
-.card:hover{border-color:#3a3a50}
-.card.rush{border-color:rgba(233,69,96,.35);background:linear-gradient(135deg,rgba(233,69,96,.04),var(--surf))}
-.card.done{opacity:.4}
-.chtop{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:8px}
-.chname{font-weight:600;font-size:13px;line-height:1.3}
-.chdesc{font-size:11px;color:var(--muted);margin-bottom:10px;line-height:1.5;border-left:2px solid var(--brd);padding-left:7px}
-.pbar{display:flex;align-items:center;gap:8px}
-.ptrack{flex:1;height:3px;background:var(--brd);border-radius:2px;overflow:hidden}
-.pfill{height:100%;border-radius:2px;transition:width .4s}
-.ph{background:var(--red)}.pm{background:var(--amber)}.pl{background:var(--blue)}.pd{background:var(--green)}
-.ppct{font-family:var(--mono);font-size:10px;color:var(--muted);width:34px;text-align:right}
-.pnums{font-family:var(--mono);font-size:10px;color:var(--muted);margin-top:3px}
-.pnums strong{color:var(--text)}
-
-/* COMBO */
-.cbox{background:var(--surf);border:1px solid rgba(245,166,35,.2);border-radius:10px;padding:16px;margin-bottom:10px}
-.cbox h3{color:var(--amber);font-family:var(--mono);font-size:11px;letter-spacing:1px;margin-bottom:4px}
-.cdesc{color:var(--muted);font-size:12px;margin-bottom:12px;line-height:1.5}
-.crow{display:flex;align-items:center;gap:8px;padding:4px 0;font-size:12px}
-.cdot{width:5px;height:5px;border-radius:50%;background:var(--amber);flex-shrink:0}
-.cdone{opacity:.4}.cdone .cdot{background:var(--green)}
-
-/* FILTERS */
-.fbar{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:14px}
-.fbar input{background:var(--surf);border:1px solid var(--brd);color:var(--text);padding:7px 12px;border-radius:6px;font-size:12px;outline:none;width:200px}
-.fbar input:focus{border-color:var(--red)}
-.fcat{background:var(--surf2);border:1px solid var(--brd);color:var(--muted);padding:6px 12px;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;transition:.15s}
-.fcat:hover{border-color:var(--red);color:var(--text)}
-.fcat.on{background:var(--red-d);border-color:var(--red);color:var(--red)}
-.tlbl{font-size:11px;color:var(--muted);display:flex;align-items:center;gap:5px;cursor:pointer;margin-left:auto}
-.tlbl input{accent-color:var(--red)}
-.rarity{font-size:10px;font-family:var(--mono);color:var(--muted);margin-top:3px}
-
-/* LOADING/ERR */
-.loading{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:80px 20px;gap:14px;color:var(--muted)}
-.spin{width:28px;height:28px;border:2px solid var(--brd);border-top-color:var(--red);border-radius:50%;animation:spin .7s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
-.err{background:var(--red-d);border:1px solid rgba(233,69,96,.3);border-radius:8px;padding:14px 18px;color:var(--red);font-size:13px;margin:20px 0}
-.empty{text-align:center;padding:60px 20px;color:var(--muted);font-size:13px}
-.sec{font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin:20px 0 10px;display:flex;align-items:center;gap:8px}
-.sec::after{content:'';flex:1;height:1px;background:var(--brd)}
-
-@media(max-width:600px){.grid{grid-template-columns:1fr}nav{padding:0 12px}#main{padding:12px}.fbar{gap:4px}}
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Share+Tech+Mono&display=swap');
+:root{
+  --bg:#07080a;--panel:#111318;--panel2:#181b22;--panel3:#20242d;--line:#2b303a;
+  --text:#f0f2f5;--muted:#87909c;--red:#c83232;--red2:#ff4242;--gold:#d6a13b;
+  --green:#39c47a;--blue:#4aa3ff;--purple:#9b6cff;--mono:'Share Tech Mono',monospace;--sans:'Inter',system-ui,sans-serif;
+}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at top left,#241111 0,#07080a 36%,#050608 100%);color:var(--text);font-family:var(--sans);min-height:100vh}
+body:before{content:"";position:fixed;inset:0;background:linear-gradient(rgba(255,255,255,.018) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px);background-size:36px 36px;pointer-events:none;opacity:.5}
+button,input,select,textarea{font-family:inherit}a{color:inherit}.mono{font-family:var(--mono)}
+.top{position:sticky;top:0;z-index:20;height:64px;background:rgba(7,8,10,.88);backdrop-filter:blur(14px);border-bottom:1px solid var(--line);display:flex;align-items:center;padding:0 18px;gap:14px}
+.brand{display:flex;align-items:center;gap:12px}.badgeLogo{width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,#cf3434,#5d1111);display:grid;place-items:center;box-shadow:0 0 24px rgba(200,50,50,.25);font-family:var(--mono);font-weight:800}
+.brand h1{font-size:15px;line-height:1;margin:0;letter-spacing:.08em;text-transform:uppercase}.brand small{display:block;margin-top:5px;color:var(--muted);font-family:var(--mono);font-size:10px;letter-spacing:.12em}
+.spacer{flex:1}.ghost{background:var(--panel2);border:1px solid var(--line);color:var(--muted);border-radius:10px;padding:9px 12px;font-size:12px;font-weight:700;cursor:pointer}.ghost:hover,.ghost.on{border-color:var(--red);color:#fff;background:rgba(200,50,50,.14)}
+.layout{display:grid;grid-template-columns:250px 1fr;min-height:calc(100vh - 64px)}.side{border-right:1px solid var(--line);background:rgba(13,15,19,.78);padding:16px;position:sticky;top:64px;height:calc(100vh - 64px);overflow:auto}.main{padding:22px;max-width:1320px;width:100%;margin:0 auto}
+.navbtn{width:100%;display:flex;align-items:center;gap:10px;background:transparent;border:1px solid transparent;color:var(--muted);padding:11px 12px;border-radius:12px;cursor:pointer;font-weight:700;font-size:13px;text-align:left;margin-bottom:4px}.navbtn:hover{background:var(--panel2);color:var(--text)}.navbtn.on{background:linear-gradient(90deg,rgba(200,50,50,.22),rgba(200,50,50,.04));border-color:rgba(200,50,50,.4);color:#fff}.navbtn span:first-child{width:22px;text-align:center}
+.login{max-width:760px;margin:72px auto;padding:0 20px;text-align:center}.hero{background:linear-gradient(180deg,rgba(17,19,24,.92),rgba(10,11,14,.92));border:1px solid var(--line);border-radius:24px;padding:38px;box-shadow:0 20px 80px rgba(0,0,0,.45)}.hero h2{font-size:42px;margin:0 0 12px;font-weight:800;letter-spacing:-.04em}.hero h2 em{font-style:normal;color:var(--red2)}.hero p{color:var(--muted);line-height:1.7;margin:0 0 26px}.keyrow{display:flex;gap:10px}.keyrow input{flex:1;background:#08090c;border:1px solid var(--line);color:var(--text);padding:15px;border-radius:14px;outline:none;font-family:var(--mono)}.keyrow input:focus{border-color:var(--red)}.primary{background:linear-gradient(135deg,#cf3434,#8e1e1e);border:0;color:white;border-radius:14px;padding:14px 20px;font-weight:800;cursor:pointer}.primary:disabled{opacity:.45}.hint{font-size:12px;color:var(--muted);margin-top:16px;line-height:1.7}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:18px}.kpi{background:linear-gradient(180deg,var(--panel),#0d0f13);border:1px solid var(--line);border-radius:16px;padding:14px}.kpi .l{color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.1em;font-family:var(--mono)}.kpi .v{font-size:24px;font-weight:800;margin-top:6px}.kpi .s{font-size:11px;color:var(--muted);margin-top:4px}
+.sectionTitle{display:flex;align-items:end;justify-content:space-between;margin:0 0 14px}.sectionTitle h2{font-size:24px;margin:0;letter-spacing:-.03em}.sectionTitle p{margin:5px 0 0;color:var(--muted);font-size:13px}.panel{background:rgba(17,19,24,.92);border:1px solid var(--line);border-radius:18px;padding:16px;margin-bottom:14px}.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:12px}.widegrid{display:grid;grid-template-columns:1.2fr .8fr;gap:12px}
+.card{background:linear-gradient(180deg,var(--panel),#0d0f13);border:1px solid var(--line);border-radius:16px;padding:14px;position:relative;overflow:hidden}.card:before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:var(--line)}.card.priority-high:before{background:var(--red2)}.card.priority-medium:before{background:var(--gold)}.card.priority-low:before{background:var(--blue)}.card.done{opacity:.42}.cardHead{display:flex;gap:11px;align-items:flex-start}.ico{width:42px;height:42px;object-fit:contain;flex-shrink:0;background:#090a0d;border-radius:10px;border:1px solid var(--line);padding:3px}.ctxt{flex:1;min-width:0}.title{font-weight:800;font-size:14px;line-height:1.25}.desc{font-size:12px;color:var(--muted);line-height:1.5;margin:7px 0 10px}.tagrow{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}.tag{font-family:var(--mono);font-size:10px;padding:3px 7px;border-radius:99px;background:var(--panel3);border:1px solid var(--line);color:var(--muted)}.tag.red{color:#ff8b8b;border-color:rgba(255,66,66,.3);background:rgba(200,50,50,.12)}.tag.green{color:#6ee59f;border-color:rgba(57,196,122,.3);background:rgba(57,196,122,.1)}.tag.gold{color:#f2c46d;border-color:rgba(214,161,59,.3);background:rgba(214,161,59,.1)}.tag.blue{color:#84c2ff;border-color:rgba(74,163,255,.3);background:rgba(74,163,255,.1)}
+.progress{display:flex;align-items:center;gap:8px;margin-top:8px}.track{flex:1;height:6px;background:#090a0d;border-radius:99px;overflow:hidden;border:1px solid #1d2028}.fill{height:100%;background:linear-gradient(90deg,var(--red),var(--gold));border-radius:99px}.pct{font-family:var(--mono);font-size:11px;color:var(--muted);width:45px;text-align:right}.meta{display:flex;justify-content:space-between;gap:8px;margin-top:6px;color:var(--muted);font-size:11px;font-family:var(--mono)}
+.actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}.mini{border:1px solid var(--line);background:var(--panel2);color:var(--muted);padding:6px 8px;border-radius:9px;font-size:11px;font-weight:800;cursor:pointer}.mini:hover,.mini.on{border-color:var(--red);color:white;background:rgba(200,50,50,.16)}.mini.star{color:#f2c46d}.mini.donebtn{color:#6ee59f}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;align-items:center}.toolbar input,.toolbar select{background:var(--panel);border:1px solid var(--line);color:var(--text);border-radius:11px;padding:10px 12px;font-size:12px;outline:none}.toolbar input{min-width:240px;flex:1}.pill{border:1px solid var(--line);background:var(--panel2);color:var(--muted);padding:9px 12px;border-radius:99px;font-size:12px;font-weight:800;cursor:pointer}.pill.on{border-color:var(--red);color:white;background:rgba(200,50,50,.16)}
+.combo{border-left:4px solid var(--red);background:linear-gradient(90deg,rgba(200,50,50,.08),rgba(17,19,24,.92))}.comboTop{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.score{font-family:var(--mono);font-size:22px;font-weight:800;color:var(--gold)}.steps{background:#090a0d;border:1px solid var(--line);border-radius:12px;padding:10px;margin:10px 0;color:#c8d0da;font-size:12px;line-height:1.5}.awardLine{display:flex;align-items:center;gap:8px;padding:7px 0;border-top:1px solid rgba(255,255,255,.04);font-size:12px}.dot{width:7px;height:7px;border-radius:99px;background:var(--red2)}.dot.done{background:var(--green)}
+.columns{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.col{background:rgba(17,19,24,.7);border:1px dashed var(--line);border-radius:16px;padding:12px;min-height:260px}.col h3{font-size:13px;text-transform:uppercase;letter-spacing:.09em;font-family:var(--mono);color:var(--muted);margin:0 0 10px}.smallcard{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px;margin-bottom:8px;font-size:12px}.empty{padding:42px;text-align:center;color:var(--muted)}.err{background:rgba(200,50,50,.13);border:1px solid rgba(200,50,50,.35);color:#ff8b8b;padding:14px;border-radius:14px;margin:20px 0}.loading{display:grid;place-items:center;gap:12px;padding:80px;color:var(--muted)}.spinner{width:32px;height:32px;border-radius:99px;border:3px solid var(--line);border-top-color:var(--red);animation:spin .8s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
+@media(max-width:900px){.layout{grid-template-columns:1fr}.side{position:static;height:auto;display:flex;overflow:auto;border-right:0;border-bottom:1px solid var(--line)}.navbtn{width:auto;white-space:nowrap}.kpis{grid-template-columns:repeat(2,1fr)}.widegrid,.columns{grid-template-columns:1fr}.keyrow{flex-direction:column}}
 </style>
 </head>
-<body class="blue">
-<nav>
-  <div class="logo">DARKPULSE<small>AWARDS TRACKER</small></div>
-  <div class="sp"></div>
-  <div id="nlngs" style="display:none;gap:6px"></div>
-  <button class="nbtn tbtn" onclick="toggleTheme()" id="tbtn">🌑</button>
-</nav>
-
-<div id="login">
-  <div class="lngs">
-    <button class="lbtn on" onclick="setLang('en')" id="len">🇬🇧 English</button>
-    <button class="lbtn" onclick="setLang('fr')" id="lfr">🇫🇷 Français</button>
-  </div>
-  <h1 id="tt"></h1>
-  <p id="ts"></p>
-  <div class="row">
-    <input type="password" id="key" placeholder="Your Torn API key..." autocomplete="off"/>
-    <button class="btn" id="lbtn" onclick="go()">Load</button>
-  </div>
-  <p class="note" id="tn"></p>
-</div>
-
-<div id="sbar"></div>
-<div id="tabs" style="display:none"></div>
-<div id="main" style="display:none"></div>
-
+<body>
+<header class="top"><div class="brand"><div class="badgeLogo">TC</div><div><h1>Torn Merit OS</h1><small>PERSONAL AWARDS COMMAND CENTER</small></div></div><div class="spacer"></div><button class="ghost" id="changeKey" onclick="logout()" style="display:none">Change key</button></header>
+<div id="login" class="login"><div class="hero"><h2>Stop scrolling. <em>Start earning merits.</em></h2><p>A smarter Torn awards tracker: personal roadmap, priority system, combo setups, explorer, and local checklist. Your API key stays in your browser session only.</p><div class="keyrow"><input id="apiKey" type="password" placeholder="Paste your Torn API key..." autocomplete="off"><button class="primary" id="loadBtn" onclick="loadApp()">Load profile</button></div><div class="hint">Requires Torn API access for profile, honors, medals and personalstats. Host it on GitHub Pages / Netlify; local file:// can be blocked by CORS.</div></div></div>
+<div id="app" class="layout" style="display:none"><aside class="side" id="side"></aside><main class="main"><div id="stats"></div><div id="content"></div></main></div>
 <script>
-// ══ I18N ══
-const T={
-  en:{title:'Track Your <em>Torn Awards</em>',sub:'Enter your API key to see your progress, find rushable awards & smart combos.',note:'Key never stored — requests go directly to Torn API from your browser.<br>Get key at <a href="https://www.torn.com/preferences.php#tab=api" target="_blank">torn.com → Preferences → API</a> (Limited access is enough)<br><strong>⚠️ Must be hosted (GitHub Pages / Netlify) — local file:// won\'t work.</strong>',load:'Load',change:'Change Key',rush:'🔥 Rush',combos:'⚡ Combos',all:'All',attacks:'⚔️ Attacks',weapons:'🔫 Weapons',crimes:'🕵️ Crimes',travel:'✈️ Travel',drugs:'💊 Drugs',casino:'🎰 Casino',misc:'🎲 Misc',gym:'💪 Gym',t1:'⚡ Do it NOW — within 50',t2:'🔥 This week — within 200',t3:'🎯 Within 1,000',t4:'📅 Within 5,000',noRush:'No rushable awards found!',noAwards:'No awards match your filters.',showEarned:'Show earned',search:'Search...',how:'How:',left:'left',earned:'✓ Done',comboTitle:'⚡ Combos — Grind Multiple at Once',comboSub:'These award groups all progress from the same action.',loading:'Loading awards from Torn API...',guide:'🧭 Smart Guide'},
-  fr:{title:'Suivi de Vos <em>Awards Torn</em>',sub:'Entrez votre clé API pour voir votre progression, trouver ce que vous pouvez rusher et découvrir des combos.',note:'Clé jamais stockée — les requêtes vont directement à l\'API Torn depuis votre navigateur.<br>Obtenez votre clé sur <a href="https://www.torn.com/preferences.php#tab=api" target="_blank">torn.com → Préférences → API</a> (Accès limité suffit)<br><strong>⚠️ Doit être hébergé (GitHub Pages / Netlify) — le fichier local file:// ne fonctionne pas.</strong>',load:'Charger',change:'Changer de clé',rush:'🔥 Rush',combos:'⚡ Combos',all:'Tous',attacks:'⚔️ Attaques',weapons:'🔫 Armes',crimes:'🕵️ Crimes',travel:'✈️ Voyage',drugs:'💊 Drogues',casino:'🎰 Casino',misc:'🎲 Misc',gym:'💪 Gym',t1:'⚡ À faire MAINTENANT — moins de 50',t2:'🔥 Cette semaine — moins de 200',t3:'🎯 Moins de 1 000',t4:'📅 Moins de 5 000',noRush:'Aucun award à rusher trouvé !',noAwards:'Aucun award ne correspond à vos filtres.',showEarned:'Afficher obtenus',search:'Rechercher...',how:'Comment:',left:'restant',earned:'✓ Obtenu',comboTitle:'⚡ Combos — Plusieurs Awards en Même Temps',comboSub:'Ces groupes d\'awards progressent tous avec la même action.',loading:'Chargement des awards depuis l\'API Torn...',guide:'🧭 Smart Guide'}
-};
-
-// Map honor/medal type to category tab
 const TYPE_CAT={
   'attacking':'attacks','camo':'attacks','weapons':'weapons','crimes':'crimes',
   'travel':'travel','drugs':'drugs','casino':'casino','gym':'gym',
@@ -407,443 +291,189 @@ function getGoalFromDesc(desc){
   return null;
 }
 
-// ══ STATE ══
-let lang=localStorage.getItem('lang')||'en';
-let theme=localStorage.getItem('theme')||'blue';
-let S={tab:'rush',search:'',showEarned:false,data:null,allAwards:null};
 
-// ══ INIT ══
-(function(){
-  document.body.className=theme==='blue'?'blue':'';
-  document.getElementById('tbtn').textContent=theme==='blue'?'🌑':'🌊';
-  applyLang();
-  document.getElementById('key').addEventListener('keydown',e=>{if(e.key==='Enter')go()});
-})();
+const ATTACK_COMBOS=[
+  {id:'bare_unarmed',
+   name:'Bare Fists — No Armor, No Weapon',
+   name_fr:'À Poil + Mains Nues',
+   color:'#e94560',
+   setup_en:`Remove ALL armor + equip NO weapon (set melee to fists/kick only). Attack any weak target.`,
+   setup_fr:`Retire TOUTE armure + AUCUNE arme (mets uniquement poings/kick). Attaque n'importe quelle cible faible.`,
+   tip_en:`Best on L3MILK [1999595] (99 total stats). Each win = +1 Bare AND +1 Unarmed finishing hit simultaneously.`,
+   tip_fr:`Parfait sur L3MILK [1999595] (99 stats). Chaque victoire = +1 Bare ET +1 coup final Unarmed en même temps.`,
+   hids:[515,763],mids:[]},
+  {id:'bare_stealth',
+   name:'Bare + Unarmed + Stealth',
+   name_fr:'À Poil + Mains Nues + Furtif',
+   color:'#4a9eff',
+   setup_en:`Remove ALL armor + fists only + enable Stealth. Use Smoke Grenade temp for max stealth chance.`,
+   setup_fr:`Retire toute armure + poings uniquement + active le Furtif. Utilise Smoke Grenade temp pour max furtif.`,
+   tip_en:`Each stealthed win counts toward Night Walker (100) + Bare (250) + Unarmed (100) all at once.`,
+   tip_fr:`Chaque victoire furtive compte pour Night Walker (100) + Bare (250) + Unarmed (100) en même temps.`,
+   hids:[515,763,27],mids:[]},
+  {id:'pepper_unarmed',
+   name:'Pepper Spray + Fists Finish',
+   name_fr:'Pepper Spray + Finir aux Poings',
+   color:'#f5a623',
+   setup_en:`Equip Pepper Spray temp ($800 at Big Al's) + no weapon. Pepper Spray cuts their DEX by 80% = easy wins.`,
+   setup_fr:`Équipe Pepper Spray temp (800$ chez Big Al) + aucune arme. Réduit leur DEX de 80% = victoires faciles.`,
+   tip_en:`Pin Puller (100 temp finishing hits) + Unarmed (100 h2h hits) + Bare (250 unarmored) all together.`,
+   tip_fr:`Pin Puller (100 coups finaux temp) + Unarmed (100 h2h) + Bare (250 sans armure) tous ensemble.`,
+   hids:[143,515,763],mids:[]},
+  {id:'rifle_rounds',
+   name:'Rifle Spam — Weapon Honor + Rounds Fired',
+   name_fr:'Spam Fusil — Honor Arme + Balles Tirées',
+   color:'#5ba8ff',
+   setup_en:`Equip rifle as primary. Set to use rifle 100% of turns. Every fight advances rifle finishing hits AND all rounds-fired honors at the same time.`,
+   setup_fr:`Équipe un fusil comme arme primaire. Mets 100% sur fusil. Chaque combat fait progresser les coups finaux fusil ET tous les honors balles tirées en même temps.`,
+   tip_en:`Spray And Pray (1k) + Two Halves (10k) + Lead Salad (100k) + Peppered (1M) all share roundsfired stat.`,
+   tip_fr:`Spray And Pray (1k) + Two Halves (10k) + Lead Salad (100k) + Peppered (1M) partagent tous la stat roundsfired.`,
+   hids:[146,140,151,834],mids:[]},
+  {id:'grenade_finish',
+   name:'Grenade Finish — Pin Puller + Rounds',
+   name_fr:'Finir à la Grenade',
+   color:'#2ecc71',
+   setup_en:`Equip SMG/rifle as primary + Grenade as temp. Spray rounds then finish with grenade.`,
+   setup_fr:`Équipe SMG/fusil + Grenade comme temp. Tire beaucoup de balles puis finis à la grenade.`,
+   tip_en:`Pin Puller + Spray And Pray + Two Halves all progress in the same attack.`,
+   tip_fr:`Pin Puller + Spray And Pray + Two Halves progressent tous dans la même attaque.`,
+   hids:[143,140,151],mids:[]},
+  {id:'kick_leonidas',
+   name:'Kick Finish — Leonidas + Unarmed',
+   name_fr:'Finir au Kick — Leonidas + Unarmed',
+   color:'#f5a623',
+   setup_en:`Unlock Kick (Education > Self Defense > Kickboxing). Set melee to kick only. Each finishing kick = Leonidas + Unarmed hits.`,
+   setup_fr:`Débloque Kick (Education > Self Defense > Kickboxing). Mets corps à corps sur kick uniquement.`,
+   tip_en:`Leonidas needs just 1 finishing kick — do it once instantly! Unarmed needs 100 total.`,
+   tip_fr:`Leonidas = juste 1 kick final. Fais-le une fois instantanément ! Unarmed = 100 au total.`,
+   hids:[871,515],mids:[]},
+  {id:'npc_chain',
+   name:'NPC Fight — Boss Fight + Chains',
+   name_fr:'Combat NPC — Boss Fight + Chaînes',
+   color:'#2ecc71',
+   setup_en:`Join active NPC fight (Duke/Jimmy/Leslie) on Torn Discord. Wait for debuffs then hit once.`,
+   setup_fr:`Rejoins un combat NPC actif (Duke/Jimmy/Leslie) sur le Discord Torn. Attends les debuffs puis frappe une fois.`,
+   tip_en:`Use TornTools extension to track NPC spawns. Boss Fight [665] needed for a merit.`,
+   tip_fr:`Utilise TornTools pour tracker les spawns NPC. Boss Fight [665] nécessaire pour un mérite.`,
+   hids:[665,253,255,257],mids:[]},
+  {id:'stealth_camo',
+   name:'Stealth — Night Walker + Camos + Medals',
+   name_fr:'Furtif — Night Walker + Camos + Médailles',
+   color:'#4a9eff',
+   setup_en:`Enable stealth + Smoke Grenade temp. Every stealthed win = Night Walker + ALL camo honors + attack medals simultaneously.`,
+   setup_fr:`Active le furtif + Smoke Grenade temp. Chaque victoire furtive = Night Walker + TOUS les Camos + médailles attaque.`,
+   tip_en:`Smoke + Flash on turn 1 = maximum stealth. Use on weak targets.`,
+   tip_fr:`Smoke + Flash au tour 1 = maximum furtif. Utilise sur des cibles faibles.`,
+   hids:[27,39,40,41,42,43],mids:[174,175,176]},
+  {id:'phoenix',
+   name:'Lose then Win — Phoenix',
+   name_fr:'Perdre puis Gagner — Phoenix',
+   color:'#f5a623',
+   setup_en:`Lose to someone, then beat them back within 10 minutes. Coordinate with a faction member: they attack you first, you attack back.`,
+   setup_fr:`Perds contre quelqu'un, puis bats-le en retour dans les 10 minutes. Coordonne avec ta faction.`,
+   tip_en:`Pick someone weaker for the return fight so you are sure to win.`,
+   tip_fr:`Choisis quelqu'un de plus faible pour le retour pour être sûr de gagner.`,
+   hids:[317],mids:[]},
+];
 
-function applyLang(){
-  const t=T[lang];
-  document.getElementById('tt').innerHTML=t.title;
-  document.getElementById('ts').textContent=t.sub;
-  document.getElementById('tn').innerHTML=t.note;
-  document.getElementById('lbtn').textContent=t.load;
-  document.getElementById('len').classList.toggle('on',lang==='en');
-  document.getElementById('lfr').classList.toggle('on',lang==='fr');
-  // Nav lang buttons
-  const nl=document.getElementById('nlngs');
-  nl.innerHTML=`<button class="nbtn${lang==='en'?' on':''}" onclick="setLang('en')">EN</button><button class="nbtn${lang==='fr'?' on':''}" onclick="setLang('fr')">FR</button>`;
-  if(S.data) renderContent();
-}
 
-function setLang(l){lang=l;localStorage.setItem('lang',l);applyLang();}
-function toggleTheme(){theme=theme==='blue'?'dark':'blue';localStorage.setItem('theme',theme);document.body.className=theme==='blue'?'blue':'';document.getElementById('tbtn').textContent=theme==='blue'?'🌑':'🌊';}
-const fmt=n=>Number(n).toLocaleString();
-const t=k=>T[lang][k]||k;
-
-// ══ LOAD DATA ══
-async function go(){
-  const key=document.getElementById('key').value.trim();
-  if(!key)return;
-  const btn=document.getElementById('lbtn');
-  btn.disabled=true;btn.textContent='...';
-  document.getElementById('login').style.display='none';
-  document.getElementById('main').style.display='block';
-  document.getElementById('main').innerHTML=`<div class="loading"><div class="spin"></div><span>${t('loading')}</span></div>`;
-
+const fmt=n=>Number(n||0).toLocaleString();
+const STATE={tab:'dashboard',data:null,awards:[],filterCat:'all',filterType:'all',q:'',showEarned:false,sort:'smart'};
+const STORE='torn-merit-os-v1';
+function prefs(){try{return JSON.parse(localStorage.getItem(STORE)||'{}')}catch{return {}}}
+function savePrefs(p){localStorage.setItem(STORE,JSON.stringify(p))}
+function awardKey(a){return a.type+a.id}
+function pget(k,def=null){const p=prefs();return p[k]??def}
+function pset(k,v){const p=prefs();p[k]=v;savePrefs(p)}
+function apiIcon(a){return `https://yata.yt/media/${a.type==='H'?'honors':'medals'}/${a.id}.png`}
+function openAward(a){window.open(`https://www.torn.com/page.php?sid=awards&tab=${a.type==='H'?'honors':'medals'}`, '_blank')}
+async function loadApp(){
+  const key=document.getElementById('apiKey').value.trim(); if(!key) return;
+  document.getElementById('loadBtn').disabled=true; document.getElementById('login').style.display='none'; document.getElementById('app').style.display='grid';
+  content(`<div class="loading"><div class="spinner"></div><div>Pulling Torn intelligence...</div></div>`);
   try{
-    // Load everything in parallel
-    const [u1,u2,torn1,torn2]=await Promise.all([
+    const [u1,u2,h,m]=await Promise.all([
       fetch(`https://api.torn.com/user/?selections=profile,honors,medals&key=${key}`).then(r=>r.json()),
       fetch(`https://api.torn.com/user/?selections=personalstats&key=${key}`).then(r=>r.json()),
       fetch(`https://api.torn.com/v2/torn/honors?key=${key}`).then(r=>r.json()),
-      fetch(`https://api.torn.com/v2/torn/medals?key=${key}`).then(r=>r.json()),
+      fetch(`https://api.torn.com/v2/torn/medals?key=${key}`).then(r=>r.json())
     ]);
-
-    if(u1.error) throw new Error(u1.error.error);
-    if(u2.error) throw new Error(u2.error.error);
-
-    // Build award DB from API data (filter out default/country honors)
-    // Filter out: default/country honors AND Crimes 1.0 legacy honors
-    const honorsDB=(torn1.honors||[]).filter(h=>h.type&&h.type.title!=='default'&&h.crimes_version!=='v1');
-    // Filter out Crimes 1.0 legacy medals
-    const medalsDB=(torn2.medals||[]).filter(m=>m.crimes_version!=='v1');
-
-    S.data={
-      name:u1.name,level:u1.level,age:u1.age,rank:u1.rank,
-      earned_h:new Set(u1.honors_awarded||[]),
-      earned_m:new Set(u1.medals_awarded||[]),
-      stats:u2.personalstats||{},
-    };
-
-    // Build computed award list
-    S.allAwards=buildAwards(honorsDB,medalsDB,S.data);
-
-    renderSbar();
-    renderTabs();
-    renderContent();
-    document.getElementById('nlngs').style.display='flex';
-  }catch(e){
-    document.getElementById('main').innerHTML=`<div class="err">❌ ${e.message}<br><small>Check your API key and make sure this page is hosted (not opened as a local file).</small></div>`;
-    document.getElementById('login').style.display='block';
-  }
-  btn.disabled=false;btn.textContent=t('load');
+    if(u1.error) throw new Error(u1.error.error); if(u2.error) throw new Error(u2.error.error);
+    const honorsDB=(h.honors||[]).filter(x=>x.type&&x.type.title!=='default'&&x.crimes_version!=='v1');
+    const medalsDB=(m.medals||[]).filter(x=>x.crimes_version!=='v1');
+    STATE.data={name:u1.name,level:u1.level,rank:u1.rank,age:u1.age,earned_h:new Set(u1.honors_awarded||[]),earned_m:new Set(u1.medals_awarded||[]),stats:u2.personalstats||{}};
+    STATE.awards=buildAwards(honorsDB,medalsDB,STATE.data).map(enrichAward);
+    document.getElementById('changeKey').style.display='inline-block'; renderShell(); render();
+  }catch(e){content(`<div class="err">❌ ${e.message}<br><small>Check the key and hosting mode.</small></div>`);document.getElementById('login').style.display='block';document.getElementById('app').style.display='none'}
+  document.getElementById('loadBtn').disabled=false;
 }
-
+function logout(){document.getElementById('login').style.display='block';document.getElementById('app').style.display='none';document.getElementById('changeKey').style.display='none'}
 function buildAwards(honorsDB,medalsDB,data){
-  const {earned_h,earned_m,stats}=data;
-  const out=[];
-
-  for(const h of honorsDB){
-    const earned=earned_h.has(h.id);
-    const mapped=getAwardMapping('H',h.id);
-    const statKey=mapped?mapped.s:guessStatKey(h.description,h.name);
-    const goal=mapped?mapped.g:getGoalFromDesc(h.description);
-    const cat=TYPE_CAT[h.type?.title||'misc']||'misc';
-    const val=statKey?Math.max(0,stats[statKey]||0):0;
-    const pct=goal&&statKey?Math.min(100,Math.round(val/goal*1000)/10):0;
-    const left=goal&&statKey?Math.max(0,goal-val):null;
-    out.push({id:h.id,type:'H',name:h.name,desc:h.description,rarity:h.rarity||'',cat,statKey,goal,val,pct,left,earned});
-  }
-
-  for(const m of medalsDB){
-    const earned=earned_m.has(m.id);
-    const mapped=getAwardMapping('M',m.id);
-    const statKey=mapped?mapped.s:guessStatKey(m.description,m.name);
-    const goal=mapped?mapped.g:getGoalFromDesc(m.description);
-    const cat=TYPE_CAT[m.type?.title||'misc']||'misc';
-    const val=statKey?Math.max(0,stats[statKey]||0):0;
-    const pct=goal&&statKey?Math.min(100,Math.round(val/goal*1000)/10):0;
-    const left=goal&&statKey?Math.max(0,goal-val):null;
-    out.push({id:m.id,type:'M',name:m.name,desc:m.description,rarity:m.rarity||'',cat,statKey,goal,val,pct,left,earned});
-  }
-
-  return out;
+ const out=[]; const {earned_h,earned_m,stats}=data;
+ for(const h of honorsDB){const earned=earned_h.has(h.id);const mapped=getAwardMapping('H',h.id);const statKey=mapped?mapped.s:guessStatKey(h.description,h.name);const goal=mapped?mapped.g:getGoalFromDesc(h.description);const cat=TYPE_CAT[h.type?.title||'misc']||'misc';const val=statKey?Math.max(0,stats[statKey]||0):0;const pct=goal&&statKey?Math.min(100,Math.round(val/goal*1000)/10):0;const left=goal&&statKey?Math.max(0,goal-val):null;out.push({id:h.id,type:'H',name:h.name,desc:h.description,rarity:h.rarity||'',cat,statKey,goal,val,pct,left,earned})}
+ for(const m of medalsDB){const earned=earned_m.has(m.id);const mapped=getAwardMapping('M',m.id);const statKey=mapped?mapped.s:guessStatKey(m.description,m.name);const goal=mapped?mapped.g:getGoalFromDesc(m.description);const cat=TYPE_CAT[m.type?.title||'misc']||'misc';const val=statKey?Math.max(0,stats[statKey]||0):0;const pct=goal&&statKey?Math.min(100,Math.round(val/goal*1000)/10):0;const left=goal&&statKey?Math.max(0,goal-val):null;out.push({id:m.id,type:'M',name:m.name,desc:m.description,rarity:m.rarity||'',cat,statKey,goal,val,pct,left,earned})}
+ return out;
 }
-
-// ══ STATS BAR ══
-function renderSbar(){
-  const {name,level,rank,earned_h,earned_m}=S.data;
-  const all=S.allAwards;
-  const rushable=all.filter(a=>!a.earned&&a.left!==null&&a.left>0&&a.left<=500).length;
-  const sbar=document.getElementById('sbar');
-  sbar.style.display='flex';
-  sbar.innerHTML=`
-    <strong style="font-size:15px">${name}</strong>
-    <span style="color:var(--muted);font-size:11px;font-family:var(--mono)">Lvl ${level} · ${rank}</span>
-    <div class="sp"></div>
-    <div class="chip">Honors <span>${earned_h.size}</span></div>
-    <div class="chip">Medals <span>${earned_m.size}</span></div>
-    <div class="chip rush">🔥 <span>${rushable}</span> rushable</div>
-    <button class="nbtn" onclick="logout()">${t('change')}</button>
-  `;
+function enrichAward(a){
+ const pr=pget('priority_'+awardKey(a),'none'); const st=pget('status_'+awardKey(a), a.earned?'done':'todo');
+ let effort='unknown', cost='unknown', speed=999999;
+ if(a.left!==null){speed=a.left; if(a.left<=10) effort='instant'; else if(a.left<=50) effort='quick'; else if(a.left<=500) effort='grind'; else effort='long';}
+ if(['travel','casino','drugs'].includes(a.cat)) cost='paid'; else if(['attacks','weapons','crimes','gym'].includes(a.cat)) cost='action'; else cost='mixed';
+ return {...a,priority:pr,status:st,effort,cost,speed};
 }
-
-// ══ TABS ══
-function renderTabs(){
-  const tabs=['rush','combos','guide','all','attacks','weapons','crimes','travel','drugs','casino','gym','misc'];
-  const el=document.getElementById('tabs');
-  el.style.display='block';
-  el.innerHTML=tabs.map(tab=>`<div class="tab${S.tab===tab?' on':''}" data-tab="${tab}" onclick="setTab('${tab}')">${t(tab)||tab}</div>`).join('');
+function renderShell(){
+ const nav=[['dashboard','🏚️','Dashboard'],['next','🎯','Next merits'],['combos','⚡','Combo builder'],['explorer','🗂️','Awards explorer'],['tracker','📌','My tracker'],['guides','📖','Guides']];
+ document.getElementById('side').innerHTML=nav.map(n=>`<button class="navbtn ${STATE.tab===n[0]?'on':''}" onclick="setTab('${n[0]}')"><span>${n[1]}</span><span>${n[2]}</span></button>`).join('')+`<div style="height:12px"></div><div class="panel" style="font-size:12px;color:var(--muted);line-height:1.6"><b style="color:white">Tip:</b><br>Use Explorer to star priorities, then My Tracker becomes your personal checklist.</div>`;
 }
-
-function setTab(tab){
-  S.tab=tab;
-  document.querySelectorAll('.tab').forEach(el=>el.classList.toggle('on',el.dataset.tab===tab));
-  renderContent();
+function setTab(t){STATE.tab=t; renderShell(); render()}
+function content(h){document.getElementById('content').innerHTML=h}
+function renderStats(){
+ const d=STATE.data,a=STATE.awards; const missing=a.filter(x=>!x.earned).length; const rush=a.filter(x=>!x.earned&&x.left!==null&&x.left<=50).length; const high=a.filter(x=>!x.earned&&x.priority==='high').length;
+ document.getElementById('stats').innerHTML=`<div class="kpis"><div class="kpi"><div class="l">Operative</div><div class="v">${d.name}</div><div class="s">Lvl ${d.level} · ${d.rank}</div></div><div class="kpi"><div class="l">Missing awards</div><div class="v">${missing}</div><div class="s">Trackable + guide-only</div></div><div class="kpi"><div class="l">Fast targets</div><div class="v">${rush}</div><div class="s">≤ 50 actions left</div></div><div class="kpi"><div class="l">High priority</div><div class="v">${high}</div><div class="s">Your pinned targets</div></div></div>`;
 }
-
-// ══ RENDER CONTENT ══
-function renderContent(){
-  const el=document.getElementById('main');
-  if(!S.data||!S.allAwards)return;
-  if(S.tab==='rush'){renderRush(el);return;}
-  if(S.tab==='combos'){renderCombos(el);return;}
-  if(S.tab==='guide'){renderSmartGuide(el);return;}
-  renderGrid(el);
+function render(){renderStats(); if(STATE.tab==='dashboard') return renderDashboard(); if(STATE.tab==='next') return renderNext(); if(STATE.tab==='combos') return renderCombosSmart(); if(STATE.tab==='explorer') return renderExplorer(); if(STATE.tab==='tracker') return renderTracker(); if(STATE.tab==='guides') return renderGuides();}
+function card(a,opts={}){
+ const cls=`card priority-${a.priority||'none'} ${a.earned?'done':''}`; const prog=a.left===null?`<div class="tag red">Manual / not trackable</div>`:`<div class="progress"><div class="track"><div class="fill" style="width:${a.pct}%"></div></div><div class="pct">${a.pct}%</div></div><div class="meta"><span>${fmt(a.val)} / ${fmt(a.goal)}</span><span>${fmt(a.left)} left</span></div>`;
+ return `<div class="${cls}"><div class="cardHead"><img class="ico" src="${apiIcon(a)}" onerror="this.style.display='none'"><div class="ctxt"><div class="title">${a.name} <span class="tag ${a.type==='H'?'blue':'gold'}">${a.type==='H'?'HONOR':'MEDAL'}</span></div><div class="desc">${a.desc||'No description available.'}</div><div class="tagrow"><span class="tag">${a.cat}</span><span class="tag">${a.statKey||'manual'}</span><span class="tag ${a.effort==='instant'?'green':a.effort==='quick'?'gold':''}">${a.effort}</span>${a.priority!=='none'?`<span class="tag red">${a.priority}</span>`:''}</div>${prog}</div></div><div class="actions"><button class="mini star ${a.priority==='high'?'on':''}" onclick="setPriority('${awardKey(a)}','high')">⭐ High</button><button class="mini ${a.priority==='medium'?'on':''}" onclick="setPriority('${awardKey(a)}','medium')">Medium</button><button class="mini ${a.priority==='low'?'on':''}" onclick="setPriority('${awardKey(a)}','low')">Low</button><button class="mini" onclick="clearPriority('${awardKey(a)}')">Clear</button><button class="mini donebtn" onclick="setStatus('${awardKey(a)}','progress')">In progress</button><button class="mini" onclick="openAwardByKey('${awardKey(a)}')">Open</button></div></div>`;
 }
-
-// ── RUSH ──
-function renderRush(el){
-  const all=S.allAwards.filter(a=>!a.earned&&a.left!==null&&a.left>0);
-  all.sort((a,b)=>a.left-b.left);
-
-  const tiers=[
-    {k:'t1',max:50,items:all.filter(a=>a.left<=50)},
-    {k:'t2',max:200,items:all.filter(a=>a.left>50&&a.left<=200)},
-    {k:'t3',max:1000,items:all.filter(a=>a.left>200&&a.left<=1000)},
-    {k:'t4',max:5000,items:all.filter(a=>a.left>1000&&a.left<=5000)},
-  ];
-
-  let html='';
-  for(const tier of tiers){
-    if(!tier.items.length)continue;
-    html+=`
-      <div class="rbox">
-        <div class="rhdr"><h3>${t(tier.k)}</h3><span class="cnt">${tier.items.length} award${tier.items.length>1?'s':''}</span></div>
-        ${tier.items.map(a=>`
-          <a class="rrow" href="https://www.torn.com/page.php?sid=awards&tab=${a.type==='H'?'honors':'medals'}" target="_blank" style="text-decoration:none;color:inherit;display:flex">
-            <img src="https://yata.yt/media/${a.type==='H'?'honors':'medals'}/${a.id}.png" 
-                 style="width:32px;height:32px;object-fit:contain;flex-shrink:0;margin-right:4px;align-self:center"
-                 onerror="this.style.display='none'" loading="lazy"/>
-            <div class="rinfo">
-              <div class="rname">${a.name}<span class="rbadge ${a.type==='H'?'bh':'bm'}">${a.type==='H'?'HONOR':'MEDAL'}</span></div>
-              <div class="rdesc"><strong style="color:var(--amber);font-size:10px">${t('how')} </strong>${a.desc}</div>
-              ${a.rarity?`<div class="rarity">${a.rarity}</div>`:''}
-            </div>
-            <div class="rright">
-              <div class="rnum">${fmt(a.left)} ${t('left')}</div>
-              <div class="rstat">${a.statKey||'?'}</div>
-              <div class="rstat" style="color:var(--muted)">${fmt(a.val)}/${fmt(a.goal)}</div>
-            </div>
-          </a>
-        `).join('')}
-      </div>
-    `;
-  }
-  el.innerHTML=html||`<div class="empty">${t('noRush')}</div>`;
+function openAwardByKey(k){const a=STATE.awards.find(x=>awardKey(x)===k);if(a)openAward(a)}
+function setPriority(k,v){pset('priority_'+k,v);STATE.awards=STATE.awards.map(a=>awardKey(a)===k?{...a,priority:v}:a);render()}
+function clearPriority(k){pset('priority_'+k,'none');STATE.awards=STATE.awards.map(a=>awardKey(a)===k?{...a,priority:'none'}:a);render()}
+function setStatus(k,v){pset('status_'+k,v);STATE.awards=STATE.awards.map(a=>awardKey(a)===k?{...a,status:v}:a);render()}
+function scoreAward(a){ if(a.earned) return 1e9; let s=0; if(a.left===null) s+=900000; else s+=a.left; if(a.priority==='high') s-=100000; if(a.priority==='medium') s-=50000; if(a.priority==='low') s-=10000; if(a.effort==='instant') s-=20000; if(a.effort==='quick') s-=10000; return s;}
+function renderDashboard(){
+ const missing=STATE.awards.filter(a=>!a.earned).sort((a,b)=>scoreAward(a)-scoreAward(b)); const quick=missing.filter(a=>a.left!==null&&a.left<=50).slice(0,6); const cats=['attacks','weapons','crimes','travel','drugs','casino','gym','misc'];
+ let catHtml=cats.map(c=>{const all=STATE.awards.filter(a=>a.cat===c);const done=all.filter(a=>a.earned).length;const pct=all.length?Math.round(done/all.length*100):0;return `<div class="smallcard"><b>${c.toUpperCase()}</b><div class="progress"><div class="track"><div class="fill" style="width:${pct}%"></div></div><div class="pct">${pct}%</div></div><div class="meta"><span>${done}/${all.length}</span><span>${all.length-done} missing</span></div></div>`}).join('');
+ content(`<div class="sectionTitle"><div><h2>Command dashboard</h2><p>Your best opportunities and weak categories.</p></div></div><div class="widegrid"><div class="panel"><h3 style="margin-top:0">Fastest actionable merits</h3><div class="grid">${quick.map(a=>card(a)).join('')||'<div class="empty">No fast trackable awards found.</div>'}</div></div><div class="panel"><h3 style="margin-top:0">Category heatmap</h3>${catHtml}<button class="primary" style="width:100%;margin-top:10px" onclick="setTab('explorer')">Open full explorer</button></div></div>`)
 }
-
-// ── SMART COMBOS + PROFILE-ADAPTED GUIDE ──
-// Design goal: do not show generic tutorials. Each section is filtered by the player's
-// already-earned honors/medals and sorted by highest "merits per action" value.
-const SMART_SETUPS=[
-  {
-    id:'bare_unarmed_stealth', cat:'attacks', cost:'low', difficulty:'easy', energy:25,
-    name_en:'Bare + Unarmed + Stealth setup', name_fr:'Sans armure + mains nues + furtif',
-    setup_en:'Remove all armor, use fists/kick only, enable stealth, use Smoke Grenade/Flash Grenade if possible, then hit weak inactive targets.',
-    setup_fr:'Retire toute armure, utilise seulement poings/kick, active le furtif, utilise Smoke/Flash Grenade si possible, puis attaque des cibles faibles inactives.',
-    why_en:'One fight can progress Bare, Unarmed finishing hits, stealthed wins, attacks won and attack medals at the same time.',
-    why_fr:'Un seul combat peut faire avancer Bare, les coups finaux mains nues, les victoires furtives, les attaques gagnées et les médailles d’attaque en même temps.',
-    awards:[['H',763],['H',515],['H',27],['H',39],['H',40],['H',41],['H',42],['M',174],['M',175],['M',176]]
-  },
-  {
-    id:'pepper_temp_finish', cat:'attacks', cost:'low', difficulty:'easy', energy:25,
-    name_en:'Pepper Spray finishing setup', name_fr:'Setup finition Pepper Spray',
-    setup_en:'Equip Pepper Spray as temporary weapon and finish weak targets with it. Works better with no armor if you still need Bare.',
-    setup_fr:'Équipe Pepper Spray en arme temporaire et finis des cibles faibles avec. Encore mieux sans armure si tu dois encore faire Bare.',
-    why_en:'Temporary weapon finishing hits can be combined with attacks won, Bare, stealth and weapon/finisher progress.',
-    why_fr:'Les coups finaux avec arme temporaire peuvent se combiner avec attaques gagnées, Bare, furtif et progression d’armes.',
-    awards:[['H',143],['H',763],['H',27],['H',39],['M',174],['M',175]]
-  },
-  {
-    id:'gun_rounds_finisher', cat:'weapons', cost:'medium', difficulty:'easy', energy:25,
-    name_en:'Gun rounds + weapon finisher setup', name_fr:'Balles tirées + finition arme',
-    setup_en:'Use a fast rifle/SMG/pistol on weak targets. Set your attack settings so the chosen weapon is used often and finish fights with that weapon type.',
-    setup_fr:'Utilise fusil/SMG/pistolet rapide sur cibles faibles. Configure tes attaques pour utiliser souvent cette arme et finir les combats avec ce type.',
-    why_en:'Rounds fired honors stack naturally with weapon finishing-hit honors and attack-win medals.',
-    why_fr:'Les honors de balles tirées se cumulent naturellement avec les coups finaux par type d’arme et les médailles d’attaque.',
-    awards:[['H',140],['H',151],['H',834],['H',836],['H',146],['H',148],['H',145],['M',174],['M',175],['M',176]]
-  },
-  {
-    id:'grenade_rounds', cat:'weapons', cost:'medium', difficulty:'medium', energy:25,
-    name_en:'Grenade finish after gun spam', name_fr:'Finir à la grenade après spam balles',
-    setup_en:'Shoot several rounds first, then finish with a grenade/temporary weapon. Use weak targets to control the fight.',
-    setup_fr:'Tire plusieurs balles d’abord, puis finis avec une grenade/arme temporaire. Utilise des cibles faibles pour contrôler le combat.',
-    why_en:'Combines rounds fired with temporary finishing hits. Good when both are still unfinished.',
-    why_fr:'Combine les balles tirées et les coups finaux temporaires. Très bon si les deux ne sont pas terminés.',
-    awards:[['H',143],['H',140],['H',151],['H',834],['M',174],['M',175]]
-  },
-  {
-    id:'faction_npc_chain', cat:'attacks', cost:'low', difficulty:'medium', energy:25,
-    name_en:'NPC / faction hit setup', name_fr:'Setup NPC / hits faction',
-    setup_en:'Join NPC fights or faction chain targets, hit once safely when the target is debuffed. Use this during faction activity.',
-    setup_fr:'Rejoins les combats NPC ou les cibles de chaîne faction, frappe une fois quand la cible est debuff. À faire pendant l’activité faction.',
-    why_en:'Useful for Boss Fight, ranked/faction hit progress and attack medals without wasting separate sessions.',
-    why_fr:'Utile pour Boss Fight, les hits de faction/ranked war et les médailles d’attaque sans faire des sessions séparées.',
-    awards:[['H',665],['H',253],['H',255],['H',257],['H',475],['M',215],['M',216],['M',217]]
-  },
-  {
-    id:'crime_chains', cat:'crimes', cost:'free', difficulty:'easy', energy:0,
-    name_en:'Crimes 2.0 category chain', name_fr:'Chaîne Crimes 2.0 par catégorie',
-    setup_en:'Pick one crime category and push it in blocks: Vandalism, Theft, Counterfeiting, Fraud, Illicit Services, Cybercrime, Extortion or Illegal Production.',
-    setup_fr:'Choisis une catégorie et monte-la par blocs : Vandalism, Theft, Counterfeiting, Fraud, Illicit Services, Cybercrime, Extortion ou Illegal Production.',
-    why_en:'Each crime category has medal ladders at 100, 200, 300, 500, 750, 1k, 1.5k, 2k+; your tracker should show the closest category first.',
-    why_fr:'Chaque catégorie a des paliers de médailles à 100, 200, 300, 500, 750, 1k, 1.5k, 2k+ ; le tracker te montre la plus proche.',
-    awards:[['M',242],['M',243],['M',244],['M',257],['M',258],['M',272],['M',273],['M',287],['M',302],['M',317],['M',332],['M',347],['M',362]]
-  },
-  {
-    id:'travel_import', cat:'travel', cost:'medium', difficulty:'easy', energy:0,
-    name_en:'Travel + import route', name_fr:'Route voyage + import',
-    setup_en:'When travelling, always buy abroad items before returning. Rotate countries if country-specific travel honors are unfinished.',
-    setup_fr:'À chaque voyage, achète des items à l’étranger avant de rentrer. Change de pays si les honors de pays ne sont pas finis.',
-    why_en:'Travel count, time abroad, country visits and imported-items awards can all progress passively together.',
-    why_fr:'Nombre de voyages, temps de voyage, visites par pays et items importés progressent passivement ensemble.',
-    awards:[['H',11],['H',165],['M',207],['M',208],['M',209],['H',541],['H',542],['H',543],['H',130],['H',131],['H',132],['H',133],['H',134],['H',135],['H',136],['H',137],['H',138],['H',139],['H',272]]
-  },
-  {
-    id:'medical_hospital', cat:'misc', cost:'low', difficulty:'easy', energy:0,
-    name_en:'Medical items + hospital progress', name_fr:'Items médicaux + progression hospital',
-    setup_en:'Use medical items normally after attacks/chains. Avoid wasting meds: this is best done passively while playing.',
-    setup_fr:'Utilise les items médicaux normalement après attaques/chaînes. Ne gaspille pas : à faire passivement en jouant.',
-    why_en:'Medical-item medals progress while you are already doing combat, chaining, NPC fights or revive/hospital gameplay.',
-    why_fr:'Les médailles d’items médicaux progressent pendant que tu fais déjà combat, chaînes, NPC ou gameplay hospital.',
-    awards:[['M',198],['M',199],['M',200],['H',903]]
-  },
-  {
-    id:'money_networth_bank', cat:'misc', cost:'variable', difficulty:'easy', energy:0,
-    name_en:'Money / networth passive stack', name_fr:'Argent / networth passif',
-    setup_en:'Keep growing recorded networth, use bank investments, and avoid holding unnecessary cash unless doing mug-related awards intentionally.',
-    setup_fr:'Augmente ton networth enregistré, utilise les investissements banque, et évite de garder du cash sauf si tu fais volontairement des awards de mug.',
-    why_en:'Networth medals are long-term, but bank and donation-type honors can be picked up when you already have the cash.',
-    why_fr:'Les médailles networth sont long terme, mais banque/donations peuvent être faites quand tu as déjà le cash.',
-    awards:[['M',89],['M',90],['M',91],['M',92],['M',93],['M',94],['M',95],['M',96],['H',12],['H',520],['H',521]]
-  }
-];
-
-const INSTANT_GUIDE=[
-  {name:'Bank investment', fr:'Investissement banque', type:'H', id:12, cost:'free/low', en:'Invest any amount in the City Bank if not done yet.', frtxt:'Investis n’importe quel montant à la banque si pas encore fait.'},
-  {name:'Wheel honors', fr:'Roues casino', type:'H', ids:[427,431,437], cost:'low', en:'Spin each casino wheel once if its honor is missing.', frtxt:'Tourne chaque roue casino une fois si l’honor manque.'},
-  {name:'Read Chronicle', fr:'Lire Chronicle', type:'H', id:845, cost:'free', en:'Open City → Chronicle and read/idle on a page if Historian is missing.', frtxt:'Ouvre City → Chronicle et lis/attends sur une page si Historian manque.'},
-  {name:'Kick finisher', fr:'Finition Kick', type:'H', id:871, cost:'free', en:'If Kick is unlocked through education, finish one fight with a kick.', frtxt:'Si Kick est débloqué via education, finis un combat avec un kick.'},
-  {name:'Friendly Fire', fr:'Friendly Fire', type:'H', id:605, cost:'25e', en:'Coordinate with a weak faction member, ask them to remove armor/weapons, then defeat them.', frtxt:'Coordonne avec un membre de faction faible, il retire armure/armes, puis bats-le.'},
-  {name:'Going Postal', fr:'Going Postal', type:'H', id:896, cost:'25e', en:'Defeat a co-worker from your company.', frtxt:'Bats un collègue de ta company.'},
-  {name:'Phoenix', fr:'Phoenix', type:'H', id:317, cost:'50e', en:'Lose to someone, then beat them back within 10 minutes.', frtxt:'Perds contre quelqu’un puis bats-le en retour dans les 10 minutes.'},
-  {name:'Church Mouse', fr:'Church Mouse', type:'H', id:739, cost:'coordination', en:'Carry exactly $1 and ask a trusted player to mug you.', frtxt:'Garde exactement $1 sur toi et demande à un joueur de confiance de te mug.'}
-];
-
-function findAward(type,id){return S.allAwards.find(a=>a.type===type&&String(a.id)===String(id));}
-function isEarned(type,id){const a=findAward(type,id); return a?!!a.earned:false;}
-function awardLeft(type,id){const a=findAward(type,id); return a&&a.left!==null?a.left:null;}
-function awardLine(type,id){
-  const a=findAward(type,id);
-  if(!a) return null;
-  return {award:a, earned:a.earned, left:a.left, pct:a.pct||0};
+function renderNext(){
+ const groups=['attacks','weapons','crimes','travel','drugs','casino','gym','misc'];
+ const html=groups.map(c=>{const best=STATE.awards.filter(a=>!a.earned&&a.cat===c).sort((a,b)=>scoreAward(a)-scoreAward(b)).slice(0,3);return `<div class="panel"><div class="sectionTitle"><div><h2>${c.toUpperCase()}</h2><p>Closest useful targets in this category.</p></div></div><div class="grid">${best.map(a=>card(a)).join('')||'<div class="empty">Nothing left here.</div>'}</div></div>`}).join(''); content(html);
 }
-function setupScore(setup){
-  const entries=setup.awards.map(x=>awardLine(x[0],x[1])).filter(Boolean);
-  const open=entries.filter(x=>!x.earned);
-  if(!open.length) return null;
-  const close=open.filter(x=>x.left!==null&&x.left<=500).length;
-  const mid=open.filter(x=>x.left!==null&&x.left>500&&x.left<=5000).length;
-  const tracked=open.filter(x=>x.left!==null).length;
-  const unknown=open.length-tracked;
-  const score=(close*8)+(mid*3)+(tracked*1.25)+(unknown*.5)+open.length;
-  return {entries,open,close,mid,tracked,unknown,score};
+function comboAwards(c){return [...c.hids.map(id=>STATE.awards.find(a=>a.type==='H'&&a.id===id)).filter(Boolean),...c.mids.map(id=>STATE.awards.find(a=>a.type==='M'&&a.id===id)).filter(Boolean)]}
+function renderCombosSmart(){
+ const active=ATTACK_COMBOS.map(c=>{const aw=comboAwards(c);const missing=aw.filter(a=>!a.earned);const priority=missing.filter(a=>a.priority==='high').length;return {...c,aw,missing,score:missing.length*10+priority*7}}).filter(c=>c.missing.length).sort((a,b)=>b.score-a.score);
+ const html=active.map(c=>`<div class="card combo" style="border-left-color:${c.color}"><div class="comboTop"><div><div class="title" style="font-size:18px">${c.name}</div><div class="desc">${c.tip_en}</div></div><div class="score">+${c.missing.length}</div></div><div class="steps"><b>Setup:</b> ${c.setup_en}</div>${c.aw.map(a=>`<div class="awardLine"><span class="dot ${a.earned?'done':''}"></span><span style="flex:1">${a.name} <span class="tag">${a.type}</span></span><span class="mono" style="color:${a.earned?'var(--green)':'var(--red2)'}">${a.earned?'DONE':(a.left!==null?fmt(a.left)+' left':'manual')}</span></div>`).join('')}<div class="actions"><button class="mini" onclick="copyCombo('${c.id}')">Copy setup</button></div></div>`).join('');
+ content(`<div class="sectionTitle"><div><h2>Combo builder</h2><p>Only shows setups that still give you unearned honors/medals. Sorted by value for your profile.</p></div></div><div class="grid">${html||'<div class="empty">All configured combo awards are already done.</div>'}</div>`)
 }
-function statusBadge(meta){
-  if(meta.close>=2) return `<span class="rbadge" style="background:var(--red-d);color:var(--red);border:1px solid rgba(233,69,96,.3)">DO NOW</span>`;
-  if(meta.close===1||meta.mid>=2) return `<span class="rbadge bm">GOOD VALUE</span>`;
-  return `<span class="rbadge bh">LONG TERM</span>`;
+function renderExplorer(){
+ const cats=['all','attacks','weapons','crimes','travel','drugs','casino','gym','misc'];
+ let list=STATE.awards.slice(); if(STATE.filterCat!=='all') list=list.filter(a=>a.cat===STATE.filterCat); if(STATE.filterType!=='all') list=list.filter(a=>a.type===STATE.filterType); if(!STATE.showEarned) list=list.filter(a=>!a.earned); if(STATE.q) list=list.filter(a=>(a.name+' '+a.desc+' '+a.statKey).toLowerCase().includes(STATE.q.toLowerCase()));
+ list.sort((a,b)=>STATE.sort==='progress'?b.pct-a.pct:STATE.sort==='left'?(a.left??1e9)-(b.left??1e9):STATE.sort==='priority'?({high:0,medium:1,low:2,none:3}[a.priority]-{high:0,medium:1,low:2,none:3}[b.priority]):scoreAward(a)-scoreAward(b));
+ const bar=`<div class="toolbar"><input placeholder="Search honor, medal, stat..." value="${STATE.q}" oninput="STATE.q=this.value;renderExplorer()"><select onchange="STATE.filterType=this.value;renderExplorer()"><option value="all">All types</option><option value="H" ${STATE.filterType==='H'?'selected':''}>Honors</option><option value="M" ${STATE.filterType==='M'?'selected':''}>Medals</option></select><select onchange="STATE.sort=this.value;renderExplorer()"><option value="smart">Smart sort</option><option value="left" ${STATE.sort==='left'?'selected':''}>Lowest remaining</option><option value="progress" ${STATE.sort==='progress'?'selected':''}>Best progress</option><option value="priority" ${STATE.sort==='priority'?'selected':''}>Priority</option></select><button class="pill ${STATE.showEarned?'on':''}" onclick="STATE.showEarned=!STATE.showEarned;renderExplorer()">Show earned</button></div><div class="toolbar">${cats.map(c=>`<button class="pill ${STATE.filterCat===c?'on':''}" onclick="STATE.filterCat='${c}';renderExplorer()">${c}</button>`).join('')}</div>`;
+ content(`<div class="sectionTitle"><div><h2>Awards explorer</h2><p>All missing honors and medals. Star priorities and build your own roadmap.</p></div><span class="tag red">${list.length} shown</span></div>${bar}<div class="grid">${list.map(a=>card(a)).join('')||'<div class="empty">No awards match your filters.</div>'}</div>`)
 }
-function awardMini(a){
-  const color=a.earned?'var(--green)':(a.left!==null&&a.left<=500?'var(--red)':'var(--muted)');
-  const right=a.earned?t('earned'):(a.left!==null?`${fmt(a.left)} ${t('left')}`:'manual');
-  return `<a class="crow ${a.earned?'cdone':''}" href="https://www.torn.com/page.php?sid=awards&tab=${a.type==='H'?'honors':'medals'}" target="_blank" style="text-decoration:none;color:inherit;display:flex;align-items:center">
-    <img src="https://yata.yt/media/${a.type==='H'?'honors':'medals'}/${a.id}.png" style="width:22px;height:22px;object-fit:contain;flex-shrink:0;margin-right:6px" onerror="this.style.display='none'" loading="lazy"/>
-    <div class="cdot"></div><div style="flex:1">${a.name} <span style="color:var(--muted);font-size:10px">[${a.type}]</span></div>
-    <div style="font-family:var(--mono);font-size:11px;color:${color}">${right}</div>
-  </a>`;
+function renderTracker(){
+ const todo=STATE.awards.filter(a=>!a.earned&&a.priority==='high'); const prog=STATE.awards.filter(a=>!a.earned&&a.status==='progress'&&a.priority!=='high'); const later=STATE.awards.filter(a=>!a.earned&&(a.priority==='medium'||a.priority==='low')).filter(a=>!prog.includes(a)&&!todo.includes(a));
+ const mk=(arr)=>arr.map(a=>`<div class="smallcard"><b>${a.name}</b><div class="meta"><span>${a.type} · ${a.cat}</span><span>${a.left!==null?fmt(a.left)+' left':'manual'}</span></div><div class="actions"><button class="mini" onclick="openAwardByKey('${awardKey(a)}')">Open</button><button class="mini" onclick="clearPriority('${awardKey(a)}')">Remove</button></div></div>`).join('')||'<div class="empty" style="padding:20px">Empty</div>';
+ content(`<div class="sectionTitle"><div><h2>My tracker</h2><p>Your local checklist. Saved in this browser with localStorage.</p></div></div><div class="columns"><div class="col"><h3>⭐ High priority</h3>${mk(todo)}</div><div class="col"><h3>🔧 In progress</h3>${mk(prog)}</div><div class="col"><h3>🕒 Later</h3>${mk(later)}</div></div>`)
 }
-function renderCombos(el){
-  const ranked=SMART_SETUPS.map(s=>({setup:s,meta:setupScore(s)})).filter(x=>x.meta).sort((a,b)=>b.meta.score-a.meta.score);
-  let html=`<div class="sec">${lang==='fr'?'⚡ Meilleurs combos selon ton profil':'⚡ Best combos for your profile'}</div>`;
-  html+=`<p style="color:var(--muted);font-size:12px;margin-bottom:16px;line-height:1.6">${lang==='fr'?'Cette page cache automatiquement les combos déjà terminés et classe les setups selon tes honors/médailles restants. Le but : gagner plusieurs mérites avec la même action.':'This page hides completed combos and ranks setups based on your missing honors/medals. Goal: earn several merits from the same action.'}</p>`;
-  if(!ranked.length){el.innerHTML=html+`<div class="empty">🏆 ${lang==='fr'?'Tous les combos suivis sont terminés.':'All tracked combos are complete.'}</div>`;return;}
-  for(const {setup,meta} of ranked){
-    const openAwards=meta.entries.map(x=>x.award).filter(a=>!a.earned);
-    html+=`<div class="cbox" style="border-left:3px solid ${meta.close>=2?'var(--red)':meta.mid>=2?'var(--amber)':'var(--blue)'}">
-      <div style="display:flex;justify-content:space-between;gap:8px;align-items:flex-start"><h3>${lang==='fr'?setup.name_fr:setup.name_en}</h3>${statusBadge(meta)}</div>
-      <div class="cdesc"><b style="color:var(--amber)">Setup:</b> ${lang==='fr'?setup.setup_fr:setup.setup_en}</div>
-      <div style="font-size:11px;color:var(--blue);margin-bottom:10px;padding:7px 8px;background:var(--blue-d);border-radius:5px;line-height:1.5">💡 ${lang==='fr'?setup.why_fr:setup.why_en}</div>
-      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px">
-        <span class="chip">Open <span>${openAwards.length}</span></span>
-        <span class="chip rush">≤500 <span>${meta.close}</span></span>
-        <span class="chip">Cost <span>${setup.cost}</span></span>
-        <span class="chip">Energy <span>${setup.energy||0}</span></span>
-      </div>
-      ${openAwards.slice(0,12).map(awardMini).join('')}
-    </div>`;
-  }
-  el.innerHTML=html;
+function renderGuides(){
+ const blocks=[['Instant merits','Do these first if missing: casino wheels, Historian, Leonidas, Friendly Fire, Going Postal, Phoenix, Landlord. These are mostly manual awards, so the API may not always track progress before completion.'],['Attack stack','Best general stack: remove armor, use fists/kick, enable stealth, use Smoke/Pepper Spray, attack weak targets. This can progress Bare, Unarmed, Night Walker, Pin Puller and Camo/attack medals depending on your setup.'],['Weapon grind','Use a fast gun for rounds-fired honors while also targeting weapon finishing-hit honors. Set weapon usage to force the category you need.'],['Travel/import','If travel awards are close, combine travel count with item import goals by always buying max items abroad.'],['Crimes 2.0','Use Explorer → Crimes and sort by Lowest remaining. The tracker will show which crime families are closest to the next medal tier.']];
+ content(`<div class="sectionTitle"><div><h2>Smart guides</h2><p>Practical paths. Guides hide less; Explorer decides exactly what applies to your profile.</p></div></div><div class="grid">${blocks.map(b=>`<div class="card"><div class="title" style="font-size:18px">${b[0]}</div><div class="desc" style="font-size:13px">${b[1]}</div><button class="mini" onclick="setTab('explorer')">Find matching awards</button></div>`).join('')}</div>`)
 }
-
-function renderSmartGuide(el){
-  const combos=SMART_SETUPS.map(s=>({setup:s,meta:setupScore(s)})).filter(x=>x.meta).sort((a,b)=>b.meta.score-a.meta.score);
-  const quick=INSTANT_GUIDE.filter(g=>{
-    const ids=g.ids||[g.id];
-    return ids.some(id=>!isEarned(g.type,id));
-  });
-  const rush=S.allAwards.filter(a=>!a.earned&&a.left!==null&&a.left>0&&a.left<=500).sort((a,b)=>a.left-b.left).slice(0,10);
-  const crimes=S.allAwards.filter(a=>!a.earned&&a.cat==='crimes'&&a.left!==null).sort((a,b)=>a.left-b.left).slice(0,6);
-  const travel=S.allAwards.filter(a=>!a.earned&&a.cat==='travel'&&a.left!==null).sort((a,b)=>a.left-b.left).slice(0,6);
-  const combat=combos.filter(x=>['attacks','weapons'].includes(x.setup.cat)).slice(0,3);
-  let html=`<div class="sec">${lang==='fr'?'🧭 Guide intelligent adapté à ton profil':'🧭 Profile-adapted smart guide'}</div>`;
-  html+=`<p style="color:var(--muted);font-size:12px;margin-bottom:14px;line-height:1.6">${lang==='fr'?'Ce guide est généré après lecture de tes honors, médailles et personalstats. Il ne te montre pas une liste générale : il retire ce que tu as déjà obtenu et priorise les actions qui débloquent plusieurs mérites ensemble.':'This guide is generated from your honors, medals and personalstats. It is not a generic list: completed awards are removed and actions that unlock multiple merits together are prioritized.'}</p>`;
-
-  html+=`<div class="rbox"><div class="rhdr"><h3>${lang==='fr'?'1) À faire maintenant':'1) Do now'}</h3><span class="cnt">${quick.length} quick checks</span></div>`;
-  if(quick.length){
-    html+=quick.slice(0,10).map(g=>`<div class="rrow" style="cursor:default"><div class="rinfo"><div class="rname">${lang==='fr'?g.fr:g.name}<span class="rbadge bm">QUICK</span></div><div class="rdesc">${lang==='fr'?g.frtxt:g.en}</div></div><div class="rright"><div class="rnum">${g.cost}</div><div class="rstat">manual</div></div></div>`).join('');
-  }else html+=`<div class="empty" style="padding:25px">${lang==='fr'?'Aucun quick win suivi restant.':'No tracked quick wins left.'}</div>`;
-  html+=`</div>`;
-
-  html+=`<div class="rbox"><div class="rhdr"><h3>${lang==='fr'?'2) Rush proche selon tes stats':'2) Closest tracked awards'}</h3><span class="cnt">${rush.length}</span></div>`;
-  if(rush.length){
-    html+=rush.map(a=>`<a class="rrow" href="https://www.torn.com/page.php?sid=awards&tab=${a.type==='H'?'honors':'medals'}" target="_blank" style="text-decoration:none;color:inherit;display:flex"><div class="rinfo"><div class="rname">${a.name}<span class="rbadge ${a.type==='H'?'bh':'bm'}">${a.type==='H'?'HONOR':'MEDAL'}</span></div><div class="rdesc">${a.desc}</div></div><div class="rright"><div class="rnum">${fmt(a.left)} ${t('left')}</div><div class="rstat">${a.statKey}</div></div></a>`).join('');
-  }else html+=`<div class="empty" style="padding:25px">${lang==='fr'?'Aucun award à moins de 500 actions.':'No awards under 500 actions.'}</div>`;
-  html+=`</div>`;
-
-  html+=`<div class="sec">${lang==='fr'?'3) Meilleurs setups multi-mérites':'3) Best multi-merit setups'}</div>`;
-  for(const {setup,meta} of combat){
-    const open=meta.entries.map(x=>x.award).filter(a=>!a.earned);
-    html+=`<div class="cbox"><div style="display:flex;justify-content:space-between;gap:8px"><h3>${lang==='fr'?setup.name_fr:setup.name_en}</h3>${statusBadge(meta)}</div><div class="cdesc">${lang==='fr'?setup.setup_fr:setup.setup_en}</div>${open.slice(0,8).map(awardMini).join('')}</div>`;
-  }
-
-  html+=`<div class="sec">${lang==='fr'?'4) Passif à intégrer tous les jours':'4) Daily passive route'}</div>`;
-  html+=`<div class="grid">`;
-  html+=`<div class="card"><div class="chtop"><div class="chname">${lang==='fr'?'Crimes à prioriser':'Crime priority'}</div><span class="rbadge bh">PASSIVE</span></div><div class="chdesc">${lang==='fr'?'Fais en priorité la catégorie avec le palier le plus proche.':'Prioritize the category with the closest next medal threshold.'}</div>${crimes.map(a=>`<div class="pnums"><strong>${a.name}</strong> — ${fmt(a.left)} ${t('left')}</div>`).join('')||'<div class="pnums">No tracked crime target.</div>'}</div>`;
-  html+=`<div class="card"><div class="chtop"><div class="chname">${lang==='fr'?'Voyages':'Travel'}</div><span class="rbadge bh">PASSIVE</span></div><div class="chdesc">${lang==='fr'?'À chaque voyage, achète des items à l’étranger et change de pays si un honor pays est proche.':'Every trip: buy abroad items and rotate countries if a country honor is close.'}</div>${travel.map(a=>`<div class="pnums"><strong>${a.name}</strong> — ${fmt(a.left)} ${t('left')}</div>`).join('')||'<div class="pnums">No tracked travel target.</div>'}</div>`;
-  html+=`</div>`;
-  el.innerHTML=html;
-}
-
-// ── GRID ──
-function renderGrid(el){
-  let all=S.allAwards;
-  if(S.tab!=='all') all=all.filter(a=>a.cat===S.tab);
-  if(!S.showEarned) all=all.filter(a=>!a.earned);
-  if(S.search){
-    const q=S.search.toLowerCase();
-    all=all.filter(a=>a.name.toLowerCase().includes(q)||a.desc.toLowerCase().includes(q));
-  }
-  all.sort((a,b)=>b.pct-a.pct);
-
-  const fbar=`
-    <div class="fbar">
-      <input type="search" placeholder="${t('search')}" oninput="S.search=this.value;renderContent()" value="${S.search}"/>
-      <label class="tlbl"><input type="checkbox" ${S.showEarned?'checked':''} onchange="S.showEarned=this.checked;renderContent()"/> ${t('showEarned')}</label>
-    </div>
-  `;
-
-  if(!all.length){el.innerHTML=fbar+`<div class="empty">${t('noAwards')}</div>`;return;}
-
-  const cards=all.map(a=>{
-    const isRush=!a.earned&&a.left!==null&&a.left>0&&a.left<=500;
-    const fc=a.earned?'pd':(a.pct>=80?'ph':(a.pct>=50?'pm':'pl'));
-    const badge=a.earned?`<span class="rbadge bd">${t('earned')}</span>`:(isRush?`<span class="rbadge" style="background:var(--red-d);color:var(--red);border:1px solid rgba(233,69,96,.3)">🔥RUSH</span>`:`<span class="rbadge ${a.type==='H'?'bh':'bm'}">${a.type==='H'?'HONOR':'MEDAL'}</span>`);
-    return `
-      <div class="card ${a.earned?'done':(isRush?'rush':'')}">
-        <div class="chtop"><div class="chname">${a.name}</div>${badge}</div>
-        <div class="chdesc">${a.desc}</div>
-        ${a.goal&&a.statKey?`
-          <div class="pbar"><div class="ptrack"><div class="pfill ${fc}" style="width:${a.pct}%"></div></div><div class="ppct">${a.pct}%</div></div>
-          <div class="pnums"><strong>${fmt(a.val)}</strong> / ${fmt(a.goal)}${!a.earned&&a.left!==null?` — <strong>${fmt(a.left)}</strong> ${t('left')}`:''}</div>
-        `:`<div class="pnums" style="color:var(--muted)">No progress tracking for this award</div>`}
-        ${a.rarity?`<div class="rarity">${a.rarity}</div>`:''}
-      </div>
-    `;
-  }).join('');
-
-  el.innerHTML=fbar+`<div class="grid">${cards}</div>`;
-}
-
-function logout(){
-  S.data=null;S.allAwards=null;
-  document.getElementById('login').style.display='block';
-  document.getElementById('main').style.display='none';
-  document.getElementById('sbar').style.display='none';
-  document.getElementById('tabs').style.display='none';
-  document.getElementById('nlngs').style.display='none';
-  document.getElementById('key').value='';
-}
+function copyCombo(id){const c=ATTACK_COMBOS.find(x=>x.id===id); if(c) copyText(c.setup_en)}
+function copyText(x){navigator.clipboard?.writeText(x)}
+document.getElementById('apiKey').addEventListener('keydown',e=>{if(e.key==='Enter')loadApp()});
 </script>
-</body>
-</html>
+</body></html>
