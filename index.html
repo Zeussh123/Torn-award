@@ -514,6 +514,127 @@ function renderGuides(){
 }
 function copyCombo(id){const c=ATTACK_COMBOS.find(x=>x.id===id); if(c) copyText(c.setup_en)}
 function copyText(x){navigator.clipboard?.writeText(x)}
+
+
+// === CORE APP FUNCTIONS PATCH ===
+function content(html){ document.getElementById('content').innerHTML = html; }
+function closeModal(){ document.getElementById('awardModal').classList.remove('on'); }
+function logout(){
+  STATE.data=null; STATE.awards=[];
+  document.getElementById('app').style.display='none';
+  document.getElementById('login').style.display='grid';
+  document.getElementById('changeKey').style.display='none';
+}
+function setTab(tab){ STATE.tab=tab; render(); }
+function render(){
+  renderSide(); renderStats();
+  if(STATE.tab==='dashboard') return renderDashboard();
+  if(STATE.tab==='optimizer') return renderOptimizer();
+  if(STATE.tab==='next') return renderNext();
+  if(STATE.tab==='combos') return renderCombosSmart();
+  if(STATE.tab==='explorer') return renderExplorer();
+  if(STATE.tab==='tracker') return renderTracker();
+  if(STATE.tab==='guides') return renderGuides();
+  renderDashboard();
+}
+function renderSide(){
+ const nav=[['dashboard','🏠','Dashboard'],['optimizer','🧮','Merit optimizer'],['next','🎯','Next merits'],['combos','⚡','Combo builder'],['explorer','🗂️','Awards explorer'],['tracker','📌','My tracker'],['guides','📖','Guides']];
+ document.getElementById('side').innerHTML = nav.map(n=>`<button class="navbtn ${STATE.tab===n[0]?'on':''}" onclick="setTab('${n[0]}')"><span>${n[1]}</span>${n[2]}</button>`).join('') + `<div class="tip"><b>Cost settings</b><br>${settingsHtml()}</div>`;
+}
+function settingsHtml(){
+ const c=calcSettings();
+ return `<label><input type="checkbox" ${c.donator?'checked':''} onchange="pset('donator',this.checked);render()"> Donator / Founder active</label><br>
+ <label>Xanax/day <select onchange="pset('xanax',Number(this.value));render()">${[0,1,2,3].map(x=>`<option value="${x}" ${c.xanax===x?'selected':''}>${x}</option>`).join('')}</select></label><br>
+ <label><input type="checkbox" ${c.refill?'checked':''} onchange="pset('refill',this.checked);render()"> Daily energy refill</label><br>
+ <label><input type="checkbox" ${c.cannabis?'checked':''} onchange="pset('cannabis',this.checked);render()"> Cannabis nerve</label><br>
+ <label>Nerve bar <input style="width:55px" type="number" value="${c.nerveBar}" onchange="pset('nerveBar',Number(this.value)||45);render()"></label><br>
+ <label>Race min <input style="width:55px" type="number" value="${c.raceMin}" onchange="pset('raceMin',Number(this.value)||5);render()"></label>`;
+}
+function renderStats(){
+ if(!STATE.data) return;
+ const a=STATE.awards, missing=a.filter(x=>!x.earned);
+ document.getElementById('stats').innerHTML=`<div class="kpis"><div class="kpi"><span>Operative</span><b>${STATE.data.name}</b><small>Lvl ${STATE.data.level} · ${STATE.data.rank||''}</small></div><div class="kpi"><span>Missing awards</span><b>${missing.length}</b><small>${missing.filter(x=>x.tracking==='exact').length} accurate · ${missing.filter(x=>x.tracking==='manual').length} manual</small></div><div class="kpi"><span>Fast targets</span><b>${missing.filter(x=>x.left!==null&&x.left<=50&&!x.lockedDespiteStats).length}</b><small>≤ 50 safe actions left</small></div><div class="kpi"><span>High priority</span><b>${a.filter(x=>x.priority==='high'&&!x.earned).length}</b><small>Your pinned targets</small></div></div>`;
+}
+function calcSettings(){ return {donator:pget('donator',true),xanax:Number(pget('xanax',0)),refill:pget('refill',false),cannabis:pget('cannabis',false),nerveBar:Number(pget('nerveBar',45)),raceMin:Number(pget('raceMin',5))}; }
+function dailyEnergyBudget(c=calcSettings()){ return (c.donator?720:480) + (c.xanax||0)*250 + (c.refill?150:0); }
+function dailyNerveBudget(c=calcSettings()){ return 288 + (c.cannabis?30:0); }
+function dailyBudgetText(){ const c=calcSettings(); return `Daily model: ${Math.round(dailyEnergyBudget(c))} energy/day, ${Math.round(dailyNerveBudget(c))} nerve/day, ${c.xanax}/3 Xanax/day, refill ${c.refill?'ON':'OFF'}.`; }
+function getGoalFromDesc(desc){
+ const m=(desc||'').match(/(?:achieve|win|commit|travel|fire|collect|use|find|import|bust|reach level|have|make|earn|attain|participate in|complete|gain|acquire|deal|serve|be a donator for)\s+(?:a\s+)?(?:total of\s+)?(?:best\s+)?(?:kill streak of\s+)?([\d,]+)/i);
+ if(m) return parseInt(m[1].replace(/,/g,''));
+ const m2=(desc||'').match(/\$([\d,]+)/); if(m2) return parseInt(m2[1].replace(/,/g,''));
+ return null;
+}
+function estimateCost(a){
+ if(a.earned) return {kind:'done',energy:0,nerve:0,hours:0,accuracy:'exact'};
+ if(a.tracking!=='exact' || a.left===null) return {kind:'manual',energy:null,nerve:null,hours:null,accuracy:'manual'};
+ const left=Math.max(0,a.left||0); let energy=0, nerve=0, hours=null, kind='estimated';
+ const s=a.statKey||'', cat=a.cat||'';
+ if(['attackswon','attackhits','attackcriticalhits','attacksstealthed','defendswon','onehitkills','h2hhits','rifhits','smghits','pishits','shohits','slahits','piehits','axehits','machits','grehits','attacksassisted','bountiescollected','moneymugged','attackdamage','yourunaway','theyrunaway','bestkillstreak','attacksdraw'].includes(s)) { energy=left*25; }
+ else if(s==='roundsfired'){ energy=Math.ceil(left/25)*25; }
+ else if(cat==='crimes' || ['criminaloffenses','vandalism','theft','counterfeiting','fraud','illicitservices','cybercrime','extortion','illegalproduction'].includes(s)){ nerve=left*4; }
+ else if(s==='peoplebusted'){ nerve=left*5; }
+ else if(s==='raceswon' || s==='racesentered'){ hours=left*(calcSettings().raceMin||5)/60; }
+ else if(s==='traveltimes' || /travel$/.test(s)){ hours=left*1.5; }
+ else if(s==='itemsboughtabroad'){ hours=Math.ceil(left/20)*1.5; }
+ else if(s==='medicalitemsused'){ hours=left*0.02; }
+ else if(['xantaken','cantaken','exttaken','drugsused'].includes(s)){ hours=s==='xantaken'?left*8:left*1; kind='rough'; }
+ else { kind='rough'; hours=null; }
+ const c=calcSettings();
+ if(energy>0) hours=Math.max(hours||0, energy/dailyEnergyBudget(c)*24);
+ if(nerve>0) hours=Math.max(hours||0, nerve/dailyNerveBudget(c)*24);
+ return {kind,energy,nerve,hours,accuracy:kind};
+}
+function modalCostBlock(a){ const co=a.costEstimate||estimateCost(a); if(co.kind==='manual') return `<div class="panel"><h3 style="margin-top:0">Cost estimate</h3><p class="desc">Manual / RNG award. Exact energy, nerve or time cannot be calculated safely from Torn personalstats.</p></div>`; return `<div class="panel"><h3 style="margin-top:0">Cost estimate</h3><div class="modalGrid"><div class="modalCell"><b>⚡ ${co.energy==null?'—':fmt(Math.ceil(co.energy))}</b><span>energy</span></div><div class="modalCell"><b>🧠 ${co.nerve==null?'—':fmt(Math.ceil(co.nerve))}</b><span>nerve</span></div><div class="modalCell"><b>⏱ ${fmtTime(co.hours)}</b><span>estimated time</span></div></div><p class="costNote">Accuracy: ${co.kind}. ${dailyBudgetText()}</p></div>`; }
+function meritRoi(a){ const co=a.costEstimate||estimateCost(a); if(co.kind==='manual') return 1e9; return (co.hours??9999) + (co.energy||0)/10000 + (co.nerve||0)/1000; }
+function relatedCombos(a){ return ATTACK_COMBOS.filter(c=>(a.type==='H'?c.hids:c.mids).includes(a.id)); }
+function card(a){ const co=a.costEstimate||estimateCost(a); const cost=co.kind==='manual'?`<div class="costMini"><span class="cm"><b>Manual/RNG</b></span></div>`:`<div class="costMini"><span class="cm">⚡ <b>${co.energy?fmt(Math.ceil(co.energy)):'0'}</b></span><span class="cm">🧠 <b>${co.nerve?fmt(Math.ceil(co.nerve)):'0'}</b></span><span class="cm">⏱ <b>${fmtTime(co.hours)}</b></span></div>`; return `<div class="card ${a.earned?'done':''}"><div class="cardTop"><img src="${apiIcon(a)}" onerror="this.style.display='none'"><div style="flex:1"><div class="title">${a.name} <span class="tag ${a.type==='H'?'blue':'gold'}">${a.type==='H'?'HONOR':'MEDAL'}</span></div><div class="desc">${a.desc||''}</div><div class="tagrow"><span class="tag">${a.cat}</span><span class="tag">${a.statKey||'manual'}</span>${trackingTag(a)}${a.lockedDespiteStats?'<span class="tag red">verify</span>':''}</div></div></div><div class="progress"><div class="track"><div class="fill" style="width:${a.pct}%"></div></div><div class="pct">${a.pct}%</div></div><div class="meta"><span>${a.left!==null?fmt(a.val)+' / '+fmt(a.goal):'manual'}</span><span>${a.left!==null?fmt(a.left)+' left':''}</span></div>${cost}<div class="actions"><button class="mini star" onclick="setPriority('${awardKey(a)}','high')">⭐ High</button><button class="mini" onclick="setPriority('${awardKey(a)}','medium')">Medium</button><button class="mini" onclick="setPriority('${awardKey(a)}','low')">Low</button><button class="mini" onclick="clearPriority('${awardKey(a)}')">Clear</button><button class="mini green" onclick="setStatus('${awardKey(a)}','progress')">In progress</button><button class="mini" onclick="openAwardByKey('${awardKey(a)}')">Details</button></div></div>`; }
+function buildAwards(honorsDB, medalsDB, data){
+ const out=[]; const stats=data.stats||{};
+ function add(raw,type){
+   const earned=(type==='H'?data.earned_h:data.earned_m).has(raw.id);
+   const mapped=getAwardMapping(type,raw.id);
+   const guessed=guessStatKey(raw.description||'', raw.name||'');
+   const tr=makeTracking(type,raw.id,raw.description||'',mapped,guessed,stats);
+   let statKey=null, goal=null, val=0, pct=0, left=null;
+   if(tr.mode==='exact'){
+     const m=tr.descMap || mapped;
+     statKey=m.s; goal=m.g; val=Number(stats[statKey]||0); left=Math.max(0,goal-val); pct=goal?Math.min(99,Math.round(val/goal*100)):0;
+     if(earned){pct=100;left=0;}
+   }
+   const cat=TYPE_CAT[(raw.type&&raw.type.title)||raw.type||'misc'] || TYPE_CAT[raw.category] || 'misc';
+   let a={id:raw.id,type,name:raw.name||`${type}${raw.id}`,desc:raw.description||'',rarity:raw.rarity||'',cat,statKey,goal,val,pct,left,earned,tracking:tr.mode,trackingReason:tr.reason,priority:pget('priority_'+type+raw.id,'none'),status:pget('status_'+type+raw.id,'todo')};
+   a.lockedDespiteStats=(!earned && tr.mode==='exact' && goal && val>=goal);
+   if(a.lockedDespiteStats){ a.pct=99; a.left=1; }
+   a.costEstimate=estimateCost(a);
+   out.push(a);
+ }
+ (honorsDB||[]).forEach(h=>add(h,'H')); (medalsDB||[]).forEach(m=>add(m,'M'));
+ return out;
+}
+async function loadApp(){
+ const key=document.getElementById('apiKey').value.trim(); if(!key) return;
+ const btn=document.getElementById('loadBtn'); btn.disabled=true; btn.textContent='Loading...';
+ document.getElementById('login').style.display='none'; document.getElementById('app').style.display='grid'; content('<div class="loading"><div class="spinner"></div><span>Loading Torn profile...</span></div>');
+ try{
+   const [u1,u2,torn1,torn2]=await Promise.all([
+    fetch(`https://api.torn.com/user/?selections=profile,honors,medals&key=${encodeURIComponent(key)}`).then(r=>r.json()),
+    fetch(`https://api.torn.com/user/?selections=personalstats&key=${encodeURIComponent(key)}`).then(r=>r.json()),
+    fetch(`https://api.torn.com/v2/torn/honors?key=${encodeURIComponent(key)}`).then(r=>r.json()),
+    fetch(`https://api.torn.com/v2/torn/medals?key=${encodeURIComponent(key)}`).then(r=>r.json())
+   ]);
+   if(u1.error) throw new Error(u1.error.error||'Torn profile API error');
+   if(u2.error) throw new Error(u2.error.error||'Torn personalstats API error');
+   const honorsDB=(torn1.honors||[]).filter(h=>h.type&&h.type.title!=='default'&&h.crimes_version!=='v1');
+   const medalsDB=(torn2.medals||[]).filter(m=>m.crimes_version!=='v1');
+   STATE.data={name:u1.name,level:u1.level,age:u1.age,rank:u1.rank,earned_h:new Set(u1.honors_awarded||[]),earned_m:new Set(u1.medals_awarded||[]),stats:u2.personalstats||{}};
+   STATE.awards=buildAwards(honorsDB,medalsDB,STATE.data);
+   document.getElementById('changeKey').style.display='inline-block';
+   render();
+ }catch(e){ content(`<div class="err">❌ ${e.message}<br><small>Check the API key and host the file on GitHub Pages / Netlify if your browser blocks local requests.</small></div>`); document.getElementById('login').style.display='grid'; document.getElementById('app').style.display='none'; }
+ finally{ btn.disabled=false; btn.textContent='Load profile'; }
+}
+
 document.getElementById('apiKey').addEventListener('keydown',e=>{if(e.key==='Enter')loadApp()});
 </script>
 <div id="awardModal" class="modalWrap" onclick="if(event.target.id==='awardModal')closeModal()"></div>
