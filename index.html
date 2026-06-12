@@ -287,8 +287,10 @@ async function go(){
     if(u2.error) throw new Error(u2.error.error);
 
     // Build award DB from API data (filter out default/country honors)
-    const honorsDB=(torn1.honors||[]).filter(h=>h.type&&h.type.title!=='default');
-    const medalsDB=(torn2.medals||[]);
+    // Filter out: default/country honors AND Crimes 1.0 legacy honors
+    const honorsDB=(torn1.honors||[]).filter(h=>h.type&&h.type.title!=='default'&&h.crimes_version!=='v1');
+    // Filter out Crimes 1.0 legacy medals
+    const medalsDB=(torn2.medals||[]).filter(m=>m.crimes_version!=='v1');
 
     S.data={
       name:u1.name,level:u1.level,age:u1.age,rank:u1.rank,
