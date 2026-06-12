@@ -49,7 +49,7 @@ button,input,select,textarea{font-family:inherit}a{color:inherit}.mono{font-fami
 </head>
 <body>
 <header class="top"><div class="brand"><div class="badgeLogo">TC</div><div><h1>Torn Merit OS</h1><small>PERSONAL AWARDS COMMAND CENTER</small></div></div><div class="spacer"></div><button class="ghost" id="changeKey" onclick="logout()" style="display:none">Change key</button></header>
-<div id="login" class="login"><div class="hero"><h2>Stop scrolling. <em>Start earning merits.</em></h2><p>A smarter Torn awards tracker: personal roadmap, priority system, combo setups, explorer, and local checklist. Your API key stays in your browser session only.</p><div class="keyrow"><input id="apiKey" type="password" placeholder="Paste your Torn API key..." autocomplete="off"><button class="primary" id="loadBtn" onclick="loadApp()">Load profile</button></div><div class="hint">Requires Torn API access for profile, honors, medals and personalstats. Host it on GitHub Pages / Netlify; local file:// can be blocked by CORS.</div></div></div>
+<div id="login" class="login"><div class="hero"><h2>Stop scrolling. <em>Start earning merits.</em></h2><p>A smarter Torn awards tracker: personal roadmap, priority system, combo setups, explorer, and local checklist. Your API key stays in your browser session only.</p><div class="keyrow"><input id="apiKey" type="password" placeholder="Paste your Torn API key..." autocomplete="off"><button class="primary" id="loadBtn" onclick="loadApp()">Load profile</button></div><div class="hint">Requires Torn API access for profile, honors, medals and personalstats. Host it on GitHub Pages / Netlify; local file:// can be blocked by CORS.</div><div id="loadStatus" class="hint" style="margin-top:10px;color:#f2c46d"></div></div></div>
 <div id="app" class="layout" style="display:none"><aside class="side" id="side"></aside><main class="main"><div id="stats"></div><div id="content"></div></main></div>
 <script>
 const TYPE_CAT={
@@ -612,30 +612,49 @@ function buildAwards(honorsDB, medalsDB, data){
  (honorsDB||[]).forEach(h=>add(h,'H')); (medalsDB||[]).forEach(m=>add(m,'M'));
  return out;
 }
+
+async function fetchTornJson(url, label){
+ const response = await fetch(url, {cache:'no-store'});
+ if(!response.ok) throw new Error(`${label} HTTP ${response.status}`);
+ const data = await response.json();
+ if(data.error) throw new Error(`${label}: ${data.error.error || JSON.stringify(data.error)}`);
+ return data;
+}
+
 async function loadApp(){
- const key=document.getElementById('apiKey').value.trim(); if(!key) return;
- const btn=document.getElementById('loadBtn'); btn.disabled=true; btn.textContent='Loading...';
+ const statusEl=document.getElementById('loadStatus');
+ if(statusEl) statusEl.textContent='';
+ console.log('[Torn Merit OS] Load profile clicked');
+ const key=document.getElementById('apiKey').value.trim();
+ if(!key){ if(statusEl) statusEl.textContent='Paste your Torn API key first.'; return; }
+ const btn=document.getElementById('loadBtn'); btn.disabled=true; btn.textContent='Loading...'; if(statusEl) statusEl.textContent='Loading Torn profile...';
  document.getElementById('login').style.display='none'; document.getElementById('app').style.display='grid'; content('<div class="loading"><div class="spinner"></div><span>Loading Torn profile...</span></div>');
  try{
+   const k=encodeURIComponent(key);
    const [u1,u2,torn1,torn2]=await Promise.all([
-    fetch(`https://api.torn.com/user/?selections=profile,honors,medals&key=${encodeURIComponent(key)}`).then(r=>r.json()),
-    fetch(`https://api.torn.com/user/?selections=personalstats&key=${encodeURIComponent(key)}`).then(r=>r.json()),
-    fetch(`https://api.torn.com/v2/torn/honors?key=${encodeURIComponent(key)}`).then(r=>r.json()),
-    fetch(`https://api.torn.com/v2/torn/medals?key=${encodeURIComponent(key)}`).then(r=>r.json())
+    fetchTornJson(`https://api.torn.com/user/?selections=profile,honors,medals&key=${k}`, 'Profile'),
+    fetchTornJson(`https://api.torn.com/user/?selections=personalstats&key=${k}`, 'Personalstats'),
+    fetchTornJson(`https://api.torn.com/v2/torn/honors?key=${k}`, 'Honors database'),
+    fetchTornJson(`https://api.torn.com/v2/torn/medals?key=${k}`, 'Medals database')
    ]);
-   if(u1.error) throw new Error(u1.error.error||'Torn profile API error');
-   if(u2.error) throw new Error(u2.error.error||'Torn personalstats API error');
    const honorsDB=(torn1.honors||[]).filter(h=>h.type&&h.type.title!=='default'&&h.crimes_version!=='v1');
    const medalsDB=(torn2.medals||[]).filter(m=>m.crimes_version!=='v1');
    STATE.data={name:u1.name,level:u1.level,age:u1.age,rank:u1.rank,earned_h:new Set(u1.honors_awarded||[]),earned_m:new Set(u1.medals_awarded||[]),stats:u2.personalstats||{}};
    STATE.awards=buildAwards(honorsDB,medalsDB,STATE.data);
    document.getElementById('changeKey').style.display='inline-block';
    render();
- }catch(e){ content(`<div class="err">❌ ${e.message}<br><small>Check the API key and host the file on GitHub Pages / Netlify if your browser blocks local requests.</small></div>`); document.getElementById('login').style.display='grid'; document.getElementById('app').style.display='none'; }
+ }catch(e){ console.error('[Torn Merit OS] Load failed', e); if(statusEl) statusEl.textContent='Error: '+e.message; content(`<div class="err">❌ ${e.message}<br><small>Check the API key and host the file on GitHub Pages / Netlify if your browser blocks local requests.</small></div>`); document.getElementById('login').style.display='grid'; document.getElementById('app').style.display='none'; }
  finally{ btn.disabled=false; btn.textContent='Load profile'; }
 }
 
-document.getElementById('apiKey').addEventListener('keydown',e=>{if(e.key==='Enter')loadApp()});
+window.loadApp = loadApp;
+function bindLogin(){
+ const keyInput=document.getElementById('apiKey');
+ const btn=document.getElementById('loadBtn');
+ if(keyInput) keyInput.addEventListener('keydown',e=>{if(e.key==='Enter')loadApp()});
+ if(btn) btn.addEventListener('click',e=>{e.preventDefault(); loadApp();});
+}
+if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', bindLogin); else bindLogin();
 </script>
 <div id="awardModal" class="modalWrap" onclick="if(event.target.id==='awardModal')closeModal()"></div>
 </body></html>
