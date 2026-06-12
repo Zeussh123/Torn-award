@@ -116,18 +116,6 @@ body.blue nav{background:rgba(6,13,26,.96)}
 .sec{font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin:20px 0 10px;display:flex;align-items:center;gap:8px}
 .sec::after{content:'';flex:1;height:1px;background:var(--brd)}
 
-.planhead{background:linear-gradient(135deg,var(--surf),var(--surf2));border:1px solid var(--brd);border-radius:12px;padding:16px;margin-bottom:14px}
-.planhead h2{font-size:18px;margin-bottom:6px}
-.planhead p{font-size:12px;color:var(--muted);line-height:1.6}
-.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
-.secondary{background:var(--surf2);border:1px solid var(--brd);color:var(--text)}
-.mini{font-size:10px;color:var(--muted);font-family:var(--mono)}
-.card.click{cursor:pointer}
-.card.click:hover{transform:translateY(-1px);border-color:var(--red)}
-.score{font-family:var(--mono);font-size:10px;color:var(--amber);margin-top:6px}
-.warn{background:var(--amber-d);border:1px solid rgba(245,166,35,.25);border-radius:8px;padding:10px 12px;color:var(--amber);font-size:12px;margin-bottom:12px;line-height:1.5}
-
-
 @media(max-width:600px){.grid{grid-template-columns:1fr}nav{padding:0 12px}#main{padding:12px}.fbar{gap:4px}}
 </style>
 </head>
@@ -160,8 +148,8 @@ body.blue nav{background:rgba(6,13,26,.96)}
 <script>
 // ══ I18N ══
 const T={
-  en:{title:'Track Your <em>Torn Awards</em>',sub:'Enter your API key to see your progress, find rushable awards & smart combos.',note:'Key never stored — requests go directly to Torn API from your browser.<br>Get key at <a href="https://www.torn.com/preferences.php#tab=api" target="_blank">torn.com → Preferences → API</a> (Limited access is enough)<br><strong>⚠️ Must be hosted (GitHub Pages / Netlify) — local file:// won\'t work.</strong>',load:'Load',change:'Change Key',rush:'🔥 Rush',combos:'⚡ Combos',all:'All',attacks:'⚔️ Attacks',weapons:'🔫 Weapons',crimes:'🕵️ Crimes',travel:'✈️ Travel',drugs:'💊 Drugs',casino:'🎰 Casino',misc:'🎲 Misc',gym:'💪 Gym',t1:'⚡ Do it NOW — within 50',t2:'🔥 This week — within 200',t3:'🎯 Within 1,000',t4:'📅 Within 5,000',noRush:'No rushable awards found!',noAwards:'No awards match your filters.',showEarned:'Show earned',search:'Search...',how:'How:',left:'left',earned:'✓ Done',comboTitle:'⚡ Combos — Grind Multiple at Once',comboSub:'These award groups all progress from the same action.',loading:'Loading awards from Torn API...',tutos:'📖 Guides',planner:'🧠 Plan',nextBest:'Best next merits',copyPlan:'Copy plan',openAwards:'Open awards page',plannerSub:'Prioritized by closeness, ease and reliability. Use this as your daily checklist.',unknown:'Manual check needed'},
-  fr:{title:'Suivi de Vos <em>Awards Torn</em>',sub:'Entrez votre clé API pour voir votre progression, trouver ce que vous pouvez rusher et découvrir des combos.',note:'Clé jamais stockée — les requêtes vont directement à l\'API Torn depuis votre navigateur.<br>Obtenez votre clé sur <a href="https://www.torn.com/preferences.php#tab=api" target="_blank">torn.com → Préférences → API</a> (Accès limité suffit)<br><strong>⚠️ Doit être hébergé (GitHub Pages / Netlify) — le fichier local file:// ne fonctionne pas.</strong>',load:'Charger',change:'Changer de clé',rush:'🔥 Rush',combos:'⚡ Combos',all:'Tous',attacks:'⚔️ Attaques',weapons:'🔫 Armes',crimes:'🕵️ Crimes',travel:'✈️ Voyage',drugs:'💊 Drogues',casino:'🎰 Casino',misc:'🎲 Misc',gym:'💪 Gym',t1:'⚡ À faire MAINTENANT — moins de 50',t2:'🔥 Cette semaine — moins de 200',t3:'🎯 Moins de 1 000',t4:'📅 Moins de 5 000',noRush:'Aucun award à rusher trouvé !',noAwards:'Aucun award ne correspond à vos filtres.',showEarned:'Afficher obtenus',search:'Rechercher...',how:'Comment:',left:'restant',earned:'✓ Obtenu',comboTitle:'⚡ Combos — Plusieurs Awards en Même Temps',comboSub:'Ces groupes d\'awards progressent tous avec la même action.',loading:'Chargement des awards depuis l\'API Torn...',tutos:'📖 Guides',planner:'🧠 Plan',nextBest:'Meilleurs mérites suivants',copyPlan:'Copier le plan',openAwards:'Ouvrir les awards',plannerSub:'Priorisé par proximité, facilité et fiabilité. Utilise ça comme checklist quotidienne.',unknown:'Vérification manuelle'}
+  en:{title:'Track Your <em>Torn Awards</em>',sub:'Enter your API key to see your progress, find rushable awards & smart combos.',note:'Key never stored — requests go directly to Torn API from your browser.<br>Get key at <a href="https://www.torn.com/preferences.php#tab=api" target="_blank">torn.com → Preferences → API</a> (Limited access is enough)<br><strong>⚠️ Must be hosted (GitHub Pages / Netlify) — local file:// won\'t work.</strong>',load:'Load',change:'Change Key',rush:'🔥 Rush',combos:'⚡ Combos',all:'All',attacks:'⚔️ Attacks',weapons:'🔫 Weapons',crimes:'🕵️ Crimes',travel:'✈️ Travel',drugs:'💊 Drugs',casino:'🎰 Casino',misc:'🎲 Misc',gym:'💪 Gym',t1:'⚡ Do it NOW — within 50',t2:'🔥 This week — within 200',t3:'🎯 Within 1,000',t4:'📅 Within 5,000',noRush:'No rushable awards found!',noAwards:'No awards match your filters.',showEarned:'Show earned',search:'Search...',how:'How:',left:'left',earned:'✓ Done',comboTitle:'⚡ Combos — Grind Multiple at Once',comboSub:'These award groups all progress from the same action.',loading:'Loading awards from Torn API...',guide:'🧭 Smart Guide'},
+  fr:{title:'Suivi de Vos <em>Awards Torn</em>',sub:'Entrez votre clé API pour voir votre progression, trouver ce que vous pouvez rusher et découvrir des combos.',note:'Clé jamais stockée — les requêtes vont directement à l\'API Torn depuis votre navigateur.<br>Obtenez votre clé sur <a href="https://www.torn.com/preferences.php#tab=api" target="_blank">torn.com → Préférences → API</a> (Accès limité suffit)<br><strong>⚠️ Doit être hébergé (GitHub Pages / Netlify) — le fichier local file:// ne fonctionne pas.</strong>',load:'Charger',change:'Changer de clé',rush:'🔥 Rush',combos:'⚡ Combos',all:'Tous',attacks:'⚔️ Attaques',weapons:'🔫 Armes',crimes:'🕵️ Crimes',travel:'✈️ Voyage',drugs:'💊 Drogues',casino:'🎰 Casino',misc:'🎲 Misc',gym:'💪 Gym',t1:'⚡ À faire MAINTENANT — moins de 50',t2:'🔥 Cette semaine — moins de 200',t3:'🎯 Moins de 1 000',t4:'📅 Moins de 5 000',noRush:'Aucun award à rusher trouvé !',noAwards:'Aucun award ne correspond à vos filtres.',showEarned:'Afficher obtenus',search:'Rechercher...',how:'Comment:',left:'restant',earned:'✓ Obtenu',comboTitle:'⚡ Combos — Plusieurs Awards en Même Temps',comboSub:'Ces groupes d\'awards progressent tous avec la même action.',loading:'Chargement des awards depuis l\'API Torn...',guide:'🧭 Smart Guide'}
 };
 
 // Map honor/medal type to category tab
@@ -551,7 +539,7 @@ function renderSbar(){
 
 // ══ TABS ══
 function renderTabs(){
-  const tabs=['rush','planner','combos','tutos','all','attacks','weapons','crimes','travel','drugs','casino','gym','misc'];
+  const tabs=['rush','combos','guide','all','attacks','weapons','crimes','travel','drugs','casino','gym','misc'];
   const el=document.getElementById('tabs');
   el.style.display='block';
   el.innerHTML=tabs.map(tab=>`<div class="tab${S.tab===tab?' on':''}" data-tab="${tab}" onclick="setTab('${tab}')">${t(tab)||tab}</div>`).join('');
@@ -568,9 +556,8 @@ function renderContent(){
   const el=document.getElementById('main');
   if(!S.data||!S.allAwards)return;
   if(S.tab==='rush'){renderRush(el);return;}
-  if(S.tab==='planner'){renderPlanner(el);return;}
   if(S.tab==='combos'){renderCombos(el);return;}
-  if(S.tab==='tutos'){renderTutos(el);return;}
+  if(S.tab==='guide'){renderSmartGuide(el);return;}
   renderGrid(el);
 }
 
@@ -615,236 +602,196 @@ function renderRush(el){
   el.innerHTML=html||`<div class="empty">${t('noRush')}</div>`;
 }
 
-
-function awardUrl(a){
-  return `https://www.torn.com/page.php?sid=awards&tab=${a.type==='H'?'honors':'medals'}`;
-}
-function planScore(a){
-  if(a.earned || a.left===null || !a.goal || !a.statKey) return -999999;
-  let score = 0;
-  score += Math.max(0, 100000 - a.left);
-  if(a.left <= 50) score += 50000;
-  else if(a.left <= 200) score += 25000;
-  else if(a.left <= 1000) score += 10000;
-  if(a.pct >= 90) score += 20000;
-  else if(a.pct >= 75) score += 10000;
-  if(['attacks','weapons','travel','drugs','gym','crimes'].includes(a.cat)) score += 3000;
-  return score;
-}
-function copyPlan(){
-  const plan = S.allAwards
-    .filter(a=>!a.earned && a.left!==null && a.left>0)
-    .sort((a,b)=>planScore(b)-planScore(a))
-    .slice(0,15)
-    .map((a,i)=>`${i+1}. ${a.name} [${a.type}] — ${fmt(a.left)} left — ${a.desc}`)
-    .join('\n');
-  navigator.clipboard?.writeText(plan);
-}
-function renderPlanner(el){
-  const candidates=S.allAwards
-    .filter(a=>!a.earned && a.left!==null && a.left>0 && a.goal && a.statKey)
-    .sort((a,b)=>planScore(b)-planScore(a))
-    .slice(0,24);
-
-  const missing=S.allAwards.filter(a=>!a.earned && (!a.goal || !a.statKey)).length;
-
-  let html=`
-    <div class="planhead">
-      <h2>${t('nextBest')}</h2>
-      <p>${t('plannerSub')}</p>
-      <div class="actions">
-        <button class="btn" onclick="copyPlan()">${t('copyPlan')}</button>
-        <button class="btn secondary" onclick="window.open('https://www.torn.com/page.php?sid=awards','_blank')">${t('openAwards')}</button>
-      </div>
-    </div>
-    ${missing?`<div class="warn">⚠️ ${missing} awards cannot be tracked automatically because Torn does not expose a clear progress stat or this tracker has no mapping yet. They still appear in the normal tabs as manual checks.</div>`:''}
-  `;
-  if(!candidates.length){el.innerHTML=html+`<div class="empty">${t('noRush')}</div>`;return;}
-
-  html+=`<div class="grid">`+candidates.map(a=>{
-    const fc=a.pct>=80?'ph':(a.pct>=50?'pm':'pl');
-    const level=a.left<=50?'⚡ Now':a.left<=200?'🔥 Soon':a.left<=1000?'🎯 Grind':'📅 Long';
-    return `
-      <div class="card click ${a.left<=500?'rush':''}" onclick="window.open('${awardUrl(a)}','_blank')">
-        <div class="chtop">
-          <div class="chname">${a.name}</div>
-          <span class="rbadge ${a.type==='H'?'bh':'bm'}">${a.type==='H'?'HONOR':'MEDAL'}</span>
-        </div>
-        <div class="chdesc">${a.desc}</div>
-        <div class="pbar"><div class="ptrack"><div class="pfill ${fc}" style="width:${a.pct}%"></div></div><div class="ppct">${a.pct}%</div></div>
-        <div class="pnums"><strong>${fmt(a.val)}</strong> / ${fmt(a.goal)} — <strong>${fmt(a.left)}</strong> ${t('left')}</div>
-        <div class="score">${level} · ${a.cat} · ${a.statKey}</div>
-        ${a.rarity?`<div class="rarity">${a.rarity}</div>`:''}
-      </div>
-    `;
-  }).join('')+`</div>`;
-  el.innerHTML=html;
-}
-
-// ── ATTACK COMBOS ──
-const ATTACK_COMBOS=[
-  {id:'bare_unarmed',
-   name:'Bare Fists — No Armor, No Weapon',
-   name_fr:'À Poil + Mains Nues',
-   color:'#e94560',
-   setup_en:`Remove ALL armor + equip NO weapon (set melee to fists/kick only). Attack any weak target.`,
-   setup_fr:`Retire TOUTE armure + AUCUNE arme (mets uniquement poings/kick). Attaque n'importe quelle cible faible.`,
-   tip_en:`Best on L3MILK [1999595] (99 total stats). Each win = +1 Bare AND +1 Unarmed finishing hit simultaneously.`,
-   tip_fr:`Parfait sur L3MILK [1999595] (99 stats). Chaque victoire = +1 Bare ET +1 coup final Unarmed en même temps.`,
-   hids:[515,763],mids:[]},
-  {id:'bare_stealth',
-   name:'Bare + Unarmed + Stealth',
-   name_fr:'À Poil + Mains Nues + Furtif',
-   color:'#4a9eff',
-   setup_en:`Remove ALL armor + fists only + enable Stealth. Use Smoke Grenade temp for max stealth chance.`,
-   setup_fr:`Retire toute armure + poings uniquement + active le Furtif. Utilise Smoke Grenade temp pour max furtif.`,
-   tip_en:`Each stealthed win counts toward Night Walker (100) + Bare (250) + Unarmed (100) all at once.`,
-   tip_fr:`Chaque victoire furtive compte pour Night Walker (100) + Bare (250) + Unarmed (100) en même temps.`,
-   hids:[515,763,27],mids:[]},
-  {id:'pepper_unarmed',
-   name:'Pepper Spray + Fists Finish',
-   name_fr:'Pepper Spray + Finir aux Poings',
-   color:'#f5a623',
-   setup_en:`Equip Pepper Spray temp ($800 at Big Al's) + no weapon. Pepper Spray cuts their DEX by 80% = easy wins.`,
-   setup_fr:`Équipe Pepper Spray temp (800$ chez Big Al) + aucune arme. Réduit leur DEX de 80% = victoires faciles.`,
-   tip_en:`Pin Puller (100 temp finishing hits) + Unarmed (100 h2h hits) + Bare (250 unarmored) all together.`,
-   tip_fr:`Pin Puller (100 coups finaux temp) + Unarmed (100 h2h) + Bare (250 sans armure) tous ensemble.`,
-   hids:[143,515,763],mids:[]},
-  {id:'rifle_rounds',
-   name:'Rifle Spam — Weapon Honor + Rounds Fired',
-   name_fr:'Spam Fusil — Honor Arme + Balles Tirées',
-   color:'#5ba8ff',
-   setup_en:`Equip rifle as primary. Set to use rifle 100% of turns. Every fight advances rifle finishing hits AND all rounds-fired honors at the same time.`,
-   setup_fr:`Équipe un fusil comme arme primaire. Mets 100% sur fusil. Chaque combat fait progresser les coups finaux fusil ET tous les honors balles tirées en même temps.`,
-   tip_en:`Spray And Pray (1k) + Two Halves (10k) + Lead Salad (100k) + Peppered (1M) all share roundsfired stat.`,
-   tip_fr:`Spray And Pray (1k) + Two Halves (10k) + Lead Salad (100k) + Peppered (1M) partagent tous la stat roundsfired.`,
-   hids:[146,140,151,834],mids:[]},
-  {id:'grenade_finish',
-   name:'Grenade Finish — Pin Puller + Rounds',
-   name_fr:'Finir à la Grenade',
-   color:'#2ecc71',
-   setup_en:`Equip SMG/rifle as primary + Grenade as temp. Spray rounds then finish with grenade.`,
-   setup_fr:`Équipe SMG/fusil + Grenade comme temp. Tire beaucoup de balles puis finis à la grenade.`,
-   tip_en:`Pin Puller + Spray And Pray + Two Halves all progress in the same attack.`,
-   tip_fr:`Pin Puller + Spray And Pray + Two Halves progressent tous dans la même attaque.`,
-   hids:[143,140,151],mids:[]},
-  {id:'kick_leonidas',
-   name:'Kick Finish — Leonidas + Unarmed',
-   name_fr:'Finir au Kick — Leonidas + Unarmed',
-   color:'#f5a623',
-   setup_en:`Unlock Kick (Education > Self Defense > Kickboxing). Set melee to kick only. Each finishing kick = Leonidas + Unarmed hits.`,
-   setup_fr:`Débloque Kick (Education > Self Defense > Kickboxing). Mets corps à corps sur kick uniquement.`,
-   tip_en:`Leonidas needs just 1 finishing kick — do it once instantly! Unarmed needs 100 total.`,
-   tip_fr:`Leonidas = juste 1 kick final. Fais-le une fois instantanément ! Unarmed = 100 au total.`,
-   hids:[871,515],mids:[]},
-  {id:'npc_chain',
-   name:'NPC Fight — Boss Fight + Chains',
-   name_fr:'Combat NPC — Boss Fight + Chaînes',
-   color:'#2ecc71',
-   setup_en:`Join active NPC fight (Duke/Jimmy/Leslie) on Torn Discord. Wait for debuffs then hit once.`,
-   setup_fr:`Rejoins un combat NPC actif (Duke/Jimmy/Leslie) sur le Discord Torn. Attends les debuffs puis frappe une fois.`,
-   tip_en:`Use TornTools extension to track NPC spawns. Boss Fight [665] needed for a merit.`,
-   tip_fr:`Utilise TornTools pour tracker les spawns NPC. Boss Fight [665] nécessaire pour un mérite.`,
-   hids:[665,253,255,257],mids:[]},
-  {id:'stealth_camo',
-   name:'Stealth — Night Walker + Camos + Medals',
-   name_fr:'Furtif — Night Walker + Camos + Médailles',
-   color:'#4a9eff',
-   setup_en:`Enable stealth + Smoke Grenade temp. Every stealthed win = Night Walker + ALL camo honors + attack medals simultaneously.`,
-   setup_fr:`Active le furtif + Smoke Grenade temp. Chaque victoire furtive = Night Walker + TOUS les Camos + médailles attaque.`,
-   tip_en:`Smoke + Flash on turn 1 = maximum stealth. Use on weak targets.`,
-   tip_fr:`Smoke + Flash au tour 1 = maximum furtif. Utilise sur des cibles faibles.`,
-   hids:[27,39,40,41,42,43],mids:[174,175,176]},
-  {id:'phoenix',
-   name:'Lose then Win — Phoenix',
-   name_fr:'Perdre puis Gagner — Phoenix',
-   color:'#f5a623',
-   setup_en:`Lose to someone, then beat them back within 10 minutes. Coordinate with a faction member: they attack you first, you attack back.`,
-   setup_fr:`Perds contre quelqu'un, puis bats-le en retour dans les 10 minutes. Coordonne avec ta faction.`,
-   tip_en:`Pick someone weaker for the return fight so you are sure to win.`,
-   tip_fr:`Choisis quelqu'un de plus faible pour le retour pour être sûr de gagner.`,
-   hids:[317],mids:[]},
+// ── SMART COMBOS + PROFILE-ADAPTED GUIDE ──
+// Design goal: do not show generic tutorials. Each section is filtered by the player's
+// already-earned honors/medals and sorted by highest "merits per action" value.
+const SMART_SETUPS=[
+  {
+    id:'bare_unarmed_stealth', cat:'attacks', cost:'low', difficulty:'easy', energy:25,
+    name_en:'Bare + Unarmed + Stealth setup', name_fr:'Sans armure + mains nues + furtif',
+    setup_en:'Remove all armor, use fists/kick only, enable stealth, use Smoke Grenade/Flash Grenade if possible, then hit weak inactive targets.',
+    setup_fr:'Retire toute armure, utilise seulement poings/kick, active le furtif, utilise Smoke/Flash Grenade si possible, puis attaque des cibles faibles inactives.',
+    why_en:'One fight can progress Bare, Unarmed finishing hits, stealthed wins, attacks won and attack medals at the same time.',
+    why_fr:'Un seul combat peut faire avancer Bare, les coups finaux mains nues, les victoires furtives, les attaques gagnées et les médailles d’attaque en même temps.',
+    awards:[['H',763],['H',515],['H',27],['H',39],['H',40],['H',41],['H',42],['M',174],['M',175],['M',176]]
+  },
+  {
+    id:'pepper_temp_finish', cat:'attacks', cost:'low', difficulty:'easy', energy:25,
+    name_en:'Pepper Spray finishing setup', name_fr:'Setup finition Pepper Spray',
+    setup_en:'Equip Pepper Spray as temporary weapon and finish weak targets with it. Works better with no armor if you still need Bare.',
+    setup_fr:'Équipe Pepper Spray en arme temporaire et finis des cibles faibles avec. Encore mieux sans armure si tu dois encore faire Bare.',
+    why_en:'Temporary weapon finishing hits can be combined with attacks won, Bare, stealth and weapon/finisher progress.',
+    why_fr:'Les coups finaux avec arme temporaire peuvent se combiner avec attaques gagnées, Bare, furtif et progression d’armes.',
+    awards:[['H',143],['H',763],['H',27],['H',39],['M',174],['M',175]]
+  },
+  {
+    id:'gun_rounds_finisher', cat:'weapons', cost:'medium', difficulty:'easy', energy:25,
+    name_en:'Gun rounds + weapon finisher setup', name_fr:'Balles tirées + finition arme',
+    setup_en:'Use a fast rifle/SMG/pistol on weak targets. Set your attack settings so the chosen weapon is used often and finish fights with that weapon type.',
+    setup_fr:'Utilise fusil/SMG/pistolet rapide sur cibles faibles. Configure tes attaques pour utiliser souvent cette arme et finir les combats avec ce type.',
+    why_en:'Rounds fired honors stack naturally with weapon finishing-hit honors and attack-win medals.',
+    why_fr:'Les honors de balles tirées se cumulent naturellement avec les coups finaux par type d’arme et les médailles d’attaque.',
+    awards:[['H',140],['H',151],['H',834],['H',836],['H',146],['H',148],['H',145],['M',174],['M',175],['M',176]]
+  },
+  {
+    id:'grenade_rounds', cat:'weapons', cost:'medium', difficulty:'medium', energy:25,
+    name_en:'Grenade finish after gun spam', name_fr:'Finir à la grenade après spam balles',
+    setup_en:'Shoot several rounds first, then finish with a grenade/temporary weapon. Use weak targets to control the fight.',
+    setup_fr:'Tire plusieurs balles d’abord, puis finis avec une grenade/arme temporaire. Utilise des cibles faibles pour contrôler le combat.',
+    why_en:'Combines rounds fired with temporary finishing hits. Good when both are still unfinished.',
+    why_fr:'Combine les balles tirées et les coups finaux temporaires. Très bon si les deux ne sont pas terminés.',
+    awards:[['H',143],['H',140],['H',151],['H',834],['M',174],['M',175]]
+  },
+  {
+    id:'faction_npc_chain', cat:'attacks', cost:'low', difficulty:'medium', energy:25,
+    name_en:'NPC / faction hit setup', name_fr:'Setup NPC / hits faction',
+    setup_en:'Join NPC fights or faction chain targets, hit once safely when the target is debuffed. Use this during faction activity.',
+    setup_fr:'Rejoins les combats NPC ou les cibles de chaîne faction, frappe une fois quand la cible est debuff. À faire pendant l’activité faction.',
+    why_en:'Useful for Boss Fight, ranked/faction hit progress and attack medals without wasting separate sessions.',
+    why_fr:'Utile pour Boss Fight, les hits de faction/ranked war et les médailles d’attaque sans faire des sessions séparées.',
+    awards:[['H',665],['H',253],['H',255],['H',257],['H',475],['M',215],['M',216],['M',217]]
+  },
+  {
+    id:'crime_chains', cat:'crimes', cost:'free', difficulty:'easy', energy:0,
+    name_en:'Crimes 2.0 category chain', name_fr:'Chaîne Crimes 2.0 par catégorie',
+    setup_en:'Pick one crime category and push it in blocks: Vandalism, Theft, Counterfeiting, Fraud, Illicit Services, Cybercrime, Extortion or Illegal Production.',
+    setup_fr:'Choisis une catégorie et monte-la par blocs : Vandalism, Theft, Counterfeiting, Fraud, Illicit Services, Cybercrime, Extortion ou Illegal Production.',
+    why_en:'Each crime category has medal ladders at 100, 200, 300, 500, 750, 1k, 1.5k, 2k+; your tracker should show the closest category first.',
+    why_fr:'Chaque catégorie a des paliers de médailles à 100, 200, 300, 500, 750, 1k, 1.5k, 2k+ ; le tracker te montre la plus proche.',
+    awards:[['M',242],['M',243],['M',244],['M',257],['M',258],['M',272],['M',273],['M',287],['M',302],['M',317],['M',332],['M',347],['M',362]]
+  },
+  {
+    id:'travel_import', cat:'travel', cost:'medium', difficulty:'easy', energy:0,
+    name_en:'Travel + import route', name_fr:'Route voyage + import',
+    setup_en:'When travelling, always buy abroad items before returning. Rotate countries if country-specific travel honors are unfinished.',
+    setup_fr:'À chaque voyage, achète des items à l’étranger avant de rentrer. Change de pays si les honors de pays ne sont pas finis.',
+    why_en:'Travel count, time abroad, country visits and imported-items awards can all progress passively together.',
+    why_fr:'Nombre de voyages, temps de voyage, visites par pays et items importés progressent passivement ensemble.',
+    awards:[['H',11],['H',165],['M',207],['M',208],['M',209],['H',541],['H',542],['H',543],['H',130],['H',131],['H',132],['H',133],['H',134],['H',135],['H',136],['H',137],['H',138],['H',139],['H',272]]
+  },
+  {
+    id:'medical_hospital', cat:'misc', cost:'low', difficulty:'easy', energy:0,
+    name_en:'Medical items + hospital progress', name_fr:'Items médicaux + progression hospital',
+    setup_en:'Use medical items normally after attacks/chains. Avoid wasting meds: this is best done passively while playing.',
+    setup_fr:'Utilise les items médicaux normalement après attaques/chaînes. Ne gaspille pas : à faire passivement en jouant.',
+    why_en:'Medical-item medals progress while you are already doing combat, chaining, NPC fights or revive/hospital gameplay.',
+    why_fr:'Les médailles d’items médicaux progressent pendant que tu fais déjà combat, chaînes, NPC ou gameplay hospital.',
+    awards:[['M',198],['M',199],['M',200],['H',903]]
+  },
+  {
+    id:'money_networth_bank', cat:'misc', cost:'variable', difficulty:'easy', energy:0,
+    name_en:'Money / networth passive stack', name_fr:'Argent / networth passif',
+    setup_en:'Keep growing recorded networth, use bank investments, and avoid holding unnecessary cash unless doing mug-related awards intentionally.',
+    setup_fr:'Augmente ton networth enregistré, utilise les investissements banque, et évite de garder du cash sauf si tu fais volontairement des awards de mug.',
+    why_en:'Networth medals are long-term, but bank and donation-type honors can be picked up when you already have the cash.',
+    why_fr:'Les médailles networth sont long terme, mais banque/donations peuvent être faites quand tu as déjà le cash.',
+    awards:[['M',89],['M',90],['M',91],['M',92],['M',93],['M',94],['M',95],['M',96],['H',12],['H',520],['H',521]]
+  }
 ];
 
+const INSTANT_GUIDE=[
+  {name:'Bank investment', fr:'Investissement banque', type:'H', id:12, cost:'free/low', en:'Invest any amount in the City Bank if not done yet.', frtxt:'Investis n’importe quel montant à la banque si pas encore fait.'},
+  {name:'Wheel honors', fr:'Roues casino', type:'H', ids:[427,431,437], cost:'low', en:'Spin each casino wheel once if its honor is missing.', frtxt:'Tourne chaque roue casino une fois si l’honor manque.'},
+  {name:'Read Chronicle', fr:'Lire Chronicle', type:'H', id:845, cost:'free', en:'Open City → Chronicle and read/idle on a page if Historian is missing.', frtxt:'Ouvre City → Chronicle et lis/attends sur une page si Historian manque.'},
+  {name:'Kick finisher', fr:'Finition Kick', type:'H', id:871, cost:'free', en:'If Kick is unlocked through education, finish one fight with a kick.', frtxt:'Si Kick est débloqué via education, finis un combat avec un kick.'},
+  {name:'Friendly Fire', fr:'Friendly Fire', type:'H', id:605, cost:'25e', en:'Coordinate with a weak faction member, ask them to remove armor/weapons, then defeat them.', frtxt:'Coordonne avec un membre de faction faible, il retire armure/armes, puis bats-le.'},
+  {name:'Going Postal', fr:'Going Postal', type:'H', id:896, cost:'25e', en:'Defeat a co-worker from your company.', frtxt:'Bats un collègue de ta company.'},
+  {name:'Phoenix', fr:'Phoenix', type:'H', id:317, cost:'50e', en:'Lose to someone, then beat them back within 10 minutes.', frtxt:'Perds contre quelqu’un puis bats-le en retour dans les 10 minutes.'},
+  {name:'Church Mouse', fr:'Church Mouse', type:'H', id:739, cost:'coordination', en:'Carry exactly $1 and ask a trusted player to mug you.', frtxt:'Garde exactement $1 sur toi et demande à un joueur de confiance de te mug.'}
+];
+
+function findAward(type,id){return S.allAwards.find(a=>a.type===type&&String(a.id)===String(id));}
+function isEarned(type,id){const a=findAward(type,id); return a?!!a.earned:false;}
+function awardLeft(type,id){const a=findAward(type,id); return a&&a.left!==null?a.left:null;}
+function awardLine(type,id){
+  const a=findAward(type,id);
+  if(!a) return null;
+  return {award:a, earned:a.earned, left:a.left, pct:a.pct||0};
+}
+function setupScore(setup){
+  const entries=setup.awards.map(x=>awardLine(x[0],x[1])).filter(Boolean);
+  const open=entries.filter(x=>!x.earned);
+  if(!open.length) return null;
+  const close=open.filter(x=>x.left!==null&&x.left<=500).length;
+  const mid=open.filter(x=>x.left!==null&&x.left>500&&x.left<=5000).length;
+  const tracked=open.filter(x=>x.left!==null).length;
+  const unknown=open.length-tracked;
+  const score=(close*8)+(mid*3)+(tracked*1.25)+(unknown*.5)+open.length;
+  return {entries,open,close,mid,tracked,unknown,score};
+}
+function statusBadge(meta){
+  if(meta.close>=2) return `<span class="rbadge" style="background:var(--red-d);color:var(--red);border:1px solid rgba(233,69,96,.3)">DO NOW</span>`;
+  if(meta.close===1||meta.mid>=2) return `<span class="rbadge bm">GOOD VALUE</span>`;
+  return `<span class="rbadge bh">LONG TERM</span>`;
+}
+function awardMini(a){
+  const color=a.earned?'var(--green)':(a.left!==null&&a.left<=500?'var(--red)':'var(--muted)');
+  const right=a.earned?t('earned'):(a.left!==null?`${fmt(a.left)} ${t('left')}`:'manual');
+  return `<a class="crow ${a.earned?'cdone':''}" href="https://www.torn.com/page.php?sid=awards&tab=${a.type==='H'?'honors':'medals'}" target="_blank" style="text-decoration:none;color:inherit;display:flex;align-items:center">
+    <img src="https://yata.yt/media/${a.type==='H'?'honors':'medals'}/${a.id}.png" style="width:22px;height:22px;object-fit:contain;flex-shrink:0;margin-right:6px" onerror="this.style.display='none'" loading="lazy"/>
+    <div class="cdot"></div><div style="flex:1">${a.name} <span style="color:var(--muted);font-size:10px">[${a.type}]</span></div>
+    <div style="font-family:var(--mono);font-size:11px;color:${color}">${right}</div>
+  </a>`;
+}
 function renderCombos(el){
-  const {earned_h,earned_m}=S.data;
-  const active=ATTACK_COMBOS.filter(c=>c.hids.some(id=>!earned_h.has(id))||c.mids.some(id=>!earned_m.has(id)));
-  let html=`<div class="sec">${lang==='fr'?'⚡ Combos par Setup':'⚡ Combos by Attack Setup'}</div>`;
-  html+=`<p style="color:var(--muted);font-size:12px;margin-bottom:16px">${lang==='fr'?'Chaque setup permet d\'obtenir plusieurs honors en même temps.':'Each setup earns multiple honors at once. Already earned awards are greyed out.'}</p>`;
-  for(const c of active){
-    const awards=[
-      ...c.hids.map(id=>{const a=S.allAwards.find(x=>x.type==='H'&&x.id===id);return a?{...a,earned:earned_h.has(id)}:{id,type:'H',name:'Honor #'+id,earned:earned_h.has(id),left:null};}),
-      ...c.mids.map(id=>{const a=S.allAwards.find(x=>x.type==='M'&&x.id===id);return a?{...a,earned:earned_m.has(id)}:{id,type:'M',name:'Medal #'+id,earned:earned_m.has(id),left:null};}),
-    ];
-    html+=`<div class="cbox" style="border-left:3px solid ${c.color};border-color:${c.color}33">
-      <h3 style="color:${c.color}">${lang==='fr'?c.name_fr:c.name}</h3>
-      <div class="cdesc"><span style="color:var(--amber);font-size:10px;font-weight:700">⚙️ Setup: </span>${lang==='fr'?c.setup_fr:c.setup_en}</div>
-      <div style="font-size:11px;color:var(--blue);margin-bottom:10px;padding:6px 8px;background:var(--blue-d);border-radius:4px">💡 ${lang==='fr'?c.tip_fr:c.tip_en}</div>
-      ${awards.map(a=>`<a class="crow ${a.earned?'cdone':''}" href="https://www.torn.com/page.php?sid=awards&tab=${a.type==='H'?'honors':'medals'}" target="_blank" style="text-decoration:none;color:inherit;display:flex;align-items:center">
-        <img src="https://yata.yt/media/${a.type==='H'?'honors':'medals'}/${a.id}.png" style="width:22px;height:22px;object-fit:contain;flex-shrink:0;margin-right:6px" onerror="this.style.display='none'" loading="lazy"/>
-        <div class="cdot"></div>
-        <div style="flex:1">${a.name} <span style="color:var(--muted);font-size:10px">[${a.type==='H'?'H':'M'}]</span></div>
-        <div style="font-family:var(--mono);font-size:11px;color:${a.earned?'var(--green)':'var(--red)'}">${a.earned?t('earned'):(a.left!==null?fmt(a.left)+' '+t('left'):'—')}</div>
-      </a>`).join('')}
+  const ranked=SMART_SETUPS.map(s=>({setup:s,meta:setupScore(s)})).filter(x=>x.meta).sort((a,b)=>b.meta.score-a.meta.score);
+  let html=`<div class="sec">${lang==='fr'?'⚡ Meilleurs combos selon ton profil':'⚡ Best combos for your profile'}</div>`;
+  html+=`<p style="color:var(--muted);font-size:12px;margin-bottom:16px;line-height:1.6">${lang==='fr'?'Cette page cache automatiquement les combos déjà terminés et classe les setups selon tes honors/médailles restants. Le but : gagner plusieurs mérites avec la même action.':'This page hides completed combos and ranks setups based on your missing honors/medals. Goal: earn several merits from the same action.'}</p>`;
+  if(!ranked.length){el.innerHTML=html+`<div class="empty">🏆 ${lang==='fr'?'Tous les combos suivis sont terminés.':'All tracked combos are complete.'}</div>`;return;}
+  for(const {setup,meta} of ranked){
+    const openAwards=meta.entries.map(x=>x.award).filter(a=>!a.earned);
+    html+=`<div class="cbox" style="border-left:3px solid ${meta.close>=2?'var(--red)':meta.mid>=2?'var(--amber)':'var(--blue)'}">
+      <div style="display:flex;justify-content:space-between;gap:8px;align-items:flex-start"><h3>${lang==='fr'?setup.name_fr:setup.name_en}</h3>${statusBadge(meta)}</div>
+      <div class="cdesc"><b style="color:var(--amber)">Setup:</b> ${lang==='fr'?setup.setup_fr:setup.setup_en}</div>
+      <div style="font-size:11px;color:var(--blue);margin-bottom:10px;padding:7px 8px;background:var(--blue-d);border-radius:5px;line-height:1.5">💡 ${lang==='fr'?setup.why_fr:setup.why_en}</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px">
+        <span class="chip">Open <span>${openAwards.length}</span></span>
+        <span class="chip rush">≤500 <span>${meta.close}</span></span>
+        <span class="chip">Cost <span>${setup.cost}</span></span>
+        <span class="chip">Energy <span>${setup.energy||0}</span></span>
+      </div>
+      ${openAwards.slice(0,12).map(awardMini).join('')}
     </div>`;
   }
-  if(!active.length) html+=`<div class="empty">🏆 All combo awards earned!</div>`;
   el.innerHTML=html;
 }
 
-function renderTutos(el){
-  const {earned_h,earned_m}=S.data;
-  const ne=(type,id)=>type==='H'?!earned_h.has(id):!earned_m.has(id);
-  const secs=[
-    {ce:`⚡ Instant — Do it right now`,cf:`⚡ Instantané — Faisable maintenant`,col:'#e94560',items:[
-      {name:'Domino Effect',type:'H',id:230,en:`Defeat L3MILK [1999595] — level 4, only 99 total stats. Always works.`,fr:`Bats L3MILK [1999595] — niveau 4, seulement 99 stats totales. Fonctionne toujours.`},
-      {name:'Pocket Money',type:'H',id:12,en:`Invest any amount in City → Bank. Even $1 works.`,fr:`Investis n'importe quel montant en City → Bank. Même $1 fonctionne.`},
-      {name:'Flatline',type:'H',id:254,en:`One-hit kill from full HP. Use powerful weapon on very weak target.`,fr:`Tue en un coup depuis les HP pleins. Arme puissante sur cible très faible.`},
-      {name:'Leonidas',type:'H',id:871,en:`Unlock Kick (Education > Self Defense > Kickboxing). Finish 1 fight with a kick.`,fr:`Débloque Kick (Education > Self Defense > Kickboxing). Termine 1 combat avec un kick.`},
-      {name:'Semper Fortis',type:'H',id:481,en:`Beat someone with more stats than you. Penguinbob is a known easy target.`,fr:`Bats quelqu'un avec plus de stats. Penguinbob est une cible facile connue.`},
-      {name:'Manu Forti',type:'H',id:627,en:`Beat someone with 2x your stats. Penguinbob works here too.`,fr:`Bats quelqu'un avec 2x tes stats. Penguinbob fonctionne ici aussi.`},
-      {name:'Vae Victis',type:'H',id:631,en:`Beat someone with 5x your stats. Penguinbob works here too.`,fr:`Bats quelqu'un avec 5x tes stats. Penguinbob fonctionne ici aussi.`},
-      {name:'Historian',type:'H',id:845,en:`Read any Chronicle (City → Chronicle). Stay on page up to 10 minutes.`,fr:`Lis n'importe quelle Chronique (City → Chronicle). Reste sur la page 10 minutes max.`},
-      {name:'Awesome',type:'H',id:427,en:`Casino → spin Wheel of Awesome. 1 merit instantly.`,fr:`Casino → tourne la Wheel of Awesome. 1 mérite instantanément.`},
-      {name:'Lame',type:'H',id:431,en:`Casino → spin Wheel of Lame. 1 merit instantly.`,fr:`Casino → tourne la Wheel of Lame. 1 mérite instantanément.`},
-      {name:'Mediocre',type:'H',id:437,en:`Casino → spin Wheel of Mediocrity. 1 merit instantly.`,fr:`Casino → tourne la Wheel of Mediocrity. 1 mérite instantanément.`},
-      {name:'Landlord',type:'H',id:860,en:`Buy a Trailer ($5,000) and lease it to a friend for 3+ days.`,fr:`Achète un Trailer (5 000$) et loue-le à un ami pour 3+ jours.`},
-      {name:'Phoenix',type:'H',id:317,en:`Lose to someone then beat them back within 10 min. Coordinate with a faction member.`,fr:`Perds contre quelqu'un puis bats-le en retour dans les 10 min. Coordonne avec ta faction.`},
-      {name:'Gone Fishing',type:'H',id:902,en:`Get defeated by a Trout. Ask a faction member to attack you with a Sea Trout.`,fr:`Fais-toi battre par une Truite. Demande à un membre de faction de t'attaquer avec une Sea Trout.`},
-      {name:'Friendly Fire',type:'H',id:605,en:`Defeat a faction member. Ask weakest member to remove armor/weapons.`,fr:`Bats un membre de ta faction. Demande au plus faible de retirer armure/armes.`},
-      {name:'Going Postal',type:'H',id:896,en:`Defeat a company co-worker. Works on DarkPulse employees.`,fr:`Bats un collègue de société. Fonctionne sur les employés DarkPulse.`},
-      {name:'Lovestruck',type:'H',id:838,en:`Defeat two married players back to back while both are still married.`,fr:`Bats deux joueurs mariés de suite pendant qu'ils sont encore mariés.`},
-      {name:'Yoink',type:'H',id:955,en:`Mug someone who just mugged someone else within 5 min. Coordinate: A mugs B, you mug A.`,fr:`Mug quelqu'un qui vient de mugger quelqu'un dans les 5 min. A mug B, tu muges A.`},
-    ]},
-    {ce:`💰 Costs a little`,cf:`💰 Coûte un peu`,col:'#f5a623',items:[
-      {name:'Spray And Pray',type:'H',id:140,en:`Fire 1,000 rounds. Buy cheap fast SMG and spam attacks on weak targets.`,fr:`Tire 1 000 balles. Achète un SMG rapide pas cher et spam des attaques.`},
-      {name:'Pin Puller',type:'H',id:143,en:`100 temp weapon finishing hits. Pepper Spray ($800 at Big Al's) on weak targets.`,fr:`100 coups finaux arme temporaire. Pepper Spray (800$) chez Big Al sur cibles faibles.`},
-      {name:'Boss Fight',type:'H',id:665,en:`Join NPC fight on Torn Discord. Wait for debuffs then hit once. Use TornTools.`,fr:`Rejoins un combat NPC sur le Discord Torn. Attends les debuffs puis frappe une fois.`},
-      {name:'Blood Money',type:'H',id:247,en:`Mug someone for $1M+. Attack a rich player and use the Mug option.`,fr:`Mug quelqu'un pour 1M$+. Attaque un joueur riche et utilise l'option Mug.`},
-      {name:'Church Mouse',type:'H',id:739,en:`Get mugged for exactly $1. Walk with $1 cash and ask someone to mug you.`,fr:`Fais-toi mugger pour exactement $1. Balade-toi avec $1 et demande à quelqu'un de te mugger.`},
-    ]},
-    {ce:`📅 Takes time — Do passively`,cf:`📅 Prend du temps — Faire passivement`,col:'#4a9eff',items:[
-      {name:'Night Walker',type:'H',id:27,en:`100 stealthed wins. Enable stealth + Smoke Grenade temp daily.`,fr:`100 victoires furtives. Active furtif + Smoke Grenade temp chaque jour.`},
-      {name:'Bare',type:'H',id:763,en:`250 unarmored wins. Remove all armor before attacking.`,fr:`250 victoires sans armure. Retire toute armure avant d'attaquer.`},
-      {name:'Unarmed',type:'H',id:515,en:`100 fist/kick finishing hits. Remove all weapons, fight with fists only.`,fr:`100 coups finaux poings/kick. Retire toutes les armes, combat uniquement aux poings.`},
-      {name:'Survivalist',type:'H',id:500,en:`Win with only 1% HP left. Use very weak weapon vs weak target. Must start with >1% HP.`,fr:`Gagne avec seulement 1% de vie. Arme très faible vs cible faible. Commence avec >1% de vie.`},
-      {name:'Sidekick',type:'H',id:490,en:`Assist in 250 attacks. Join faction attacks in progress.`,fr:`Aide dans 250 attaques. Rejoins les attaques de faction en cours.`},
-    ]},
-  ];
-  let html=`<div class="sec">${lang==='fr'?'📖 Guide — Mérites Rapides':'📖 Guide — Fast Merits'}</div>`;
-  for(const s of secs){
-    const items=s.items.filter(i=>ne(i.type,i.id));
-    if(!items.length) continue;
-    html+=`<div style="margin-bottom:20px">
-      <div style="font-family:var(--mono);font-size:11px;color:${s.col};letter-spacing:1px;margin-bottom:8px">${lang==='fr'?s.cf:s.ce} <span style="color:var(--muted);font-weight:400">(${items.length})</span></div>
-      ${items.map(i=>`<a href="https://www.torn.com/page.php?sid=awards&tab=${i.type==='H'?'honors':'medals'}" target="_blank" style="text-decoration:none;color:inherit;display:flex;align-items:flex-start;gap:10px;padding:11px 14px;background:var(--surf);border:1px solid var(--brd);border-radius:8px;margin-bottom:6px;transition:border-color .15s" onmouseover="this.style.borderColor='${s.col}'" onmouseout="this.style.borderColor='var(--brd)'">
-        <img src="https://yata.yt/media/${i.type==='H'?'honors':'medals'}/${i.id}.png" style="width:36px;height:36px;object-fit:contain;flex-shrink:0" onerror="this.style.display='none'" loading="lazy"/>
-        <div style="flex:1"><div style="font-weight:600;font-size:13px;margin-bottom:3px">${i.name}</div><div style="font-size:12px;color:var(--muted);line-height:1.5">${lang==='fr'?i.fr:i.en}</div></div>
-        <div style="color:${s.col};font-size:16px;flex-shrink:0;align-self:center">→</div>
-      </a>`).join('')}
-    </div>`;
+function renderSmartGuide(el){
+  const combos=SMART_SETUPS.map(s=>({setup:s,meta:setupScore(s)})).filter(x=>x.meta).sort((a,b)=>b.meta.score-a.meta.score);
+  const quick=INSTANT_GUIDE.filter(g=>{
+    const ids=g.ids||[g.id];
+    return ids.some(id=>!isEarned(g.type,id));
+  });
+  const rush=S.allAwards.filter(a=>!a.earned&&a.left!==null&&a.left>0&&a.left<=500).sort((a,b)=>a.left-b.left).slice(0,10);
+  const crimes=S.allAwards.filter(a=>!a.earned&&a.cat==='crimes'&&a.left!==null).sort((a,b)=>a.left-b.left).slice(0,6);
+  const travel=S.allAwards.filter(a=>!a.earned&&a.cat==='travel'&&a.left!==null).sort((a,b)=>a.left-b.left).slice(0,6);
+  const combat=combos.filter(x=>['attacks','weapons'].includes(x.setup.cat)).slice(0,3);
+  let html=`<div class="sec">${lang==='fr'?'🧭 Guide intelligent adapté à ton profil':'🧭 Profile-adapted smart guide'}</div>`;
+  html+=`<p style="color:var(--muted);font-size:12px;margin-bottom:14px;line-height:1.6">${lang==='fr'?'Ce guide est généré après lecture de tes honors, médailles et personalstats. Il ne te montre pas une liste générale : il retire ce que tu as déjà obtenu et priorise les actions qui débloquent plusieurs mérites ensemble.':'This guide is generated from your honors, medals and personalstats. It is not a generic list: completed awards are removed and actions that unlock multiple merits together are prioritized.'}</p>`;
+
+  html+=`<div class="rbox"><div class="rhdr"><h3>${lang==='fr'?'1) À faire maintenant':'1) Do now'}</h3><span class="cnt">${quick.length} quick checks</span></div>`;
+  if(quick.length){
+    html+=quick.slice(0,10).map(g=>`<div class="rrow" style="cursor:default"><div class="rinfo"><div class="rname">${lang==='fr'?g.fr:g.name}<span class="rbadge bm">QUICK</span></div><div class="rdesc">${lang==='fr'?g.frtxt:g.en}</div></div><div class="rright"><div class="rnum">${g.cost}</div><div class="rstat">manual</div></div></div>`).join('');
+  }else html+=`<div class="empty" style="padding:25px">${lang==='fr'?'Aucun quick win suivi restant.':'No tracked quick wins left.'}</div>`;
+  html+=`</div>`;
+
+  html+=`<div class="rbox"><div class="rhdr"><h3>${lang==='fr'?'2) Rush proche selon tes stats':'2) Closest tracked awards'}</h3><span class="cnt">${rush.length}</span></div>`;
+  if(rush.length){
+    html+=rush.map(a=>`<a class="rrow" href="https://www.torn.com/page.php?sid=awards&tab=${a.type==='H'?'honors':'medals'}" target="_blank" style="text-decoration:none;color:inherit;display:flex"><div class="rinfo"><div class="rname">${a.name}<span class="rbadge ${a.type==='H'?'bh':'bm'}">${a.type==='H'?'HONOR':'MEDAL'}</span></div><div class="rdesc">${a.desc}</div></div><div class="rright"><div class="rnum">${fmt(a.left)} ${t('left')}</div><div class="rstat">${a.statKey}</div></div></a>`).join('');
+  }else html+=`<div class="empty" style="padding:25px">${lang==='fr'?'Aucun award à moins de 500 actions.':'No awards under 500 actions.'}</div>`;
+  html+=`</div>`;
+
+  html+=`<div class="sec">${lang==='fr'?'3) Meilleurs setups multi-mérites':'3) Best multi-merit setups'}</div>`;
+  for(const {setup,meta} of combat){
+    const open=meta.entries.map(x=>x.award).filter(a=>!a.earned);
+    html+=`<div class="cbox"><div style="display:flex;justify-content:space-between;gap:8px"><h3>${lang==='fr'?setup.name_fr:setup.name_en}</h3>${statusBadge(meta)}</div><div class="cdesc">${lang==='fr'?setup.setup_fr:setup.setup_en}</div>${open.slice(0,8).map(awardMini).join('')}</div>`;
   }
-  if(!html.includes('surf')) html+=`<div class="empty">🏆 All guide awards already earned!</div>`;
+
+  html+=`<div class="sec">${lang==='fr'?'4) Passif à intégrer tous les jours':'4) Daily passive route'}</div>`;
+  html+=`<div class="grid">`;
+  html+=`<div class="card"><div class="chtop"><div class="chname">${lang==='fr'?'Crimes à prioriser':'Crime priority'}</div><span class="rbadge bh">PASSIVE</span></div><div class="chdesc">${lang==='fr'?'Fais en priorité la catégorie avec le palier le plus proche.':'Prioritize the category with the closest next medal threshold.'}</div>${crimes.map(a=>`<div class="pnums"><strong>${a.name}</strong> — ${fmt(a.left)} ${t('left')}</div>`).join('')||'<div class="pnums">No tracked crime target.</div>'}</div>`;
+  html+=`<div class="card"><div class="chtop"><div class="chname">${lang==='fr'?'Voyages':'Travel'}</div><span class="rbadge bh">PASSIVE</span></div><div class="chdesc">${lang==='fr'?'À chaque voyage, achète des items à l’étranger et change de pays si un honor pays est proche.':'Every trip: buy abroad items and rotate countries if a country honor is close.'}</div>${travel.map(a=>`<div class="pnums"><strong>${a.name}</strong> — ${fmt(a.left)} ${t('left')}</div>`).join('')||'<div class="pnums">No tracked travel target.</div>'}</div>`;
+  html+=`</div>`;
   el.innerHTML=html;
 }
 
@@ -873,7 +820,7 @@ function renderGrid(el){
     const fc=a.earned?'pd':(a.pct>=80?'ph':(a.pct>=50?'pm':'pl'));
     const badge=a.earned?`<span class="rbadge bd">${t('earned')}</span>`:(isRush?`<span class="rbadge" style="background:var(--red-d);color:var(--red);border:1px solid rgba(233,69,96,.3)">🔥RUSH</span>`:`<span class="rbadge ${a.type==='H'?'bh':'bm'}">${a.type==='H'?'HONOR':'MEDAL'}</span>`);
     return `
-      <div class="card click ${a.earned?'done':(isRush?'rush':'')}" onclick="window.open(awardUrl(a),'_blank')">
+      <div class="card ${a.earned?'done':(isRush?'rush':'')}">
         <div class="chtop"><div class="chname">${a.name}</div>${badge}</div>
         <div class="chdesc">${a.desc}</div>
         ${a.goal&&a.statKey?`
