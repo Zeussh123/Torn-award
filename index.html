@@ -29,6 +29,18 @@ button,input,select,textarea{font-family:inherit}a{color:inherit}.mono{font-fami
 .toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;align-items:center}.toolbar input,.toolbar select{background:var(--panel);border:1px solid var(--line);color:var(--text);border-radius:11px;padding:10px 12px;font-size:12px;outline:none}.toolbar input{min-width:240px;flex:1}.pill{border:1px solid var(--line);background:var(--panel2);color:var(--muted);padding:9px 12px;border-radius:99px;font-size:12px;font-weight:800;cursor:pointer}.pill.on{border-color:var(--red);color:white;background:rgba(200,50,50,.16)}
 .combo{border-left:4px solid var(--red);background:linear-gradient(90deg,rgba(200,50,50,.08),rgba(17,19,24,.92))}.comboTop{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.score{font-family:var(--mono);font-size:22px;font-weight:800;color:var(--gold)}.steps{background:#090a0d;border:1px solid var(--line);border-radius:12px;padding:10px;margin:10px 0;color:#c8d0da;font-size:12px;line-height:1.5}.awardLine{display:flex;align-items:center;gap:8px;padding:7px 0;border-top:1px solid rgba(255,255,255,.04);font-size:12px}.dot{width:7px;height:7px;border-radius:99px;background:var(--red2)}.dot.done{background:var(--green)}
 .columns{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.col{background:rgba(17,19,24,.7);border:1px dashed var(--line);border-radius:16px;padding:12px;min-height:260px}.col h3{font-size:13px;text-transform:uppercase;letter-spacing:.09em;font-family:var(--mono);color:var(--muted);margin:0 0 10px}.smallcard{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px;margin-bottom:8px;font-size:12px}.empty{padding:42px;text-align:center;color:var(--muted)}.err{background:rgba(200,50,50,.13);border:1px solid rgba(200,50,50,.35);color:#ff8b8b;padding:14px;border-radius:14px;margin:20px 0}.loading{display:grid;place-items:center;gap:12px;padding:80px;color:var(--muted)}.spinner{width:32px;height:32px;border-radius:99px;border:3px solid var(--line);border-top-color:var(--red);animation:spin .8s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
+
+.calcPanel{margin-top:12px;border-top:1px solid var(--line);padding-top:12px}
+.calcPanel h4{margin:0 0 8px;font-size:12px;text-transform:uppercase;letter-spacing:.09em;font-family:var(--mono);color:var(--muted)}
+.calcRow{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:8px 0;font-size:12px;color:var(--muted)}
+.calcRow select,.calcRow input{background:#090a0d;border:1px solid var(--line);color:var(--text);border-radius:8px;padding:5px 7px;font-size:11px;max-width:92px}
+.costBox{margin-top:10px;background:#090a0d;border:1px solid var(--line);border-radius:12px;padding:9px}
+.costGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:7px}
+.costCell{background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.055);border-radius:9px;padding:7px;text-align:center}
+.costCell b{display:block;font-size:12px;color:var(--text)}
+.costCell span{display:block;margin-top:3px;font-family:var(--mono);font-size:10px;color:var(--muted)}
+.costNote{font-size:10.5px;line-height:1.45;color:var(--muted)}
+
 @media(max-width:900px){.layout{grid-template-columns:1fr}.side{position:static;height:auto;display:flex;overflow:auto;border-right:0;border-bottom:1px solid var(--line)}.navbtn{width:auto;white-space:nowrap}.kpis{grid-template-columns:repeat(2,1fr)}.widegrid,.columns{grid-template-columns:1fr}.keyrow{flex-direction:column}}
 </style>
 </head>
@@ -433,6 +445,7 @@ const ATTACK_COMBOS=[
 
 
 const fmt=n=>Number(n||0).toLocaleString();
+const fmtTime=h=>{if(h==null||!isFinite(h))return '—'; if(h<1)return Math.ceil(h*60)+' min'; if(h<48)return (Math.round(h*10)/10)+' h'; return (Math.round(h/24*10)/10)+' d'};
 const STATE={tab:'dashboard',data:null,awards:[],filterCat:'all',filterType:'all',filterTracking:'all',q:'',showEarned:false,sort:'smart'};
 const STORE='torn-merit-os-v1';
 function prefs(){try{return JSON.parse(localStorage.getItem(STORE)||'{}')}catch{return {}}}
@@ -507,17 +520,121 @@ function enrichAward(a){
    if(a.left<=10) effort='instant'; else if(a.left<=50) effort='quick'; else if(a.left<=500) effort='grind'; else effort='long';
  }
  if(['travel','casino','drugs'].includes(a.cat)) cost='paid'; else if(['attacks','weapons','crimes','gym'].includes(a.cat)) cost='action'; else cost='mixed';
- return {...a,priority:pr,status:st,effort,cost,speed};
+ const base={...a,priority:pr,status:st,effort,cost,speed};
+ return {...base,costEstimate:actionCostModel(base)};
 }
+
+function calcSettings(){
+ const p=prefs();
+ return {
+  donator:p.calc_donator??true,
+  xanax:Math.max(0,Math.min(3,Number(p.calc_xanax??0))),
+  refill:p.calc_refill??false,
+  cannabis:p.calc_cannabis??false,
+  nnb:Math.max(15,Math.min(120,Number(p.calc_nnb??35))),
+  raceMinutes:Math.max(2,Math.min(60,Number(p.calc_race_minutes??5))),
+  attacksPerXanax:p.calc_attacks_per_xanax??25
+ };
+}
+function setCalc(k,v){pset('calc_'+k,v);STATE.awards=STATE.awards.map(enrichAward);renderShell();render();}
+function dailyEnergyBudget(c=calcSettings()){
+ // Torn Wiki: donator/subscriber refill is 5E/10m to 150; non-donator is 5E/15m to 100.
+ const natural=c.donator?720:480;
+ const startCap=c.donator?150:100;
+ return natural + startCap + (c.xanax*250) + (c.refill?startCap:0);
+}
+function dailyNerveBudget(c=calcSettings()){
+ // Torn Wiki: nerve regenerates 1 every 5 minutes. Cannabis gives 8-12 nerve; use 10 avg.
+ return 288 + c.nnb + (c.cannabis?10:0);
+}
+function actionCostModel(a, c=calcSettings()){
+ if(a.earned) return {kind:'done',energy:0,nerve:0,actions:0,hours:0,accuracy:'done',note:'Already unlocked on Torn.'};
+ if(a.tracking==='manual' || a.left===null || a.lockedDespiteStats){
+   return {kind:'manual',energy:null,nerve:null,actions:null,hours:null,accuracy:'manual',note:a.trackingReason||'No exact State/Goal counter available. Manual or RNG progress.'};
+ }
+ const left=Math.max(0,a.left||0), stat=a.statKey||'', desc=(a.desc||'').toLowerCase();
+ let energy=0, nerve=0, actions=left, hours=null, accuracy='estimated', note='Estimated from the mapped Torn personalstats counter.';
+ const attackStats=new Set(['attackswon','attackhits','attackcriticalhits','attacksstealthed','defendswon','attacksdraw','attacksassisted','onehitkills','bountiescollected','moneymugged','attackdamage','rankedwarhits','rifhits','smghits','pishits','shohits','slahits','piehits','axehits','machits','h2hhits','grehits','yourunaway','theyrunaway','respectforfaction','bestkillstreak']);
+ const nerveStats=new Set(['criminaloffenses','vandalism','theft','counterfeiting','fraud','illicitservices','cybercrime','extortion','illegalproduction','peoplebusted']);
+ if(attackStats.has(stat)){
+   // Most attack awards require attacks; use 25E per attack. For rounds fired, actions vary wildly by weapon, so keep it manual-ish.
+   if(stat==='roundsfired'){
+     energy=Math.ceil(left/20)*25;
+     actions=Math.ceil(left/20);
+     accuracy='rough';
+     note='Rounds fired depends heavily on weapon speed, reloads, misses and fight length. Assumes ~20 rounds fired per 25E attack.';
+   }else if(stat==='attackdamage'){
+     energy=Math.ceil(left/5000)*25;
+     actions=Math.ceil(left/5000);
+     accuracy='rough';
+     note='Damage per attack depends on your battle stats, target and weapons. Assumes ~5,000 damage per attack.';
+   }else if(stat==='moneymugged'){
+     energy=25;
+     actions=1;
+     accuracy='manual';
+     note='Money mugged depends on the target cash. Energy shown is for one mug attempt; amount is not predictable.';
+   }else{
+     energy=left*25;
+     actions=left;
+     accuracy='good';
+     note='Assumes one 25E attack per progress point. Combo setups can reduce effective time when multiple awards progress together.';
+   }
+   hours=energy/dailyEnergyBudget(c)*24;
+ }else if(nerveStats.has(stat)){
+   nerve=left*1;
+   actions=left;
+   accuracy='rough';
+   note='Uses 1 nerve per offense as a conservative baseline. Real Crimes 2.0 actions have different nerve costs, so treat this as a lower-bound estimate.';
+   hours=nerve/dailyNerveBudget(c)*24;
+ }else if(stat==='raceswon'){
+   actions=left;
+   energy=0; nerve=0;
+   hours=left*c.raceMinutes;
+   accuracy='estimated';
+   note='Uses your configured average race length. Race wins depend on car/class/competition.';
+ }else if(stat==='racesentered'){
+   actions=left; hours=left*c.raceMinutes; accuracy='estimated'; note='Uses your configured average race length.';
+ }else if(stat==='traveltimes'){
+   actions=left; hours=left*2; accuracy='rough'; note='Assumes ~2h average round trip. Actual country routes vary a lot.';
+ }else if(stat.endsWith('travel')){
+   actions=left; hours=left*2; accuracy='rough'; note='Assumes ~2h average round trip for country-specific travel awards.';
+ }else if(stat==='traveltime'){
+   actions=null; hours=left/3600; accuracy='good'; note='Goal is time spent travelling; converted seconds to hours.';
+ }else if(stat==='xantaken'){
+   actions=left; hours=c.xanax>0?(left/c.xanax*24):null; accuracy='good'; note='Based on your Xanax-per-day setting. Xanax gives +250 energy but has drug cooldown and overdose risk.';
+ }else if(stat==='cantaken'){
+   actions=left; hours=c.cannabis?left*24:null; accuracy='estimated'; note='Cannabis use is limited by drug cooldown and RNG overdose risk; toggle Cannabis ON to estimate one use/day.';
+ }else if(stat==='medicalitemsused'){
+   actions=left; hours=null; accuracy='manual'; note='Medical items are limited by cooldown and item availability. Exact time depends on med cooldown.';
+ }else if(stat==='jobpointsused'){
+   actions=left; hours=null; accuracy='manual'; note='Job points/day depends on your job/company position. Configure manually in a future version.';
+ }else if(stat==='age'||stat==='daysbeendonator'||stat==='factiondays'||stat==='activestreak'){
+   actions=left; hours=left*24; accuracy='good'; note='Time-gated award. Converted remaining days to calendar time.';
+ }else{
+   actions=left; hours=null; accuracy='manual'; note='No resource model yet for this stat. Progress is trackable, but energy/nerve/time cost is not reliable.';
+ }
+ return {kind:'estimate',energy,nerve,actions,hours,accuracy,note};
+}
+function costHtml(a){
+ const c=a.costEstimate||actionCostModel(a);
+ if(c.kind==='done') return `<div class="costBox"><div class="costNote">✅ ${c.note}</div></div>`;
+ if(c.kind==='manual') return `<div class="costBox"><div class="costGrid"><div class="costCell"><b>—</b><span>energy</span></div><div class="costCell"><b>—</b><span>nerve</span></div><div class="costCell"><b>manual</b><span>time</span></div></div><div class="costNote">🎲 ${c.note}</div></div>`;
+ const en=c.energy==null?'—':fmt(Math.ceil(c.energy));
+ const nv=c.nerve==null?'—':fmt(Math.ceil(c.nerve));
+ const tm=c.hours==null?'manual':fmtTime(c.hours);
+ return `<div class="costBox"><div class="costGrid"><div class="costCell"><b>⚡ ${en}</b><span>energy</span></div><div class="costCell"><b>🧠 ${nv}</b><span>nerve</span></div><div class="costCell"><b>⏱ ${tm}</b><span>${c.accuracy}</span></div></div><div class="costNote">${c.note}</div></div>`;
+}
+
 function renderShell(){
  const nav=[['dashboard','🏚️','Dashboard'],['next','🎯','Next merits'],['combos','⚡','Combo builder'],['explorer','🗂️','Awards explorer'],['tracker','📌','My tracker'],['guides','📖','Guides']];
- document.getElementById('side').innerHTML=nav.map(n=>`<button class="navbtn ${STATE.tab===n[0]?'on':''}" onclick="setTab('${n[0]}')"><span>${n[1]}</span><span>${n[2]}</span></button>`).join('')+`<div style="height:12px"></div><div class="panel" style="font-size:12px;color:var(--muted);line-height:1.6"><b style="color:white">Tip:</b><br>Use Explorer to star priorities, then My Tracker becomes your personal checklist.</div>`;
+ const c=calcSettings();
+ document.getElementById('side').innerHTML=nav.map(n=>`<button class="navbtn ${STATE.tab===n[0]?'on':''}" onclick="setTab('${n[0]}')"><span>${n[1]}</span><span>${n[2]}</span></button>`).join('')+`<div style="height:12px"></div><div class="panel calcPanel" style="font-size:12px;color:var(--muted);line-height:1.6"><h4>Cost model</h4><div class="calcRow"><span>Donator / Founder</span><input type="checkbox" ${c.donator?'checked':''} onchange="setCalc('donator',this.checked)"></div><div class="calcRow"><span>Xanax / day</span><select onchange="setCalc('xanax',Number(this.value))"><option value="0" ${c.xanax===0?'selected':''}>0</option><option value="1" ${c.xanax===1?'selected':''}>1</option><option value="2" ${c.xanax===2?'selected':''}>2</option><option value="3" ${c.xanax===3?'selected':''}>3</option></select></div><div class="calcRow"><span>Daily energy refill</span><input type="checkbox" ${c.refill?'checked':''} onchange="setCalc('refill',this.checked)"></div><div class="calcRow"><span>Cannabis nerve</span><input type="checkbox" ${c.cannabis?'checked':''} onchange="setCalc('cannabis',this.checked)"></div><div class="calcRow"><span>Nerve bar</span><input type="number" value="${c.nnb}" min="15" max="120" onchange="setCalc('nnb',Number(this.value))"></div><div class="calcRow"><span>Race min.</span><input type="number" value="${c.raceMinutes}" min="2" max="60" onchange="setCalc('race_minutes',Number(this.value))"></div><div style="margin-top:8px;font-family:var(--mono);font-size:11px;color:var(--muted)">Daily budget: ⚡ ${fmt(Math.round(dailyEnergyBudget(c)))} · 🧠 ${fmt(Math.round(dailyNerveBudget(c)))}</div></div><div class="panel" style="font-size:12px;color:var(--muted);line-height:1.6"><b style="color:white">Tip:</b><br>Use Explorer to star priorities, then My Tracker becomes your personal checklist.</div>`;
 }
 function setTab(t){STATE.tab=t; renderShell(); render()}
 function content(h){document.getElementById('content').innerHTML=h}
 function renderStats(){
- const d=STATE.data,a=STATE.awards; const missing=a.filter(x=>!x.earned).length; const rush=a.filter(x=>!x.earned&&!x.lockedDespiteStats&&x.left!==null&&x.left<=50).length; const high=a.filter(x=>!x.earned&&x.priority==='high').length; const exact=a.filter(x=>!x.earned&&x.tracking==='exact').length; const manual=a.filter(x=>!x.earned&&x.tracking==='manual').length; const verify=a.filter(x=>!x.earned&&x.lockedDespiteStats).length;
- document.getElementById('stats').innerHTML=`<div class="kpis"><div class="kpi"><div class="l">Operative</div><div class="v">${d.name}</div><div class="s">Lvl ${d.level} · ${d.rank}</div></div><div class="kpi"><div class="l">Missing awards</div><div class="v">${missing}</div><div class="s">${exact} accurate · ${manual} manual · ${verify} verify</div></div><div class="kpi"><div class="l">Fast targets</div><div class="v">${rush}</div><div class="s">≤ 50 safe trackable actions left</div></div><div class="kpi"><div class="l">High priority</div><div class="v">${high}</div><div class="s">Your pinned targets</div></div></div>`;
+ const d=STATE.data,a=STATE.awards,c=calcSettings(); const missing=a.filter(x=>!x.earned).length; const rush=a.filter(x=>!x.earned&&!x.lockedDespiteStats&&x.left!==null&&x.left<=50).length; const high=a.filter(x=>!x.earned&&x.priority==='high').length; const exact=a.filter(x=>!x.earned&&x.tracking==='exact').length; const manual=a.filter(x=>!x.earned&&x.tracking==='manual').length; const verify=a.filter(x=>!x.earned&&x.lockedDespiteStats).length;
+ document.getElementById('stats').innerHTML=`<div class="kpis"><div class="kpi"><div class="l">Operative</div><div class="v">${d.name}</div><div class="s">Lvl ${d.level} · ${d.rank}</div></div><div class="kpi"><div class="l">Missing awards</div><div class="v">${missing}</div><div class="s">${exact} accurate · ${manual} manual · ${verify} verify</div></div><div class="kpi"><div class="l">Daily budget</div><div class="v">⚡ ${fmt(Math.round(dailyEnergyBudget(c)))}</div><div class="s">🧠 ${fmt(Math.round(dailyNerveBudget(c)))} nerve/day · ${c.xanax} xanax</div></div><div class="kpi"><div class="l">High priority</div><div class="v">${high}</div><div class="s">Your pinned targets</div></div></div>`;
 }
 function render(){renderStats(); if(STATE.tab==='dashboard') return renderDashboard(); if(STATE.tab==='next') return renderNext(); if(STATE.tab==='combos') return renderCombosSmart(); if(STATE.tab==='explorer') return renderExplorer(); if(STATE.tab==='tracker') return renderTracker(); if(STATE.tab==='guides') return renderGuides();}
 function card(a,opts={}){
@@ -532,7 +649,7 @@ function card(a,opts={}){
  }else{
   prog=`<div class="progress"><div class="track"><div class="fill" style="width:${a.pct}%"></div></div><div class="pct">${a.pct}%</div></div><div class="meta"><span>${fmt(a.val)} / ${fmt(a.goal)}</span><span>${fmt(a.left)} left</span></div><div class="tagrow">${trackingTag(a)}</div>`;
  }
- return `<div class="${cls}"><div class="cardHead"><img class="ico" src="${apiIcon(a)}" onerror="this.style.display='none'"><div class="ctxt"><div class="title">${a.name} <span class="tag ${a.type==='H'?'blue':'gold'}">${a.type==='H'?'HONOR':'MEDAL'}</span></div><div class="desc">${a.desc||'No description available.'}</div><div class="tagrow"><span class="tag">${a.cat}</span><span class="tag">${a.statKey||'manual'}</span><span class="tag ${a.effort==='instant'?'green':a.effort==='quick'?'gold':''}">${a.effort}</span>${a.priority!=='none'?`<span class="tag red">${a.priority}</span>`:''}</div>${prog}</div></div><div class="actions"><button class="mini star ${a.priority==='high'?'on':''}" onclick="setPriority('${awardKey(a)}','high')">⭐ High</button><button class="mini ${a.priority==='medium'?'on':''}" onclick="setPriority('${awardKey(a)}','medium')">Medium</button><button class="mini ${a.priority==='low'?'on':''}" onclick="setPriority('${awardKey(a)}','low')">Low</button><button class="mini" onclick="clearPriority('${awardKey(a)}')">Clear</button><button class="mini donebtn" onclick="setStatus('${awardKey(a)}','progress')">In progress</button><button class="mini" onclick="openAwardByKey('${awardKey(a)}')">Open</button></div></div>`;
+ return `<div class="${cls}"><div class="cardHead"><img class="ico" src="${apiIcon(a)}" onerror="this.style.display='none'"><div class="ctxt"><div class="title">${a.name} <span class="tag ${a.type==='H'?'blue':'gold'}">${a.type==='H'?'HONOR':'MEDAL'}</span></div><div class="desc">${a.desc||'No description available.'}</div><div class="tagrow"><span class="tag">${a.cat}</span><span class="tag">${a.statKey||'manual'}</span><span class="tag ${a.effort==='instant'?'green':a.effort==='quick'?'gold':''}">${a.effort}</span>${a.priority!=='none'?`<span class="tag red">${a.priority}</span>`:''}</div>${prog}${costHtml(a)}</div></div><div class="actions"><button class="mini star ${a.priority==='high'?'on':''}" onclick="setPriority('${awardKey(a)}','high')">⭐ High</button><button class="mini ${a.priority==='medium'?'on':''}" onclick="setPriority('${awardKey(a)}','medium')">Medium</button><button class="mini ${a.priority==='low'?'on':''}" onclick="setPriority('${awardKey(a)}','low')">Low</button><button class="mini" onclick="clearPriority('${awardKey(a)}')">Clear</button><button class="mini donebtn" onclick="setStatus('${awardKey(a)}','progress')">In progress</button><button class="mini" onclick="openAwardByKey('${awardKey(a)}')">Open</button></div></div>`;
 }
 function openAwardByKey(k){const a=STATE.awards.find(x=>awardKey(x)===k);if(a)openAward(a)}
 function setPriority(k,v){pset('priority_'+k,v);STATE.awards=STATE.awards.map(a=>awardKey(a)===k?{...a,priority:v}:a);render()}
@@ -542,7 +659,7 @@ function scoreAward(a){ if(a.earned) return 1e9; let s=0; if(a.left===null) s+=a
 function renderDashboard(){
  const missing=STATE.awards.filter(a=>!a.earned).sort((a,b)=>scoreAward(a)-scoreAward(b)); const quick=missing.filter(a=>!a.lockedDespiteStats&&a.left!==null&&a.left<=50).slice(0,6); const cats=['attacks','weapons','crimes','travel','drugs','casino','gym','misc'];
  let catHtml=cats.map(c=>{const all=STATE.awards.filter(a=>a.cat===c);const done=all.filter(a=>a.earned).length;const pct=all.length?Math.round(done/all.length*100):0;return `<div class="smallcard"><b>${c.toUpperCase()}</b><div class="progress"><div class="track"><div class="fill" style="width:${pct}%"></div></div><div class="pct">${pct}%</div></div><div class="meta"><span>${done}/${all.length}</span><span>${all.length-done} missing</span></div></div>`}).join('');
- content(`<div class="sectionTitle"><div><h2>Command dashboard</h2><p>Your best opportunities and weak categories.</p></div></div><div class="widegrid"><div class="panel"><h3 style="margin-top:0">Fastest actionable merits</h3><div class="grid">${quick.map(a=>card(a)).join('')||'<div class="empty">No fast trackable awards found.</div>'}</div></div><div class="panel"><h3 style="margin-top:0">Category heatmap</h3>${catHtml}<button class="primary" style="width:100%;margin-top:10px" onclick="setTab('explorer')">Open full explorer</button></div></div>`)
+ content(`<div class="sectionTitle"><div><h2>Command dashboard</h2><p>Your best opportunities, weak categories, and resource estimates based on your settings.</p></div></div><div class="widegrid"><div class="panel"><h3 style="margin-top:0">Fastest actionable merits</h3><div class="grid">${quick.map(a=>card(a)).join('')||'<div class="empty">No fast trackable awards found.</div>'}</div></div><div class="panel"><h3 style="margin-top:0">Category heatmap</h3>${catHtml}<button class="primary" style="width:100%;margin-top:10px" onclick="setTab('explorer')">Open full explorer</button></div></div>`)
 }
 function renderNext(){
  const groups=['attacks','weapons','crimes','travel','drugs','casino','gym','misc'];
