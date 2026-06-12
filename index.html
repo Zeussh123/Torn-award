@@ -76,7 +76,8 @@ const AWARD_MAP = {
   H254:{s:'onehitkills',g:1},H517:{s:'onehitkills',g:100},
   // Bounties
   H232:{s:'bountiescollected',g:250},H236:{s:'moneymugged',g:10000000},
-  H800:{s:'bountiesplaced',g:10},
+  // H800 Surplus: use 100 rounds of special ammunition. Not reliably exposed in personalstats.
+  // H800 is handled as manual by TRACKING_OVERRIDES.
   // Mugging
   H247:{s:'moneymugged',g:1000000},H739:{s:'moneymugged',g:1},
   H955:{s:'moneymugged',g:1},
@@ -244,8 +245,10 @@ function getAwardMapping(type, id) {
 // manual    = Torn personalstats does not expose the exact sub-progress needed
 const TRACKING_OVERRIDES={
   H676:{mode:'manual',reason:'This honor requires successfully burgling all 34 unique areas. Torn personalstats exposes total crime/offense counters, not the unique burglary-area checklist.'},
+  H800:{mode:'manual',reason:'Surplus requires using 100 rounds of special ammunition. This is not the same as bounties placed, and Torn personalstats does not expose a reliable special-ammo-rounds counter here.'},
 };
 const MANUAL_PATTERNS=[
+  /special ammunition/i,/special ammo/i,/use\s+\d+\s+rounds\s+of\s+special/i,
   /burgle all\s+\d+\s+areas/i,/all\s+\d+\s+areas/i,/all available areas/i,
   /each\s+.*area/i,/unique\s+.*area/i,/every\s+.*area/i,/all\s+.*areas/i,
   /all\s+.*temporary weapons/i,/all\s+.*weapons/i,/all\s+.*items/i,/complete\s+.*collection/i,
@@ -285,6 +288,7 @@ function guessStatKey(desc,name){
   if(d.includes('finishing hit') && d.includes('clubbing')) return 'axehits';
   if(d.includes('finishing hit') && d.includes('mechanical')) return 'machits';
   if(d.includes('finishing hit') && (d.includes('fist')||d.includes('kick'))) return 'h2hhits';
+  if((d.includes('special ammunition')||d.includes('special ammo')) && d.includes('round')) return null;
   if(d.includes('fire') && d.includes('round')) return 'roundsfired';
   if(d.includes('theft offense')||d.includes('theft crime')) return 'theft';
   if(d.includes('vandalism offense')||d.includes('vandalism crime')) return 'vandalism';
