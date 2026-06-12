@@ -161,16 +161,206 @@ const TYPE_CAT={
   'commitment':'misc','level':'misc','networth':'misc','default':'misc'
 };
 
-// Stat key mapping from description keywords
+// Precise mapping: honor/medal ID → {stat, goal}
+// Honors (H) and Medals (M) with their real Torn API IDs
+const AWARD_MAP = {
+  // ── HONORS ──
+  // Camo (attackswon)
+  H39:{s:'attackswon',g:5},H40:{s:'attackswon',g:20},H41:{s:'attackswon',g:50},
+  H42:{s:'attackswon',g:100},H43:{s:'attackswon',g:250},H44:{s:'attackswon',g:500},
+  H45:{s:'attackswon',g:1000},H46:{s:'attackswon',g:2000},H47:{s:'attackswon',g:3000},
+  H48:{s:'attackswon',g:4000},H49:{s:'attackswon',g:5000},
+  // Kill streak
+  H15:{s:'bestkillstreak',g:10},H16:{s:'bestkillstreak',g:100},H17:{s:'bestkillstreak',g:500},
+  // Critical hits
+  H20:{s:'attackcriticalhits',g:25},H227:{s:'attackcriticalhits',g:1000},
+  // Rounds fired
+  H140:{s:'roundsfired',g:1000},H151:{s:'roundsfired',g:10000},
+  H834:{s:'roundsfired',g:100000},H836:{s:'roundsfired',g:1000000},
+  // Weapon finishing hits
+  H146:{s:'rifhits',g:100},H148:{s:'smghits',g:100},H145:{s:'pishits',g:100},
+  H147:{s:'shohits',g:100},H150:{s:'slahits',g:100},H149:{s:'piehits',g:100},
+  H142:{s:'axehits',g:100},H28:{s:'machits',g:100},H141:{s:'machits',g:100},
+  H515:{s:'h2hhits',g:100},H143:{s:'grehits',g:100},H144:{s:'machits',g:100},
+  // Defends
+  H22:{s:'defendswon',g:50},
+  // Stealthed
+  H27:{s:'attacksstealthed',g:100},
+  // Assists
+  H490:{s:'attacksassisted',g:250},H639:{s:'attacksassisted',g:1},
+  // One hit kills
+  H254:{s:'onehitkills',g:1},H517:{s:'onehitkills',g:100},
+  // Bounties
+  H232:{s:'bountiescollected',g:250},H236:{s:'moneymugged',g:10000000},
+  H800:{s:'bountiesplaced',g:10},
+  // Mugging
+  H247:{s:'moneymugged',g:1000000},H739:{s:'moneymugged',g:1},
+  H955:{s:'moneymugged',g:1},
+  // Damage
+  H740:{s:'attackdamage',g:5000},H741:{s:'attackdamage',g:10000},H786:{s:'attackdamage',g:15000},
+  H1002:{s:'attackdamage',g:1000000},H1004:{s:'attackdamage',g:100000},
+  H1001:{s:'attackdamage',g:10000000},H1003:{s:'attackdamage',g:100000000},
+  // Chains
+  H253:{s:'rankedwarhits',g:10},H255:{s:'rankedwarhits',g:100},
+  H257:{s:'rankedwarhits',g:1000},H475:{s:'rankedwarhits',g:10000},H476:{s:'rankedwarhits',g:100000},
+  H256:{s:'rankedwarhits',g:10},H477:{s:'rankedwarhits',g:100},H478:{s:'rankedwarhits',g:1000},
+  // Attacks won misc
+  H228:{s:'attackswon',g:1000},H601:{s:'attackhits',g:10000},
+  H270:{s:'attacksdraw',g:100},
+  // Travel
+  H11:{s:'traveltimes',g:100},H165:{s:'traveltimes',g:1000},
+  H541:{s:'itemsboughtabroad',g:100},H542:{s:'itemsboughtabroad',g:1000},H543:{s:'itemsboughtabroad',g:10000},
+  H130:{s:'argtravel',g:50},H131:{s:'mextravel',g:50},H132:{s:'dubtravel',g:50},
+  H133:{s:'hawtravel',g:50},H134:{s:'japtravel',g:50},H135:{s:'lontravel',g:50},
+  H136:{s:'soutravel',g:50},H137:{s:'switravel',g:50},H138:{s:'chitravel',g:50},
+  H139:{s:'cantravel',g:50},H272:{s:'caytravel',g:50},
+  H549:{s:'traveltime',g:604800},H567:{s:'traveltime',g:2678400},H557:{s:'traveltime',g:31536000},
+  // Drugs (honors)
+  H37:{s:'xantaken',g:50},H29:{s:'cantaken',g:50},H30:{s:'exttaken',g:50},
+  H26:{s:'cantaken',g:1},
+  // Hospital
+  H903:{s:'hospital',g:250},H367:{s:'hospital',g:1},
+  // Crimes (honors)
+  H552:{s:'organisedcrimes',g:100},H251:{s:'criminaloffenses',g:10000},
+  H676:{s:'criminaloffenses',g:34},
+  // Job points
+  H4:{s:'jobpointsused',g:100},H164:{s:'jobpointsused',g:1000},H742:{s:'jobpointsused',g:10000},
+  // Gym
+  H686:{s:'totalstats',g:10000},H720:{s:'totalstats',g:1000},H687:{s:'totalstats',g:100},
+  H723:{s:'totalstats',g:100000},H694:{s:'totalstats',g:1000000},
+  H708:{s:'totalstats',g:10000000},H679:{s:'totalstats',g:100000000},
+  H721:{s:'totalstats',g:1000000000},
+  // Awards count
+  H606:{s:'awards',g:100},H229:{s:'awards',g:250},H614:{s:'awards',g:500},
+  // Misc
+  H1:{s:'cityfinds',g:50},H238:{s:'dumpfinds',g:1000},
+  H266:{s:'refills',g:250},H395:{s:'maxenergy',g:1000},
+  H520:{s:'donatedmoney',g:100000},H521:{s:'donatedmoney',g:1000000},
+  H873:{s:'activestreak',g:100},
+  H844:{s:'workingstats',g:10000},
+
+  // ── MEDALS ──
+  // Attacks
+  M174:{s:'attackswon',g:50},M175:{s:'attackswon',g:250},M176:{s:'attackswon',g:500},
+  M177:{s:'attackswon',g:2500},M178:{s:'attackswon',g:10000},
+  // Defends
+  M179:{s:'defendswon',g:50},M180:{s:'defendswon',g:250},M181:{s:'defendswon',g:500},
+  M182:{s:'defendswon',g:2500},M183:{s:'defendswon',g:10000},
+  // Escapes
+  M184:{s:'yourunaway',g:50},M185:{s:'yourunaway',g:250},M186:{s:'yourunaway',g:1000},
+  M187:{s:'theyrunaway',g:50},M188:{s:'theyrunaway',g:250},M189:{s:'theyrunaway',g:1000},
+  // Kill streak
+  M190:{s:'bestkillstreak',g:25},M191:{s:'bestkillstreak',g:50},M192:{s:'bestkillstreak',g:100},
+  M193:{s:'bestkillstreak',g:250},M194:{s:'bestkillstreak',g:500},
+  // Critical hits
+  M195:{s:'attackcriticalhits',g:500},M196:{s:'attackcriticalhits',g:2500},M197:{s:'attackcriticalhits',g:10000},
+  // Bounties
+  M201:{s:'bountiescollected',g:25},M202:{s:'bountiescollected',g:100},M203:{s:'bountiescollected',g:500},
+  // Faction respect
+  M215:{s:'respectforfaction',g:100},M216:{s:'respectforfaction',g:500},
+  M217:{s:'respectforfaction',g:1000},M218:{s:'respectforfaction',g:2500},
+  M219:{s:'respectforfaction',g:5000},M220:{s:'respectforfaction',g:10000},
+  M221:{s:'respectforfaction',g:25000},M222:{s:'respectforfaction',g:50000},
+  M223:{s:'respectforfaction',g:75000},M224:{s:'respectforfaction',g:100000},
+  // Medical items
+  M198:{s:'medicalitemsused',g:500},M199:{s:'medicalitemsused',g:5000},M200:{s:'medicalitemsused',g:25000},
+  // City finds
+  M204:{s:'cityfinds',g:10},M205:{s:'cityfinds',g:50},M206:{s:'cityfinds',g:100},
+  // Travel
+  M207:{s:'traveltimes',g:25},M208:{s:'traveltimes',g:100},M209:{s:'traveltimes',g:500},
+  // Donator
+  M210:{s:'daysbeendonator',g:30},M211:{s:'daysbeendonator',g:100},
+  M212:{s:'daysbeendonator',g:250},M213:{s:'daysbeendonator',g:500},M214:{s:'daysbeendonator',g:1000},
+  // Networth
+  M89:{s:'networth',g:100000},M90:{s:'networth',g:250000},M91:{s:'networth',g:500000},
+  M92:{s:'networth',g:1000000},M93:{s:'networth',g:2500000},M94:{s:'networth',g:10000000},
+  M95:{s:'networth',g:25000000},M96:{s:'networth',g:100000000},
+  M236:{s:'networth',g:250000000},M237:{s:'networth',g:1000000000},
+  M238:{s:'networth',g:2500000000},M239:{s:'networth',g:10000000000},
+  M240:{s:'networth',g:25000000000},M241:{s:'networth',g:100000000000},
+  // Crimes 2.0 — Criminal offenses total
+  M242:{s:'criminaloffenses',g:100},M243:{s:'criminaloffenses',g:200},
+  M244:{s:'criminaloffenses',g:300},M245:{s:'criminaloffenses',g:500},
+  M246:{s:'criminaloffenses',g:750},M247:{s:'criminaloffenses',g:1000},
+  M248:{s:'criminaloffenses',g:1500},M249:{s:'criminaloffenses',g:2000},
+  M250:{s:'criminaloffenses',g:2500},M251:{s:'criminaloffenses',g:3000},
+  M252:{s:'criminaloffenses',g:4000},M253:{s:'criminaloffenses',g:5000},
+  M254:{s:'criminaloffenses',g:6000},M255:{s:'criminaloffenses',g:7500},M256:{s:'criminaloffenses',g:10000},
+  // Vandalism
+  M257:{s:'vandalism',g:100},M258:{s:'vandalism',g:200},M259:{s:'vandalism',g:300},
+  M260:{s:'vandalism',g:500},M261:{s:'vandalism',g:750},M262:{s:'vandalism',g:1000},
+  M263:{s:'vandalism',g:1500},M264:{s:'vandalism',g:2000},M265:{s:'vandalism',g:2500},
+  M266:{s:'vandalism',g:3000},M267:{s:'vandalism',g:4000},M268:{s:'vandalism',g:5000},
+  M269:{s:'vandalism',g:6000},M270:{s:'vandalism',g:7500},M271:{s:'vandalism',g:10000},
+  // Theft
+  M272:{s:'theft',g:100},M273:{s:'theft',g:200},M274:{s:'theft',g:300},
+  M275:{s:'theft',g:500},M276:{s:'theft',g:750},M277:{s:'theft',g:1000},
+  M278:{s:'theft',g:1500},M279:{s:'theft',g:2000},M280:{s:'theft',g:2500},
+  M281:{s:'theft',g:3000},M282:{s:'theft',g:4000},M283:{s:'theft',g:5000},
+  M284:{s:'theft',g:6000},M285:{s:'theft',g:7500},M286:{s:'theft',g:10000},
+  // Counterfeiting
+  M287:{s:'counterfeiting',g:100},M288:{s:'counterfeiting',g:200},M289:{s:'counterfeiting',g:300},
+  M290:{s:'counterfeiting',g:500},M291:{s:'counterfeiting',g:750},M292:{s:'counterfeiting',g:1000},
+  M293:{s:'counterfeiting',g:1500},M294:{s:'counterfeiting',g:2000},M295:{s:'counterfeiting',g:2500},
+  M296:{s:'counterfeiting',g:3000},M297:{s:'counterfeiting',g:4000},M298:{s:'counterfeiting',g:5000},
+  M299:{s:'counterfeiting',g:6000},M300:{s:'counterfeiting',g:7500},M301:{s:'counterfeiting',g:10000},
+  // Fraud
+  M302:{s:'fraud',g:100},M303:{s:'fraud',g:200},M304:{s:'fraud',g:300},
+  M305:{s:'fraud',g:500},M306:{s:'fraud',g:750},M307:{s:'fraud',g:1000},
+  M308:{s:'fraud',g:1500},M309:{s:'fraud',g:2000},M310:{s:'fraud',g:2500},
+  M311:{s:'fraud',g:3000},M312:{s:'fraud',g:4000},M313:{s:'fraud',g:5000},
+  M314:{s:'fraud',g:6000},M315:{s:'fraud',g:7500},M316:{s:'fraud',g:10000},
+  // Illicit Services
+  M317:{s:'illicitservices',g:100},M318:{s:'illicitservices',g:200},M319:{s:'illicitservices',g:300},
+  M320:{s:'illicitservices',g:500},M321:{s:'illicitservices',g:750},M322:{s:'illicitservices',g:1000},
+  M323:{s:'illicitservices',g:1500},M324:{s:'illicitservices',g:2000},M325:{s:'illicitservices',g:2500},
+  M326:{s:'illicitservices',g:3000},M327:{s:'illicitservices',g:4000},M328:{s:'illicitservices',g:5000},
+  M329:{s:'illicitservices',g:6000},M330:{s:'illicitservices',g:7500},M331:{s:'illicitservices',g:10000},
+  // Cybercrime
+  M332:{s:'cybercrime',g:100},M333:{s:'cybercrime',g:200},M334:{s:'cybercrime',g:300},
+  M335:{s:'cybercrime',g:500},M336:{s:'cybercrime',g:750},M337:{s:'cybercrime',g:1000},
+  M338:{s:'cybercrime',g:1500},M339:{s:'cybercrime',g:2000},M340:{s:'cybercrime',g:2500},
+  M341:{s:'cybercrime',g:3000},M342:{s:'cybercrime',g:4000},M343:{s:'cybercrime',g:5000},
+  M344:{s:'cybercrime',g:6000},M345:{s:'cybercrime',g:7500},M346:{s:'cybercrime',g:10000},
+  // Extortion
+  M347:{s:'extortion',g:100},M348:{s:'extortion',g:200},M349:{s:'extortion',g:300},
+  M350:{s:'extortion',g:500},M351:{s:'extortion',g:750},M352:{s:'extortion',g:1000},
+  M353:{s:'extortion',g:1500},M354:{s:'extortion',g:2000},M355:{s:'extortion',g:2500},
+  M356:{s:'extortion',g:3000},M357:{s:'extortion',g:4000},M358:{s:'extortion',g:5000},
+  M359:{s:'extortion',g:6000},M360:{s:'extortion',g:7500},M361:{s:'extortion',g:10000},
+  // Illegal Production
+  M362:{s:'illegalproduction',g:100},M363:{s:'illegalproduction',g:200},M364:{s:'illegalproduction',g:300},
+  M365:{s:'illegalproduction',g:500},M366:{s:'illegalproduction',g:750},M367:{s:'illegalproduction',g:1000},
+  M368:{s:'illegalproduction',g:1500},M369:{s:'illegalproduction',g:2000},M370:{s:'illegalproduction',g:2500},
+  M371:{s:'illegalproduction',g:3000},M372:{s:'illegalproduction',g:4000},M373:{s:'illegalproduction',g:5000},
+  M374:{s:'illegalproduction',g:6000},M375:{s:'illegalproduction',g:7500},M376:{s:'illegalproduction',g:10000},
+  // Faction days
+  M26:{s:'factiondays',g:100},M27:{s:'factiondays',g:200},M28:{s:'factiondays',g:300},
+  M29:{s:'factiondays',g:400},M108:{s:'factiondays',g:500},M109:{s:'factiondays',g:600},
+  M148:{s:'factiondays',g:700},M149:{s:'factiondays',g:800},M150:{s:'factiondays',g:900},M151:{s:'factiondays',g:1000},
+  // People busted
+  M30:{s:'peoplebusted',g:250},M31:{s:'peoplebusted',g:500},M32:{s:'peoplebusted',g:1000},
+  M33:{s:'peoplebusted',g:2000},M105:{s:'peoplebusted',g:4000},M106:{s:'peoplebusted',g:6000},M107:{s:'peoplebusted',g:8000},
+  // Rank medals (level-based — no easy stat key, skip progress)
+  // Service years
+  M225:{s:'age',g:365},M226:{s:'age',g:730},M227:{s:'age',g:1095},
+  M228:{s:'age',g:1460},M229:{s:'age',g:1825},M230:{s:'age',g:2190},
+  M231:{s:'age',g:2555},M232:{s:'age',g:2920},M234:{s:'age',g:3285},M235:{s:'age',g:3650},
+};
+
+function getAwardMapping(type, id) {
+  const key = type + id;
+  return AWARD_MAP[key] || null;
+}
+
+// Fallback stat key from description (for awards not in map)
 function guessStatKey(desc,name){
-  const d=desc.toLowerCase(),n=name.toLowerCase();
-  if(d.includes('kill streak')||d.includes('best kill streak')) return 'bestkillstreak';
+  const d=desc.toLowerCase();
+  if(d.includes('kill streak')) return 'bestkillstreak';
   if(d.includes('win') && d.includes('attack')) return 'attackswon';
   if(d.includes('critical hit')) return 'attackcriticalhits';
   if(d.includes('stealthed attack')) return 'attacksstealthed';
   if(d.includes('defend')) return 'defendswon';
-  if(d.includes('assist')) return 'attacksassisted';
-  if(d.includes('one hit kill')) return 'onehitkills';
   if(d.includes('finishing hit') && d.includes('rifle')) return 'rifhits';
   if(d.includes('finishing hit') && d.includes('smg')) return 'smghits';
   if(d.includes('finishing hit') && d.includes('pistol')) return 'pishits';
@@ -179,53 +369,38 @@ function guessStatKey(desc,name){
   if(d.includes('finishing hit') && d.includes('piercing')) return 'piehits';
   if(d.includes('finishing hit') && d.includes('clubbing')) return 'axehits';
   if(d.includes('finishing hit') && d.includes('mechanical')) return 'machits';
-  if(d.includes('finishing hit') && d.includes('fist')) return 'h2hhits';
-  if(d.includes('finishing hit') && d.includes('kick')) return 'h2hhits';
-  if(d.includes('finishing hit') && d.includes('heavy artillery')) return 'machits';
-  if(d.includes('finishing hit') && d.includes('machine gun')) return 'machits';
-  if(d.includes('finishing hit') && d.includes('temporary')) return 'grehits';
+  if(d.includes('finishing hit') && (d.includes('fist')||d.includes('kick'))) return 'h2hhits';
   if(d.includes('fire') && d.includes('round')) return 'roundsfired';
-  if(d.includes('bounty') && d.includes('collect')) return 'bountiescollected';
-  if(d.includes('bounty') && d.includes('place')) return 'bountiesplaced';
-  if(d.includes('mug')) return 'moneymugged';
-  if(d.includes('theft crime')) return 'theft';
-  if(d.includes('vandalism')||d.includes('vandal')||d.includes('graffiti crew')) return 'vandalism';
-  if(d.includes('fraud')) return 'fraud';
-  if(d.includes('criminal offense')||d.includes('criminal offenses')) return 'criminaloffenses';
-  if(d.includes('computer crime')) return 'cybercrime';
+  if(d.includes('theft offense')||d.includes('theft crime')) return 'theft';
+  if(d.includes('vandalism offense')||d.includes('vandalism crime')) return 'vandalism';
+  if(d.includes('fraud offense')||d.includes('fraud crime')) return 'fraud';
+  if(d.includes('cybercrime offense')) return 'cybercrime';
+  if(d.includes('counterfeiting offense')) return 'counterfeiting';
+  if(d.includes('illicit service offense')) return 'illicitservices';
+  if(d.includes('extortion offense')) return 'extortion';
+  if(d.includes('illegal production offense')) return 'illegalproduction';
+  if(d.includes('criminal offense')) return 'criminaloffenses';
   if(d.includes('organized crime')) return 'organisedcrimes';
-  if(d.includes('murder crime')) return 'criminaloffenses';
-  if(d.includes('auto theft')) return 'criminaloffenses';
-  if(d.includes('drug dealing')||d.includes('drug crime')) return 'drugsused';
-  if(d.includes('travel') && d.includes('time')) return 'traveltimes';
-  if(d.includes('travel') && d.includes('100 time')) return 'traveltimes';
-  if(d.includes('travel') && d.includes('25 time')) return 'traveltimes';
-  if(d.includes('travel') && d.includes('500 time')) return 'traveltimes';
-  if(d.includes('travel') && d.includes('1,000 time')) return 'traveltimes';
+  if(d.includes('travel') && (d.includes('time')||d.includes('abroad'))) return 'traveltimes';
   if(d.includes('import')) return 'itemsboughtabroad';
   if(d.includes('xanax')) return 'xantaken';
   if(d.includes('ecstasy')) return 'exttaken';
   if(d.includes('cannabis')) return 'cantaken';
   if(d.includes(' drug')) return 'drugsused';
-  if(d.includes('race')) return 'racesentered';
-  if(d.includes('networth')||d.includes('$100,000 for')||d.includes('$1,000,000 for')||d.includes('recorded networth')) return 'networth';
   if(d.includes('donator')) return 'daysbeendonator';
-  if(d.includes('strength')) return 'strength';
-  if(d.includes('defense')) return 'defense';
-  if(d.includes('dexterity')) return 'dexterity';
-  if(d.includes('speed')) return 'speed';
-  if(d.includes('total stat')) return 'totalstats';
-  if(d.includes('hospital')) return 'hospital';
-  if(d.includes('active') && d.includes('day')) return 'activestreak';
-  if(d.includes('job point')) return 'jobpointsused';
   if(d.includes('medical item')) return 'medicalitemsused';
   if(d.includes('city') && d.includes('find')) return 'cityfinds';
+  if(d.includes('total stat')) return 'totalstats';
+  if(d.includes('bust') && d.includes('jail')) return 'peoplebusted';
+  if(d.includes('respect')) return 'respectforfaction';
+  if(d.includes('race')) return 'racesentered';
+  if(d.includes('mug')) return 'moneymugged';
+  if(d.includes('recorded networth')||d.includes('networth')) return 'networth';
   return null;
 }
 
 function getGoalFromDesc(desc){
-  // Extract number from description
-  const m=desc.match(/(?:achieve|win|commit|travel|fire|collect|use|find|import|bust|reach level|reach the rank|have|make|earn|attain|participate in|complete|gain)\s+(?:a\s+)?(?:total of\s+)?(?:best\s+)?(?:kill streak of\s+)?([\d,]+)/i);
+  const m=desc.match(/(?:achieve|win|commit|travel|fire|collect|use|find|import|bust|reach level|have|make|earn|attain|participate in|complete|gain|acquire|deal|serve|be a donator for)\s+(?:a\s+)?(?:total of\s+)?(?:best\s+)?(?:kill streak of\s+)?([\d,]+)/i);
   if(m) return parseInt(m[1].replace(/,/g,''));
   const m2=desc.match(/\$([\d,]+)/);
   if(m2) return parseInt(m2[1].replace(/,/g,''));
@@ -319,8 +494,9 @@ function buildAwards(honorsDB,medalsDB,data){
 
   for(const h of honorsDB){
     const earned=earned_h.has(h.id);
-    const statKey=guessStatKey(h.description,h.name);
-    const goal=getGoalFromDesc(h.description);
+    const mapped=getAwardMapping('H',h.id);
+    const statKey=mapped?mapped.s:guessStatKey(h.description,h.name);
+    const goal=mapped?mapped.g:getGoalFromDesc(h.description);
     const cat=TYPE_CAT[h.type?.title||'misc']||'misc';
     const val=statKey?Math.max(0,stats[statKey]||0):0;
     const pct=goal&&statKey?Math.min(100,Math.round(val/goal*1000)/10):0;
@@ -330,8 +506,9 @@ function buildAwards(honorsDB,medalsDB,data){
 
   for(const m of medalsDB){
     const earned=earned_m.has(m.id);
-    const statKey=guessStatKey(m.description,m.name);
-    const goal=getGoalFromDesc(m.description);
+    const mapped=getAwardMapping('M',m.id);
+    const statKey=mapped?mapped.s:guessStatKey(m.description,m.name);
+    const goal=mapped?mapped.g:getGoalFromDesc(m.description);
     const cat=TYPE_CAT[m.type?.title||'misc']||'misc';
     const val=statKey?Math.max(0,stats[statKey]||0):0;
     const pct=goal&&statKey?Math.min(100,Math.round(val/goal*1000)/10):0;
