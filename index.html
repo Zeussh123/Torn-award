@@ -148,8 +148,8 @@ body.blue nav{background:rgba(6,13,26,.96)}
 <script>
 // ══ I18N ══
 const T={
-  en:{title:'Track Your <em>Torn Awards</em>',sub:'Enter your API key to see your progress, find rushable awards & smart combos.',note:'Key never stored — requests go directly to Torn API from your browser.<br>Get key at <a href="https://www.torn.com/preferences.php#tab=api" target="_blank">torn.com → Preferences → API</a> (Limited access is enough)<br><strong>⚠️ Must be hosted (GitHub Pages / Netlify) — local file:// won\'t work.</strong>',load:'Load',change:'Change Key',rush:'🔥 Rush',combos:'⚡ Combos',all:'All',attacks:'⚔️ Attacks',weapons:'🔫 Weapons',crimes:'🕵️ Crimes',travel:'✈️ Travel',drugs:'💊 Drugs',casino:'🎰 Casino',misc:'🎲 Misc',gym:'💪 Gym',t1:'⚡ Do it NOW — within 50',t2:'🔥 This week — within 200',t3:'🎯 Within 1,000',t4:'📅 Within 5,000',noRush:'No rushable awards found!',noAwards:'No awards match your filters.',showEarned:'Show earned',search:'Search...',how:'How:',left:'left',earned:'✓ Done',comboTitle:'⚡ Combos — Grind Multiple at Once',comboSub:'These award groups all progress from the same action.',loading:'Loading awards from Torn API...'},
-  fr:{title:'Suivi de Vos <em>Awards Torn</em>',sub:'Entrez votre clé API pour voir votre progression, trouver ce que vous pouvez rusher et découvrir des combos.',note:'Clé jamais stockée — les requêtes vont directement à l\'API Torn depuis votre navigateur.<br>Obtenez votre clé sur <a href="https://www.torn.com/preferences.php#tab=api" target="_blank">torn.com → Préférences → API</a> (Accès limité suffit)<br><strong>⚠️ Doit être hébergé (GitHub Pages / Netlify) — le fichier local file:// ne fonctionne pas.</strong>',load:'Charger',change:'Changer de clé',rush:'🔥 Rush',combos:'⚡ Combos',all:'Tous',attacks:'⚔️ Attaques',weapons:'🔫 Armes',crimes:'🕵️ Crimes',travel:'✈️ Voyage',drugs:'💊 Drogues',casino:'🎰 Casino',misc:'🎲 Misc',gym:'💪 Gym',t1:'⚡ À faire MAINTENANT — moins de 50',t2:'🔥 Cette semaine — moins de 200',t3:'🎯 Moins de 1 000',t4:'📅 Moins de 5 000',noRush:'Aucun award à rusher trouvé !',noAwards:'Aucun award ne correspond à vos filtres.',showEarned:'Afficher obtenus',search:'Rechercher...',how:'Comment:',left:'restant',earned:'✓ Obtenu',comboTitle:'⚡ Combos — Plusieurs Awards en Même Temps',comboSub:'Ces groupes d\'awards progressent tous avec la même action.',loading:'Chargement des awards depuis l\'API Torn...'}
+  en:{title:'Track Your <em>Torn Awards</em>',sub:'Enter your API key to see your progress, find rushable awards & smart combos.',note:'Key never stored — requests go directly to Torn API from your browser.<br>Get key at <a href="https://www.torn.com/preferences.php#tab=api" target="_blank">torn.com → Preferences → API</a> (Limited access is enough)<br><strong>⚠️ Must be hosted (GitHub Pages / Netlify) — local file:// won\'t work.</strong>',load:'Load',change:'Change Key',rush:'🔥 Rush',combos:'⚡ Combos',all:'All',attacks:'⚔️ Attacks',weapons:'🔫 Weapons',crimes:'🕵️ Crimes',travel:'✈️ Travel',drugs:'💊 Drugs',casino:'🎰 Casino',misc:'🎲 Misc',gym:'💪 Gym',t1:'⚡ Do it NOW — within 50',t2:'🔥 This week — within 200',t3:'🎯 Within 1,000',t4:'📅 Within 5,000',noRush:'No rushable awards found!',noAwards:'No awards match your filters.',showEarned:'Show earned',search:'Search...',how:'How:',left:'left',earned:'✓ Done',comboTitle:'⚡ Combos — Grind Multiple at Once',comboSub:'These award groups all progress from the same action.',loading:'Loading awards from Torn API...',tutos:'📖 Guides'},
+  fr:{title:'Suivi de Vos <em>Awards Torn</em>',sub:'Entrez votre clé API pour voir votre progression, trouver ce que vous pouvez rusher et découvrir des combos.',note:'Clé jamais stockée — les requêtes vont directement à l\'API Torn depuis votre navigateur.<br>Obtenez votre clé sur <a href="https://www.torn.com/preferences.php#tab=api" target="_blank">torn.com → Préférences → API</a> (Accès limité suffit)<br><strong>⚠️ Doit être hébergé (GitHub Pages / Netlify) — le fichier local file:// ne fonctionne pas.</strong>',load:'Charger',change:'Changer de clé',rush:'🔥 Rush',combos:'⚡ Combos',all:'Tous',attacks:'⚔️ Attaques',weapons:'🔫 Armes',crimes:'🕵️ Crimes',travel:'✈️ Voyage',drugs:'💊 Drogues',casino:'🎰 Casino',misc:'🎲 Misc',gym:'💪 Gym',t1:'⚡ À faire MAINTENANT — moins de 50',t2:'🔥 Cette semaine — moins de 200',t3:'🎯 Moins de 1 000',t4:'📅 Moins de 5 000',noRush:'Aucun award à rusher trouvé !',noAwards:'Aucun award ne correspond à vos filtres.',showEarned:'Afficher obtenus',search:'Rechercher...',how:'Comment:',left:'restant',earned:'✓ Obtenu',comboTitle:'⚡ Combos — Plusieurs Awards en Même Temps',comboSub:'Ces groupes d\'awards progressent tous avec la même action.',loading:'Chargement des awards depuis l\'API Torn...',tutos:'📖 Guides'}
 };
 
 // Map honor/medal type to category tab
@@ -539,7 +539,7 @@ function renderSbar(){
 
 // ══ TABS ══
 function renderTabs(){
-  const tabs=['rush','combos','all','attacks','weapons','crimes','travel','drugs','casino','gym','misc'];
+  const tabs=['rush','combos','tutos','all','attacks','weapons','crimes','travel','drugs','casino','gym','misc'];
   const el=document.getElementById('tabs');
   el.style.display='block';
   el.innerHTML=tabs.map(tab=>`<div class="tab${S.tab===tab?' on':''}" data-tab="${tab}" onclick="setTab('${tab}')">${t(tab)||tab}</div>`).join('');
@@ -557,6 +557,7 @@ function renderContent(){
   if(!S.data||!S.allAwards)return;
   if(S.tab==='rush'){renderRush(el);return;}
   if(S.tab==='combos'){renderCombos(el);return;}
+  if(S.tab==='tutos'){renderTutos(el);return;}
   renderGrid(el);
 }
 
