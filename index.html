@@ -180,10 +180,12 @@ const MANUAL_OVERRIDES={
   H786:'Requires dealing 15,000+ damage in a SINGLE HIT (not cumulative total).',
   H477:'Requires earning 100+ faction respect from a SINGLE HIT (not total respect earned).',
   H478:'Requires earning 1,000+ faction respect from a SINGLE HIT (not total respect earned).',
+  H274:`Requires winning 250 races with a SINGLE car (not total race wins). Track your best car's win count in-game. Progress here shows total race wins as a rough proxy only.`,
 };
 
 const EXACT_OVERRIDES={
-  H571:{s:'raceswon',g:100},
+  H571:{s:'raceswon',g:100},   // Checkered Past — win 100 races total
+  H274:{s:'raceswon',g:250},   // Redline — 250 wins with SAME car (we track total wins as proxy, but note it's per-car)
   // Close Escape honors
   H184:{s:'yourunaway',g:50},H185:{s:'yourunaway',g:250},H186:{s:'yourunaway',g:1000},
   // Enemy escape medals
@@ -238,7 +240,19 @@ const CRIME_GUIDE={
   illegalproduction:{crime:'Not yet released',icon:'🔒',nerve:0,
     tip:'Illegal Production crimes are not yet available in Crimes 2.0. These medals cannot be earned yet.'},
 };
+// Special cost notes for non-energy/nerve awards
+const SPECIAL_COST={
+  refills:{icon:'🔵',label:'Points cost',
+    tip:'Each energy refill costs 30 Torn Points. Check current point price on the market to estimate total cost. 30 pts × remaining refills = total points needed.'},
+  organisedcrimes:{icon:'👥',label:'Organized Crimes',
+    tip:'~3 days per OC (research + preparation). Coordinate with your faction. Each OC = +1 Mastermind progress.'},
+  cityfinds:{icon:'🏙️',label:'City finds',
+    tip:'Items appear in the city randomly. Higher Awareness merit = more frequent finds. Roughly 1-3 finds per day depending on your awareness level.'},
+  raceswon:{icon:'🏁',label:'Racing',
+    tip:'Win races in City → Racing. Each race takes ~7 min average. Higher racing skill = better win rate. Checkered Past = 100 total wins.'},
+};
 function getCrimeGuide(s){return CRIME_GUIDE[s]||null}
+function getSpecialCost(s){return SPECIAL_COST[s]||null}
 
 const TYPE_CAT={attacking:'attacks',camo:'attacks',weapons:'weapons',crimes:'crimes',travel:'travel',drugs:'drugs',casino:'casino',gym:'gym',hospital:'hospital',faction:'faction',items:'items',money:'money',competitions:'competitions',commitment:'commitment',work:'work',misc:'miscellaneous',default:'miscellaneous'};
 const CAT_ICON={attacks:'⚔️',weapons:'🔫',crimes:'🕵️',travel:'✈️',drugs:'💊',casino:'🎰',gym:'💪',hospital:'🏥',faction:'👊',items:'🎒',money:'💰',competitions:'🏆',commitment:'⏳',work:'💼',miscellaneous:'🎲'};
@@ -392,8 +406,10 @@ function estimateCost(a){
   // Combat stats — 25 energy per attack
   if(['attackswon','defendswon','attacksstealthed','attackcriticalhits','onehitkills','attackhits',
       'h2hhits','rifhits','smghits','pishits','shohits','slahits','piehits','axehits','machits',
-      'grehits','attacksassisted','rankedwarhits','bountiescollected','yourunaway','theyrunaway'].includes(k))
+      'grehits','attacksassisted','rankedwarhits','bountiescollected'].includes(k))
     energy=left*25;
+  // yourunaway/theyrunaway are passive/luck-based — can't be forced efficiently
+  else if(['yourunaway','theyrunaway'].includes(k)){energy=left*25;accuracy='context'}
   else if(k==='bestkillstreak')energy=left*25;
   else if(k==='roundsfired')energy=Math.ceil(left/20)*25;
   // Crimes — use exact nerve costs from CRIME_GUIDE
@@ -421,8 +437,10 @@ function estimateCost(a){
   }
   // Mastermind (OCs) — ~3 days per OC
   else if(k==='organisedcrimes'){timeHours=left*3*24;accuracy='context'}
-  // City finds — ~1 find per city refresh (every 30min), but luck-based
-  else if(k==='cityfinds'){timeHours=left*0.5;accuracy='context'}
+  // City finds — depends on Awareness merit level
+  // Base: ~1/day without awareness. With merits: up to 3-4/day
+  // Conservative estimate: 1 find per day = 24h each
+  else if(k==='cityfinds'){timeHours=left*24;accuracy='context'}
   else if(['xantaken','cantaken','exttaken','drugsused','medicalitemsused',
            'networth','totalstats','awards','workingstats'].includes(k))accuracy='context';
 
@@ -438,7 +456,12 @@ function awardImg(a){return `https://yata.yt/media/${a.type==='H'?'honors':'meda
 function card(a){
   const p=a.priority;const tr=a.tracking;const c=a.cost;const pct=tr.pct;const left=tr.left;
   const cg=getCrimeGuide(tr.statKey);
-  const crimeTip=cg&&!a.earned&&left>0&&left!==null?`<div class="crime-tip"><strong>${cg.icon} ${cg.crime}${cg.nerve>0?' · '+cg.nerve+'N/offense':' · not available yet'}</strong><br>${cg.tip}</div>`:'';
+  const sc=getSpecialCost(tr.statKey);
+  const crimeTip=cg&&!a.earned&&left>0&&left!==null
+    ?`<div class="crime-tip"><strong>${cg.icon} ${cg.crime}${cg.nerve>0?' · '+cg.nerve+'N/offense':' · not available yet'}</strong><br>${cg.tip}</div>`
+    :sc&&!a.earned
+    ?`<div class="crime-tip"><strong>${sc.icon} ${sc.label}</strong><br>${sc.tip}</div>`
+    :'';
   const progLeft=a.earned?'Done':tr.mode==='verify'&&tr.statKey==='networth'?'⏳ Time pending':left===null?'Manual':fmt(left)+' left';
   const progCurrent=tr.current===null?'Manual':tr.mode==='verify'&&tr.statKey==='networth'?'✅ Threshold met':fmt(tr.current)+' / '+fmt(tr.goal);
   const timeDisplay=c.timeHours===null?'—':c.timeHours===0?'Now':formatTime(c.timeHours);
@@ -471,6 +494,9 @@ function scoreAward(a){
   if(a.cost.timeHours)s+=a.cost.timeHours*3;
   if(a.tracking.mode==='manual')s+=100000;
   if(a.tracking.mode==='verify')s+=50000;
+  if(a.tracking.mode==='context')s+=20000; // passive/luck-based: deprioritize vs active grinds
+  // Extra penalty for enemy-escape and stalemate awards (can't be forced)
+  if(['theyrunaway','attacksdraw'].includes(a.tracking.statKey))s+=30000;
   if(a.priority==='high')s-=10000;
   if(a.priority==='medium')s-=3000;
   if(a.priority==='low')s-=500;
