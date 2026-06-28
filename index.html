@@ -269,71 +269,124 @@ window.addEventListener('DOMContentLoaded',()=>{$('loadBtn').addEventListener('c
 async function fetchJson(url){const r=await fetch(url);if(!r.ok)throw new Error('HTTP '+r.status);return await r.json()}
 
 async function loadApp(){
-  setError('');const key=$('apiKey').value.trim();if(!key){setError('Paste your Torn API key first.');return}
-  const btn=$('loadBtn');btn.disabled=true;btn.textContent='Loading...';
+  setError('');
+  const key=$('apiKey').value.trim();
+  if(!key){setError('Paste your Torn API key first.');return}
+  const btn=$('loadBtn');
+  btn.disabled=true;
+  btn.textContent='Loading...';
 
-  // Fetch a URL with retry on Torn backend error (code 17)
-  async function tryFetch(url,label){
-    const maxRetries=5;
+  const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+
+  async function tryFetch(url,label,opts={}){
+    const maxRetries=opts.retries||8;
+    let lastError='';
     for(let i=0;i<maxRetries;i++){
       try{
         const d=await fetchJson(url);
         if(!d.error)return d;
-        if(d.error.code===17&&i<maxRetries-1){
-          setError(`Torn API is slow — retrying ${label} (${i+1}/${maxRetries})...`);
-          await new Promise(r=>setTimeout(r,2500*(i+1)));
+        const code=Number(d.error.code);
+        lastError=`${label}: ${d.error.error || 'API error'}${code?` (code ${code})`:''}`;
+
+        // Torn code 17 is server-side / temporary. Retry with backoff.
+        if(code===17 && i<maxRetries-1){
+          setError(`Torn backend is unstable — retrying ${label} ${i+1}/${maxRetries}...`);
+          await sleep(1800*(i+1));
           continue;
         }
-        throw new Error(`${label}: ${d.error.error}`);
+
+        // Public torn DB endpoints may reject no-key requests on some setups.
+        // Caller can handle fallback by catching this.
+        throw new Error(lastError);
       }catch(e){
-        if(i===maxRetries-1)throw e;
-        if(!e.message.includes('Torn')){
-          await new Promise(r=>setTimeout(r,2000));
+        lastError=e.message||String(e);
+        if(i<maxRetries-1){
+          setError(`Connection issue — retrying ${label} ${i+1}/${maxRetries}...`);
+          await sleep(1500*(i+1));
           continue;
         }
-        throw e;
+        throw new Error(lastError);
       }
     }
+    throw new Error(lastError || `${label}: unknown error`);
+  }
+
+  function normalizeDb(payload,field){
+    const raw=payload[field] || payload.data || [];
+    if(Array.isArray(raw))return raw;
+    if(raw && typeof raw==='object')return Object.values(raw);
+    return [];
   }
 
   try{
     setError('');
-    btn.textContent='Loading profile...';
-    const[u1,u2]=await Promise.all([
-      tryFetch(`https://api.torn.com/user/?selections=profile,honors,medals&key=${encodeURIComponent(key)}`,'Profile'),
-      tryFetch(`https://api.torn.com/user/?selections=personalstats&key=${encodeURIComponent(key)}`,'Stats'),
-    ]);
 
-    btn.textContent='Loading award database...';
-    const[hdb,mdb]=await Promise.all([
-      tryFetch(`https://api.torn.com/v2/torn/honors?key=${encodeURIComponent(key)}`,'Honors DB'),
-      tryFetch(`https://api.torn.com/v2/torn/medals?key=${encodeURIComponent(key)}`,'Medals DB'),
-    ]);
+    // IMPORTANT: one user call only. The old version made profile and stats in parallel;
+    // Torn sometimes returns code 17 more often when several requests hit at once.
+    btn.textContent='Loading profile...';
+    const user=await tryFetch(
+      `https://api.torn.com/user/?selections=profile,honors,medals,personalstats&key=${encodeURIComponent(key)}`,
+      'Profile + stats'
+    );
+
+    btn.textContent='Loading awards database...';
+
+    // Prefer public DB calls without the player key. If Torn rejects it, retry with key.
+    let hdb,mdb;
+    try{
+      hdb=await tryFetch('https://api.torn.com/v2/torn/honors','Honors DB',{retries:4});
+    }catch(e){
+      hdb=await tryFetch(`https://api.torn.com/v2/torn/honors?key=${encodeURIComponent(key)}`,'Honors DB',{retries:6});
+    }
+    await sleep(350);
+    try{
+      mdb=await tryFetch('https://api.torn.com/v2/torn/medals','Medals DB',{retries:4});
+    }catch(e){
+      mdb=await tryFetch(`https://api.torn.com/v2/torn/medals?key=${encodeURIComponent(key)}`,'Medals DB',{retries:6});
+    }
 
     setError('');
-    const honorsDB=(hdb.honors||hdb.data||[]).filter(h=>h&&h.id&&h.type?.title!=='default'&&h.crimes_version!=='v1');
-    const medalsDB=(mdb.medals||mdb.data||[]).filter(m=>m&&m.id&&m.crimes_version!=='v1');
-    const ps=u2.personalstats||{};
-    ps.age=u1.age||0;
-    ps.factiondays=u1.faction?.days_in_faction||0;
-    STATE.data={name:u1.name||'Unknown',level:u1.level||0,rank:u1.rank||'',age:u1.age||0,
-      earnedH:new Set(u1.honors_awarded||[]),earnedM:new Set(u1.medals_awarded||[]),stats:ps};
+    const honorsDB=normalizeDb(hdb,'honors').filter(h=>h&&h.id&&h.type?.title!=='default'&&h.crimes_version!=='v1');
+    const medalsDB=normalizeDb(mdb,'medals').filter(m=>m&&m.id&&m.crimes_version!=='v1');
+
+    if(!honorsDB.length && !medalsDB.length){
+      throw new Error('Award database loaded empty. Torn API response shape may have changed.');
+    }
+
+    const ps=user.personalstats||{};
+    ps.age=user.age||0;
+    ps.factiondays=user.faction?.days_in_faction||0;
+
+    STATE.data={
+      name:user.name||'Unknown',
+      level:user.level||0,
+      rank:user.rank||'',
+      age:user.age||0,
+      earnedH:new Set((user.honors_awarded||[]).map(Number)),
+      earnedM:new Set((user.medals_awarded||[]).map(Number)),
+      stats:ps
+    };
+
     STATE.awards=buildAwards(honorsDB,medalsDB,STATE.data);
-    $('login').style.display='none';$('tabs').style.display='flex';$('app').style.display='block';
+    $('login').style.display='none';
+    $('tabs').style.display='flex';
+    $('app').style.display='block';
     $('profilePill').textContent=`${STATE.data.name} · Lvl ${STATE.data.level}`;
     $('profilePill').classList.add('good');
     render();
   }catch(e){
     console.error(e);
-    // Check if it's a backend error
-    const msg=e.message||'';
-    if(msg.includes('Backend error')||msg.includes('backend')){
-      setError('⚠️ Torn API is currently unstable (backend error). This is a Torn server issue, not your key. Wait 1-2 minutes and try again.');
-    } else {
-      setError(msg+' — Check your API key or try again.');
+    const msg=e.message||String(e);
+    if(msg.includes('code 17')||msg.toLowerCase().includes('backend')){
+      setError('⚠️ Torn API returned backend error #17 after several retries. This is server-side. Try again in 1–2 minutes. If it keeps happening, use the proxy/backend version instead of direct browser calls.\n\nDetails: '+msg);
+    }else if(msg.toLowerCase().includes('failed to fetch')||msg.toLowerCase().includes('cors')){
+      setError('Browser could not reach Torn API. This is usually CORS or network blocking. Host the file online, or use a small backend/proxy.\n\nDetails: '+msg);
+    }else{
+      setError(msg+' — Check your API key permissions and try again.');
     }
   }finally{
-    btn.disabled=false;btn.textContent='Load profile';
+    btn.disabled=false;
+    btn.textContent='Load profile';
   }
 }
 
