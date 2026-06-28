@@ -231,6 +231,19 @@ const MANUAL_OVERRIDES={
 };
 const EXACT_OVERRIDES={
   H571:{s:'raceswon',g:100},
+  // Faction commitment medals
+  M26:{s:'factiondays',g:100},M27:{s:'factiondays',g:200},M28:{s:'factiondays',g:300},
+  M29:{s:'factiondays',g:400},M108:{s:'factiondays',g:500},M109:{s:'factiondays',g:600},
+  M148:{s:'factiondays',g:700},M149:{s:'factiondays',g:800},M150:{s:'factiondays',g:900},
+  M151:{s:'factiondays',g:1000},
+  // Service years medals (age in days)
+  M225:{s:'age',g:365},M226:{s:'age',g:730},M227:{s:'age',g:1095},
+  M228:{s:'age',g:1460},M229:{s:'age',g:1825},M230:{s:'age',g:2190},
+  M231:{s:'age',g:2555},M232:{s:'age',g:2920},M234:{s:'age',g:3285},M235:{s:'age',g:3650},
+  // Close Escape (Honor 184 = escape 50 foes)
+  H184:{s:'yourunaway',g:50},H185:{s:'yourunaway',g:250},H186:{s:'yourunaway',g:1000},
+  // Enemy escape medals
+  M187:{s:'theyrunaway',g:50},M188:{s:'theyrunaway',g:250},M189:{s:'theyrunaway',g:1000},
 };
 const TYPE_CAT={attacking:'attacks',camo:'attacks',weapons:'weapons',crimes:'crimes',travel:'travel',drugs:'drugs',casino:'casino',gym:'gym',hospital:'hospital',faction:'faction',items:'items',money:'money',competitions:'competitions',commitment:'commitment',work:'work',misc:'miscellaneous',default:'miscellaneous'};
 const CAT_ICON={attacks:'⚔️',weapons:'🔫',crimes:'🕵️',travel:'✈️',drugs:'💊',casino:'🎰',gym:'💪',hospital:'🏥',faction:'👊',items:'🎒',money:'💰',competitions:'🏆',commitment:'⏳',work:'💼',miscellaneous:'🎲'};
@@ -271,7 +284,7 @@ async function loadApp(){
 }
 function resetApp(){localStorage.removeItem('torn_merit_priorities');localStorage.removeItem('torn_merit_notes');location.reload()}
 function renderTabs(){const el=$('tabs'); el.innerHTML=TABS.map(([id,label])=>`<button class="tab ${STATE.tab===id?'on':''}" onclick="setTab('${id}')">${label}</button>`).join('')}
-function setTab(t){STATE.tab=t;renderTabs();render()}
+function setTab(t){STATE.tab=t;if(t!=="explorer"){STATE.cat="all";STATE.tracking="all";STATE.search="";STATE.status="locked";}renderTabs();render()}
 function getAwardMapping(type,id){const k=type+id; if(EXACT_OVERRIDES[k])return EXACT_OVERRIDES[k]; if(MANUAL_OVERRIDES[k])return null; return AWARD_MAP[k]||null}
 function guessStatKey(desc,name){
   const d=(desc||'').toLowerCase();
@@ -283,6 +296,10 @@ function guessStatKey(desc,name){
   if(d.includes('stealthed attack')) return 'attacksstealthed';
   if(d.includes('win')&&d.includes('attack')) return 'attackswon';
   if(d.includes('defend')) return 'defendswon';
+  if(d.includes('escape from')) return 'yourunaway';
+  if(d.includes('escape from you')) return 'theyrunaway';
+  if(d.includes('serve')&&d.includes('faction')) return 'factiondays';
+  if(d.includes('live in torn')) return 'age';
   if(d.includes('fire')&&d.includes('round')) return 'roundsfired';
   if(d.includes('xanax')) return 'xantaken';
   if(d.includes('cannabis')&&!d.includes('overdose')) return 'cantaken';
@@ -310,7 +327,7 @@ function makeTracking(a,statKey,goal,earned){
   const current=Math.max(0, Number(STATE.data.stats[statKey]||0));
   let pct=Math.min(100, Math.round(current/goal*1000)/10), left=Math.max(0, goal-current), mode=AWARD_MAP[a.type+a.id]||EXACT_OVERRIDES[a.type+a.id]?'accurate':'estimated', label=mode==='accurate'?'Accurate':'Estimated';
   let reason=mode==='accurate'?'Mapped to a known Torn personalstat.':'Guessed from award description; verify if it looks wrong.';
-  if(!earned && pct>=100){pct=99; left=1; mode='verify'; label='Needs verification'; reason='The stat is above the goal, but Torn still reports this award as locked. It may require a special condition.'}
+  if(!earned && pct>=100){pct=99; left=1; mode='verify'; label='Needs verification'; reason='Stat exceeds the tracked goal but Torn reports this award as locked. Either the condition is more complex (special action required) or the stat mapping is wrong. Check the award description on torn.com.'}
   if(earned){pct=100;left=0}
   return {mode,label,reason,current,goal,pct,left,statKey};
 }
