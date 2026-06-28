@@ -227,7 +227,14 @@ const MANUAL_OVERRIDES={
   H955:'Mug someone who just mugged; event-based.',
   H481:'Opponent stat comparison; not trackable from personalstats.',
   H627:'Opponent stat comparison; not trackable from personalstats.',
-  H631:'Opponent stat comparison; not trackable from personalstats.'
+  H631:'Opponent stat comparison; not trackable from personalstats.',
+  // Single-hit damage honors — can't track via total damage stat
+  H740:'Requires dealing 5,000+ damage in a SINGLE HIT (not total). Use powerful weapon + high strength.',
+  H741:'Requires dealing 10,000+ damage in a SINGLE HIT (not total).',
+  H786:'Requires dealing 15,000+ damage in a SINGLE HIT (not total).',
+  // Faction respect single hit
+  H477:'Requires earning 100+ faction respect from a SINGLE HIT (not total).',
+  H478:'Requires earning 1,000+ faction respect from a SINGLE HIT (not total).',
 };
 const EXACT_OVERRIDES={
   H571:{s:'raceswon',g:100},
@@ -240,6 +247,15 @@ const EXACT_OVERRIDES={
   M225:{s:'age',g:365},M226:{s:'age',g:730},M227:{s:'age',g:1095},
   M228:{s:'age',g:1460},M229:{s:'age',g:1825},M230:{s:'age',g:2190},
   M231:{s:'age',g:2555},M232:{s:'age',g:2920},M234:{s:'age',g:3285},M235:{s:'age',g:3650},
+  // Networth medals — tracked in $ (condition: reach amount for X days)
+  // We track $ value; if met, we show "time condition pending"
+  M89:{s:'networth',g:100000,days:3},M90:{s:'networth',g:250000,days:3},
+  M91:{s:'networth',g:500000,days:3},M92:{s:'networth',g:1000000,days:3},
+  M93:{s:'networth',g:2500000,days:7},M94:{s:'networth',g:10000000,days:7},
+  M95:{s:'networth',g:25000000,days:14},M96:{s:'networth',g:100000000,days:14},
+  M236:{s:'networth',g:250000000,days:28},M237:{s:'networth',g:1000000000,days:28},
+  M238:{s:'networth',g:2500000000,days:56},M239:{s:'networth',g:10000000000,days:56},
+  M240:{s:'networth',g:25000000000,days:112},M241:{s:'networth',g:100000000000,days:112},
   // Close Escape (Honor 184 = escape 50 foes)
   H184:{s:'yourunaway',g:50},H185:{s:'yourunaway',g:250},H186:{s:'yourunaway',g:1000},
   // Enemy escape medals
@@ -325,6 +341,24 @@ function makeTracking(a,statKey,goal,earned){
   if(override) return {mode:'manual', label:'Manual', reason:override, current:null, goal:null, pct:earned?100:null, left:null};
   if(!statKey||!goal) return {mode:'manual',label:'Manual',reason:'No reliable personalstats mapping for this award.',current:null,goal:null,pct:earned?100:null,left:null};
   const current=Math.max(0, Number(STATE.data.stats[statKey]||0));
+  // Special case: networth medals require holding the amount for X days
+  // We can only track the $ amount, not the days
+  const exactEntry=EXACT_OVERRIDES[a.type+a.id];
+  if(statKey==='networth' && exactEntry && exactEntry.days){
+    const daysReq=exactEntry.days;
+    if(current>=goal){
+      // Networth condition met — time requirement pending (can't track days via API)
+      return {mode:'verify',label:'Time condition pending',
+        reason:`Your networth ($${current.toLocaleString()}) meets the $${goal.toLocaleString()} threshold. You need to maintain it for ${daysReq} days. Torn tracks this internally — we can't read the day count via API.`,
+        current,goal,pct:earned?100:99,left:null,statKey};
+    } else {
+      // Networth not yet reached
+      const pct=Math.min(99,Math.round(current/goal*1000)/10);
+      return {mode:'accurate',label:'Accurate',
+        reason:`Reach $${goal.toLocaleString()} networth and maintain it for ${daysReq} days.`,
+        current,goal,pct,left:goal-current,statKey};
+    }
+  }
   let pct=Math.min(100, Math.round(current/goal*1000)/10), left=Math.max(0, goal-current), mode=AWARD_MAP[a.type+a.id]||EXACT_OVERRIDES[a.type+a.id]?'accurate':'estimated', label=mode==='accurate'?'Accurate':'Estimated';
   let reason=mode==='accurate'?'Mapped to a known Torn personalstat.':'Guessed from award description; verify if it looks wrong.';
   if(!earned && pct>=100){pct=99; left=1; mode='verify'; label='Needs verification'; reason='Stat exceeds the tracked goal but Torn reports this award as locked. Either the condition is more complex (special action required) or the stat mapping is wrong. Check the award description on torn.com.'}
