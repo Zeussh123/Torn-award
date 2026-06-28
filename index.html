@@ -420,48 +420,57 @@ function renderTracker(c){const groups={high:[],medium:[],low:[],none:[]}; locke
 // Crime guide data — nerve cost per offense and best crime to do
 const CRIME_GUIDE={
   vandalism:{
-    crime:'Graffiti',nerve:1,icon:'🎨',
-    tip:'Cheapest vandalism crime. 1 nerve per attempt. Need: Spray Paint + Paint Mask (enhancer). Nerve to 10k medals: ~10,000 nerve (~8,300 to CS100).',
+    crime:'Graffiti',icon:'🎨',
+    nerveMin:3,nerveMax:3,
+    tip:`3N per spray. Each spray = +1 Vandalism offense. Need Spray Paint (consumable) + Ladder/Wire Cutters. Locations: East Side, West Side, North Side (unlocked at higher CS). Best: spam the cheapest location available.`,
     link:'https://www.torn.com/crimes.php#sub=graffiti'
   },
   theft:{
-    crime:'Shoplifting',nerve:2,icon:'🏪',
-    tip:'Best theft/nerve ratio. 2 nerve per attempt. Each attempt = +1 Theft offense AND +1 Criminal offense. Need: Shoplifting enhancer. Tip: do it when guards are away for better loot.',
+    crime:'Shoplifting',icon:'🏪',
+    nerveMin:4,nerveMax:4,
+    tip:`4N per shoplift. Each attempt = +1 Theft offense AND +1 Criminal offense (double progress!). Best targets: Sally's Sweet Shop ($2,183/N) or Pharmacy ($6,983/N when guard is away). No special items required.`,
     link:'https://www.torn.com/crimes.php#sub=shoplifting'
   },
   criminaloffenses:{
-    crime:'Graffiti / Shoplifting',nerve:1,icon:'📋',
-    tip:'Criminal offenses = SUM of all crimes. Every vandalism (1N) and theft (2N) counts. Do Graffiti (1N) to maximize offenses per nerve spent.',
-    link:'https://www.torn.com/crimes.php#sub=graffiti'
+    crime:'Any crime (Graffiti cheapest)',icon:'📋',
+    nerveMin:3,nerveMax:4,
+    tip:`Total criminal offenses = SUM of ALL crimes. Graffiti (3N) is cheapest per offense. Shoplifting (4N) gives +1 Theft AND +1 Criminal simultaneously — best dual progress. Pick whichever crime category medal you need most.`,
+    link:'https://www.torn.com/crimes.php'
   },
   counterfeiting:{
-    crime:'Bootlegging — Store Collection',nerve:1,icon:'📀',
-    tip:'Set up DVD store and collect funds = 1 nerve, counts as Counterfeiting offense. Cheapest path to 10k counterfeiting medals. Need: PC/Laptop + Blank DVDs + High-Speed Drive (enhancer). Total nerve to 10k: ~10,000 if collecting only.',
+    crime:'Bootlegging',icon:'📀',
+    nerveMin:2,nerveMax:5,
+    tip:`Copy DVDs = 2N (most efficient for medals), Sell Counterfeit DVDs = 5N. Both count as Counterfeiting offenses. Best strategy: copy DVDs at 2N each to grind medals. Online store (1N collect) unlocks at higher CS level. Need: PC/Laptop + Blank DVDs + High-Speed Drive (enhancer).`,
     link:'https://www.torn.com/crimes.php#sub=bootlegging'
   },
   fraud:{
-    crime:'Hustling',nerve:2,icon:'🎭',
-    tip:'2 nerve per attempt (some games cost more). Every attempt = +1 Fraud offense. Card Skimming also works (1N for collection). Hustling tip: do it with 40+ nerve at a time for efficiency.',
+    crime:'Hustling / Card Skimming',icon:'🎭',
+    nerveMin:2,nerveMax:8,
+    tip:`Hustling: Gather Audience 4N, Demo games 2N each — all count as Fraud offenses. Card Skimming: Install 6N, Recover 4N, Sell 6N. Cheapest Fraud: Hustling demos at 2N. Need Megaphone for Hustling.`,
     link:'https://www.torn.com/crimes.php#sub=hustling'
   },
   cybercrime:{
-    crime:'Cracking',nerve:3,icon:'💻',
-    tip:'3-10 nerve per crack depending on target. Every crack = +1 Cybercrime offense. Best money/nerve ratio (~5k-10k$/N). Need: Rig (PC components) + 4 education courses (CMT1520 required first).',
+    crime:'Cracking',icon:'💻',
+    nerveMin:7,nerveMax:7,
+    tip:`7N per Brute Force attempt (all targets same cost). Each crack = +1 Cybercrime offense. Need: Rig (PC components) + CMT1520 education course (required to unlock). Good payout: $800-$3,000/N.`,
     link:'https://www.torn.com/crimes.php#sub=cracking'
   },
   illicitservices:{
-    crime:'Disposal',nerve:6,icon:'🗑️',
-    tip:'6-12 nerve per job. Limited to a few jobs per day. Every job = +1 Illicit Service offense. Slower to grind — expect months for 10k medals.',
+    crime:'Disposal',icon:'🗑️',
+    nerveMin:6,nerveMax:14,
+    tip:`Nerve varies by method — Abandon 6N, Bury 8N, Burn 10N, Sink 12N, Dissolve 14N. Limited jobs per day. Each job = +1 Illicit Service offense. Slow grind — prioritize higher value methods.`,
     link:'https://www.torn.com/crimes.php#sub=disposal'
   },
   extortion:{
-    crime:'Not yet released',nerve:0,icon:'⚠️',
-    tip:'Extortion crimes are not yet available in Crimes 2.0. Medals exist but cannot be earned yet.',
+    crime:'Not yet released ⚠️',icon:'🔒',
+    nerveMin:0,nerveMax:0,
+    tip:`Extortion crimes are not yet available in Crimes 2.0. These medals cannot be earned yet — ignore them for now.`,
     link:'https://www.torn.com/crimes.php'
   },
   illegalproduction:{
-    crime:'Not yet released',nerve:0,icon:'⚠️',
-    tip:'Illegal Production crimes are not yet available in Crimes 2.0. Medals exist but cannot be earned yet.',
+    crime:'Not yet released ⚠️',icon:'🔒',
+    nerveMin:0,nerveMax:0,
+    tip:`Illegal Production crimes are not yet available in Crimes 2.0. These medals cannot be earned yet — ignore them for now.`,
     link:'https://www.torn.com/crimes.php'
   },
 };
