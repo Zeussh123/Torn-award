@@ -274,15 +274,25 @@ async function loadApp(){
 
   // Fetch a URL with retry on Torn backend error (code 17)
   async function tryFetch(url,label){
-    for(let i=0;i<3;i++){
-      const d=await fetchJson(url);
-      if(!d.error)return d;
-      if(d.error.code===17&&i<2){
-        setError(`Torn backend error on ${label} — retrying (${i+1}/3)...`);
-        await new Promise(r=>setTimeout(r,2000*(i+1)));
-        continue;
+    const maxRetries=5;
+    for(let i=0;i<maxRetries;i++){
+      try{
+        const d=await fetchJson(url);
+        if(!d.error)return d;
+        if(d.error.code===17&&i<maxRetries-1){
+          setError(`Torn API is slow — retrying ${label} (${i+1}/${maxRetries})...`);
+          await new Promise(r=>setTimeout(r,2500*(i+1)));
+          continue;
+        }
+        throw new Error(`${label}: ${d.error.error}`);
+      }catch(e){
+        if(i===maxRetries-1)throw e;
+        if(!e.message.includes('Torn')){
+          await new Promise(r=>setTimeout(r,2000));
+          continue;
+        }
+        throw e;
       }
-      throw new Error(`${label}: ${d.error.error}`);
     }
   }
 
@@ -315,7 +325,13 @@ async function loadApp(){
     render();
   }catch(e){
     console.error(e);
-    setError(e.message+' — If this repeats, the Torn API may be temporarily down. Try again in a minute.');
+    // Check if it's a backend error
+    const msg=e.message||'';
+    if(msg.includes('Backend error')||msg.includes('backend')){
+      setError('⚠️ Torn API is currently unstable (backend error). This is a Torn server issue, not your key. Wait 1-2 minutes and try again.');
+    } else {
+      setError(msg+' — Check your API key or try again.');
+    }
   }finally{
     btn.disabled=false;btn.textContent='Load profile';
   }
