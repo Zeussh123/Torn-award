@@ -272,16 +272,38 @@ async function loadApp(){
   setError('');const key=$('apiKey').value.trim();if(!key){setError('Paste your Torn API key first.');return}
   const btn=$('loadBtn');btn.disabled=true;btn.textContent='Loading...';
   try{
-    const[u1,u2,hdb,mdb]=await Promise.all([
+    // Fetch user data first
+    const[u1,u2]=await Promise.all([
       `https://api.torn.com/user/?selections=profile,honors,medals&key=${encodeURIComponent(key)}`,
-      `https://api.torn.com/user/?selections=personalstats&key=${encodeURIComponent(key)}`,
-      `https://api.torn.com/v2/torn/honors?key=${encodeURIComponent(key)}`,
-      `https://api.torn.com/v2/torn/medals?key=${encodeURIComponent(key)}`
+      `https://api.torn.com/user/?selections=personalstats&key=${encodeURIComponent(key)}`
     ].map(fetchJson));
-    if(u1.error)throw new Error('Profile: '+u1.error.error);
-    if(u2.error)throw new Error('Stats: '+u2.error.error);
-    if(hdb.error)throw new Error('Honors DB: '+hdb.error.error);
-    if(mdb.error)throw new Error('Medals DB: '+mdb.error.error);
+    if(u1.error)throw new Error('Profile API: '+u1.error.error);
+    if(u2.error)throw new Error('Stats API: '+u2.error.error);
+
+    // Fetch honor/medal DB with retry on backend error
+    async function fetchWithRetry(url, label, retries=3){
+      for(let i=0;i<retries;i++){
+        try{
+          const d=await fetchJson(url);
+          if(d.error){
+            if(d.error.code===17&&i<retries-1){
+              // Backend error — wait and retry
+              await new Promise(r=>setTimeout(r,1500*(i+1)));
+              continue;
+            }
+            throw new Error(label+': '+d.error.error);
+          }
+          return d;
+        }catch(e){
+          if(i===retries-1)throw e;
+          await new Promise(r=>setTimeout(r,1500*(i+1)));
+        }
+      }
+    }
+    const[hdb,mdb]=await Promise.all([
+      fetchWithRetry(`https://api.torn.com/v2/torn/honors?key=${encodeURIComponent(key)}`,'Honors DB'),
+      fetchWithRetry(`https://api.torn.com/v2/torn/medals?key=${encodeURIComponent(key)}`,'Medals DB'),
+    ]);
     const honorsDB=(hdb.honors||hdb.data||[]).filter(h=>h&&h.id&&h.type?.title!=='default'&&h.crimes_version!=='v1');
     const medalsDB=(mdb.medals||mdb.data||[]).filter(m=>m&&m.id&&m.crimes_version!=='v1');
     const ps=u2.personalstats||{};
